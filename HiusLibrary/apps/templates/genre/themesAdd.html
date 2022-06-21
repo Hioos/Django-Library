@@ -1,0 +1,45 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+    <div class="container">
+
+        <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="row">
+                    <div class="col">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4">Add A New Themes!</h1>
+                            </div>
+                            <form class="user" name="registration-form" id="registration-form" action="{% url 'addNewTheme' %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="text" class="form-control form-control-user" id="themeName"
+                                            placeholder="Name" name="themeName">
+                                    </div>
+                                </div>
+                                <div class ="form-group">
+                                  <div class="form-group">
+                                    <label for="themeDesc">Description:</label>
+                                    <textarea class="form-control " id="themeDesc" name="themeDesc" rows="3" style="resize: none;height: 300px;"></textarea>
+                                  </div>
+                                </div>
+                                <div class="row">
+                                <div class="col-5"></div>
+                                <div class="col-1">
+                                <button type="submit" class="btn btn-info btn-circle btn-lg">
+                                    <i class="fas fa-save"></i>
+                                </button>
+                                </div>
+                                <div class="col-6"></div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

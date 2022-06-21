@@ -1,0 +1,87 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+<div class="container-fluid">
+    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Loan Status
+</h1>
+                    </div>
+<div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <div class="row">
+                                <div class="col">
+                            <a class="login-trigger btn btn-info btn-icon-split btn-sm" href="#" data-target="#login" data-toggle="modal">                                        <span class="icon text-white-50">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                        <span class="text">New Status</span></a>
+                                    </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table  class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Status</th>
+                                            <th>Created At</th>
+                                            <th>Updated At</th>
+                                            <th>Created By</th>
+                                            <th>Updated By</th>
+                                            <th  style="text-align: center">View</th>
+                                            <th  style="text-align: center">Edit</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Status</th>
+                                            <th>Created At</th>
+                                            <th>Updated At</th>
+                                            <th>Created By</th>
+                                            <th>Updated By</th>
+                                            <th  style="text-align: center">View</th>
+                                            <th  style="text-align: center">Edit</th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                    {% for loan in loans %}
+                                        <tr>
+                                           <td>{{loan.loanStatus_id}}</td>
+                                           <td>{{loan.loanStatus_name}}</td>
+                                           <td>{{loan.loanStatus_createdAt}}</td>
+                                           <td>{{loan.loanStatus_updatedAt}}</td>
+                                            <td>{{ loan.loanStatus_createdBy.administrator_name }}</td>
+                                            <td>{{ loan.loanStatus_updatedBy.administrator_name }}</td>
+                                           <td  style="text-align: center"><a class="btn btn-success btn-circle btn-sm" href=""><i class="fas fa-flag"></i></a></td>
+                                           <td  style="text-align: center"><a class="btn btn-warning btn-circle btn-sm" href=""><i class="fas fa-pen-fancy"></i></a></td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                </div>
+</div>
+<div id="login" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+      <div class="modal-body">
+        <button data-dismiss="modal" class="close">&times;</button>
+        <h4>New Status</h4>
+        <form class="user" name="registration-form" id="registration-form" action="{% url 'loanAdd' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group row">
+                <div class="col-sm-10 mb-3 mb-sm-0">
+          <input type="text" name="statusName" class="username form-control "/>
+                    </div>
+                <div class="col-sm-2">
+            <button class="btn btn-success btn-circle" type="submit"><i class="fas fa-check"></i></button>
+                    </div>
+            </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
