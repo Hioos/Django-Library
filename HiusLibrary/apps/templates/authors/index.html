@@ -104,17 +104,36 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <div id="dataTable_wrapper" class="dataTables_wrapper dt-bootstrap4"><div class="row"><div class="col-sm-12 col-md-6"><div class="dataTables_length" id="dataTable_length"><label>Show <select name="dataTable_length" aria-controls="dataTable" class="custom-select custom-select-sm form-control form-control-sm"><option value="10">10</option><option value="25">25</option><option value="50">50</option><option value="100">100</option></select> entries</label></div></div><div class="col-sm-12 col-md-6"><div id="dataTable_filter" class="dataTables_filter"><label>Search:<input type="search" class="form-control form-control-sm" placeholder="" aria-controls="dataTable"></label></div></div></div><div class="row"><div class="col-sm-12"><div style="overflow-x:auto;"><table class="table table-bordered dataTable" id="dataTable" width="100%" cellspacing="0" role="grid" aria-describedby="dataTable_info" style="
-   overflow-x:scroll;
-   width:250%;
-   display:block;
-">
-
+                                <table  class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
-                                        <tr role="row"><th class="sorting sorting_asc" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-sort="ascending" aria-label="Name: activate to sort column descending" style="width: 15%;">Image</th><th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Position: activate to sort column ascending" style="width: 15%;">Name</th><th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Office: activate to sort column ascending" style="width: 5%;">Nationality</th><th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Age: activate to sort column ascending" style="width: 5%;">Gender</th><th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Start date: activate to sort column ascending" style="width: 17%;">DoB</th><th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="2" colspan="1" aria-label="Salary: activate to sort column ascending" style="width: 70%;">Biography</th><th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending" style="width: 19%;">Created Date</th><th class="sorting" tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1" aria-label="Salary: activate to sort column ascending" style="width: 19%;">Updated Date</th><th tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1">Created By</th><th tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1">Updated By</th><th tabindex="0" aria-controls="dataTable" rowspan="1" colspan="1">Edit</th></tr>
-                                    </thead>
+                                    <tr>
+                                            <th>Image</th>
+                                            <th>Name</th>
+                                            <th>Nationality</th>
+                                            <th>Gender</th>
+                                            <th>DoB</th>
+                                            <th>Biography</th>
+                                            <th>Created At</th>
+                                            <th>Updated At</th>
+                                            <th>Created By</th>
+                                            <th>Updated By</th>
+                                            <th  style="text-align: center">Edit</th>
+                                    </tr>
+                                  </thead>
                                     <tfoot>
-                                    <tr><th rowspan="1" colspan="1">Image</th><th rowspan="1" colspan="1">Name</th><th rowspan="1" colspan="1">Nationality</th><th rowspan="1" colspan="1">Gender</th><th rowspan="1" colspan="1">DoB</th><th rowspan="1" colspan="1">Biography</th><th rowspan="1" colspan="1">Created Date</th><th rowspan="1" colspan="1">Updated Date</th><th rowspan="1" colspan="1">Created By</th><th rowspan="1" colspan="1">Updated By</th><th rowspan="1" colspan="1">Edit</th></tr>
+                                    <tr>
+                                            <th>Image</th>
+                                            <th>Name</th>
+                                            <th>Nationality</th>
+                                            <th>Gender</th>
+                                            <th>DoB</th>
+                                            <th>Biography</th>
+                                            <th>Created At</th>
+                                            <th>Updated At</th>
+                                            <th>Created By</th>
+                                            <th>Updated By</th>
+                                            <th  style="text-align: center">Edit</th>
+                                    </tr>
                                     </tfoot>
                                     <tbody>
                                     {% for author in authors %}
@@ -127,13 +146,13 @@
                                             <td style="width:90%;text-align:center;vertical-align: middle;">{{ author.author_biography}}</td>
                                             <td style="width:5%;text-align:center;vertical-align: middle;">{{ author.author_createdAt }}</td>
                                             <td style="width:5%;text-align:center;vertical-align: middle;">{{ author.author_updatedAt }}</td>
-                                            <td style="width:5%;text-align:center;vertical-align: middle;">{{ author.author_createdBy.administrator_name}} </td>
-                                            <td style="width:5%;text-align:center;vertical-align: middle;">{{ author.author_updatedBy.administrator_name  }}</td>
+                                            <td style="width:5%;text-align:center;vertical-align: middle;">{{ author.author_createdBy.name}} </td>
+                                            <td style="width:5%;text-align:center;vertical-align: middle;">{{ author.author_updatedBy.name }}</td>
                                             <td style="width:5%;text-align:center;vertical-align: middle;"><a class="btn btn-warning btn-circle btn-sm" href="{% url 'updateAuthor' author.author_id %}"><i class="fas fa-edit"></i></a></td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
-                                </table></div></div></div><div class="row"><div class="col-sm-12 col-md-5"><div class="dataTables_info" id="dataTable_info" role="status" aria-live="polite"></div></div><div class="col-sm-12 col-md-7"><div class="dataTables_paginate paging_simple_numbers" id="dataTable_paginate"><ul class="pagination"><li class="paginate_button page-item previous disabled" id="dataTable_previous"><a href="#" aria-controls="dataTable" data-dt-idx="0" tabindex="0" class="page-link">Previous</a></li><li class="paginate_button page-item active"><a href="#" aria-controls="dataTable" data-dt-idx="1" tabindex="0" class="page-link">1</a></li><li class="paginate_button page-item "><a href="#" aria-controls="dataTable" data-dt-idx="2" tabindex="0" class="page-link">2</a></li><li class="paginate_button page-item "><a href="#" aria-controls="dataTable" data-dt-idx="3" tabindex="0" class="page-link">3</a></li><li class="paginate_button page-item "><a href="#" aria-controls="dataTable" data-dt-idx="4" tabindex="0" class="page-link">4</a></li><li class="paginate_button page-item "><a href="#" aria-controls="dataTable" data-dt-idx="5" tabindex="0" class="page-link">5</a></li><li class="paginate_button page-item "><a href="#" aria-controls="dataTable" data-dt-idx="6" tabindex="0" class="page-link">6</a></li><li class="paginate_button page-item next" id="dataTable_next"><a href="#" aria-controls="dataTable" data-dt-idx="7" tabindex="0" class="page-link">Next</a></li></ul></div></div></div></div>
+                                </table>
                             </div>
                         </div>
                     </div>

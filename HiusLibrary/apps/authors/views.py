@@ -8,13 +8,18 @@ from django.template import loader
 from django.urls import reverse
 
 from .models import Authors
-from ..administrator.models import Administrator
-def authorCounter():
-    count = Authors.objects.all().count()
-    return count
+from django.contrib.auth.decorators import login_required
+
+from ..accounts.models import Account
+
+
+@login_required
 def index(request):
     authors = Authors.objects.select_related()
     template = loader.get_template('authors/index.html')
+    def authorCounter():
+        count = Authors.objects.all().count()
+        return count
     x = authorCounter()
     context = {
         'authors' : authors,
@@ -22,9 +27,11 @@ def index(request):
     }
     # str(authors.query)
     return HttpResponse(template.render(context, request))
+@login_required
 def add(request):
     template = loader.get_template('authors/add.html')
     return HttpResponse(template.render({},request))
+@login_required
 def addNewAuthor(request):
     authorName = request.POST['authorName']
     authorDoB = request.POST['authorDoB']
@@ -34,6 +41,8 @@ def addNewAuthor(request):
     authorGender = request.POST['authorGender']
     authorCreatedAt = datetime.datetime.now()
     authorUpdatedAt = datetime.datetime.now()
+    authorCreatedBy =  request.session['id']
+    admin = Account.objects.get(id = authorCreatedBy)
     author = Authors(author_name = authorName,
                      author_dateOfBirth = authorDoB,
                      author_biography = authorBio,
@@ -41,9 +50,12 @@ def addNewAuthor(request):
                      author_nationalImgUrl = authorNationalityURL,
                      author_createdAt = authorCreatedAt,
                      author_updatedAt = authorUpdatedAt,
-                     author_gender = authorGender)
+                     author_gender = authorGender,
+                     author_createdBy = admin,
+                     author_updatedBy = admin)
     author.save()
     return HttpResponseRedirect(reverse('authorsIndex'))
+@login_required
 def update(request,id):
     author = Authors.objects.get(author_id = id)
     authorGender = Authors.objects.values('author_gender').filter(author_id=id)
@@ -57,6 +69,7 @@ def update(request,id):
         'x' : x
     }
     return HttpResponse(template.render(context,request))
+@login_required
 def updateProcess(request,id):
     authorName = request.POST['authorName']
     authorDoB = request.POST['authorDoB']

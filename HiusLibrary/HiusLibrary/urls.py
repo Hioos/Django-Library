@@ -17,12 +17,11 @@ from django.contrib import admin
 from django.urls import path, include
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('',include('apps.home.urls')),
-    path('administrator/',include('apps.administrator.urls')),
-    path('genre/',include('apps.genre.urls')),
-    path('authors/', include('apps.authors.urls')),
-    path('loan/',include('apps.loan.urls')),
-    path('user/',include('apps.users.urls')),
-    path('login/',include('apps.authentication.urls'))
+    path('adminControlPanel/', admin.site.urls),
+    path('admin/authenticate/', include('django.contrib.auth.urls')),
+    path('admin/authenticate/',include('apps.accounts.urls')),
+    path('admin/',include('apps.home.urls')),
+    path('admin/genre/',include('apps.genre.urls')),
+    path('admin/authors/', include('apps.authors.urls')),
+    path('admin/loan/',include('apps.loan.urls'))
 ]
