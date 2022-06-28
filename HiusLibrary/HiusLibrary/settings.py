@@ -13,9 +13,10 @@ import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 CORE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+LOGIN_URL = "/admin/authenticate/logIn"
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
@@ -26,10 +27,8 @@ SECRET_KEY = 'django-insecure-6+bavq+!-8od^m(=dy1+x2fr3wnkb^4=@ur=0nab&=5bvcs=f*
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
-
 # Application definition
-
+AUTH_USER_MODEL = "accounts.Account"
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -38,12 +37,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'apps.administrator',
     'apps.genre',
     'apps.authors',
     'apps.loan',
-    'apps.users',
-    'apps.authentication'
+    'apps.accounts',
 ]
 
 MIDDLEWARE = [

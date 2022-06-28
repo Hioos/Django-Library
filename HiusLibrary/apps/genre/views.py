@@ -7,9 +7,9 @@ import datetime
 from django.urls import reverse
 
 from .models import Genre, SubGenre, Themes
-from ..administrator.models import Administrator
+from django.contrib.auth.decorators import login_required
 
-
+@login_required
 def index(request):
     genres = Genre.objects.all()
     count = Genre.objects.count()
@@ -19,9 +19,11 @@ def index(request):
             'count': count,
     }
     return HttpResponse(template.render(context, request))
+@login_required
 def add(request):
     template = loader.get_template('genre/add.html')
     return HttpResponse(template.render({},request))
+@login_required
 def addNewGenre(request):
     genreName = request.POST['genreName']
     genreCode = request.POST['genreCode']
@@ -35,6 +37,7 @@ def addNewGenre(request):
                   genre_createdAt = genreCreatedAt)
     genre.save()
     return HttpResponseRedirect(reverse('genreIndex'))
+@login_required
 def update(request, id):
     genre = Genre.objects.get(id = id)
     template = loader.get_template('genre/update.html')
@@ -42,20 +45,20 @@ def update(request, id):
         'genre' : genre,
     }
     return HttpResponse(template.render(context,request))
+@login_required
 def updateGenreProcess(request,id):
     genreName = request.POST['genreName']
     genreCode = request.POST['genreCode']
     genreDesc = request.POST['genreDesc']
     genreUpdatedAt = datetime.datetime.now()
-    intModifiedUser = Administrator.objects.get(id=1)
     genre = Genre.objects.get(id=id)
     genre.genre_name = genreName
     genre.genre_code = genreCode
     genre.genre_description = genreDesc
     genre.genre_updatedAt = genreUpdatedAt
-    genre.genre_updatedBy = intModifiedUser
     genre.save()
     return HttpResponseRedirect(reverse('genreIndex'))
+@login_required
 def subGenre(request,id):
     subGenre = SubGenre.objects.filter(subgenre_ofGenre=id).prefetch_related('subgenre_ofGenre')
     genre = Genre.objects.get(id=id)
@@ -67,6 +70,7 @@ def subGenre(request,id):
             'subGenreCount': subGenreCount,
     }
     return HttpResponse(template.render(context, request))
+@login_required
 def subGenreAdd(request,id):
     template = loader.get_template('genre/subGenreAdd.html')
     genre = Genre.objects.get(id=id)
@@ -74,6 +78,7 @@ def subGenreAdd(request,id):
         'genre': genre
     }
     return HttpResponse(template.render(context,request))
+@login_required
 def addNewSubGenre(request,id):
     subGenreName = request.POST['subGenreName']
     subGenreCode = request.POST['subGenreCode']
@@ -91,6 +96,7 @@ def addNewSubGenre(request,id):
 
     subGenre.save()
     return HttpResponseRedirect(reverse('subgenre',args=[id]))
+@login_required
 def subGenreUpdate(request,id):
     subGenre = SubGenre.objects.get(id = id)
     template = loader.get_template('genre/subGenreUpdate.html')
@@ -98,6 +104,7 @@ def subGenreUpdate(request,id):
         'subGenre' : subGenre,
     }
     return HttpResponse(template.render(context,request))
+@login_required
 def updateSubGenreProcess(request,id):
     subGenreName = request.POST['subGenreName']
     subGenreCode = request.POST['subGenreCode']
@@ -114,6 +121,7 @@ def updateSubGenreProcess(request,id):
     subGenre.subgenre_updatedAt = subGenreUpdatedAt
     subGenre.save()
     return HttpResponseRedirect(reverse('subgenre',args=[field_value]))
+@login_required
 def themes(request):
     themes = Themes.objects.all()
     count = Themes.objects.count()
@@ -123,9 +131,11 @@ def themes(request):
             'count': count,
     }
     return HttpResponse(template.render(context, request))
+@login_required
 def themeAdd(request):
     template = loader.get_template('genre/themesAdd.html')
     return HttpResponse(template.render({},request))
+@login_required
 def addNewTheme(request):
     themeName = request.POST['themeName']
     themeDesc = request.POST['themeDesc']
@@ -138,6 +148,7 @@ def addNewTheme(request):
     )
     theme.save()
     return HttpResponseRedirect(reverse('themes'))
+@login_required
 def editTheme(request,id):
     theme = Themes.objects.get(theme_id=id)
     template = loader.get_template('genre/editTheme.html')
@@ -145,6 +156,7 @@ def editTheme(request,id):
         'theme' : theme
     }
     return HttpResponse(template.render(context,request))
+@login_required
 def updateTheme(request,id):
     themeName = request.POST['themeName']
     themeDesc = request.POST['themeDesc']
