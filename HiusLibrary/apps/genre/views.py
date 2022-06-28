@@ -9,6 +9,9 @@ from django.urls import reverse
 from .models import Genre, SubGenre, Themes
 from django.contrib.auth.decorators import login_required
 
+from ..accounts.models import Account
+
+
 @login_required
 def index(request):
     genres = Genre.objects.all()
@@ -30,11 +33,15 @@ def addNewGenre(request):
     genreDesc = request.POST['genreDesc']
     genreUpdatedAt = datetime.datetime.now()
     genreCreatedAt = datetime.datetime.now()
+    admin = Account.objects.get(id=request.session['id'])
     genre = Genre(genre_name = genreName,
                   genre_description = genreDesc,
                   genre_code = genreCode,
                   genre_updatedAt = genreUpdatedAt,
-                  genre_createdAt = genreCreatedAt)
+                  genre_createdAt = genreCreatedAt,
+                  genre_createdBy = admin,
+                  genre_updatedBy = admin
+                  )
     genre.save()
     return HttpResponseRedirect(reverse('genreIndex'))
 @login_required
@@ -51,11 +58,13 @@ def updateGenreProcess(request,id):
     genreCode = request.POST['genreCode']
     genreDesc = request.POST['genreDesc']
     genreUpdatedAt = datetime.datetime.now()
+    admin = Account.objects.get(id=request.session['id'])
     genre = Genre.objects.get(id=id)
     genre.genre_name = genreName
     genre.genre_code = genreCode
     genre.genre_description = genreDesc
     genre.genre_updatedAt = genreUpdatedAt
+    genre.genre_updatedBy = admin
     genre.save()
     return HttpResponseRedirect(reverse('genreIndex'))
 @login_required
@@ -85,13 +94,16 @@ def addNewSubGenre(request,id):
     subGenreDesc = request.POST['subGenreDesc']
     subGenreUpdatedAt = datetime.datetime.now()
     subGenreCreatedAt = datetime.datetime.now()
+    admin = Account.objects.get(id=request.session['id'])
     subGenre = SubGenre(
                   subgenre_name = subGenreName,
                   subgenre_description = subGenreDesc,
                   subgenre_code = subGenreCode,
                   subgenre_updatedAt = subGenreUpdatedAt,
                   subgenre_createdAt = subGenreCreatedAt,
-                  subgenre_ofGenre = Genre.objects.get(id=id)
+                  subgenre_ofGenre = Genre.objects.get(id=id),
+                    subgenre_createdBy = admin,
+                    subgenre_updatedBy = admin
                 )
 
     subGenre.save()
@@ -113,12 +125,14 @@ def updateSubGenreProcess(request,id):
     obj = SubGenre.objects.first()
     field_object = SubGenre._meta.get_field(field_name)
     field_value = field_object.value_from_object(obj)
+    admin = Account.objects.get(id=request.session['id'])
     subGenreUpdatedAt = datetime.datetime.now()
     subGenre = SubGenre.objects.get(id=id)
     subGenre.subgenre_name = subGenreName
     subGenre.subgenre_code = subGenreCode
     subGenre.subgenre_description = subGenreDesc
     subGenre.subgenre_updatedAt = subGenreUpdatedAt
+    subGenre.subgenre_updatedBy = admin
     subGenre.save()
     return HttpResponseRedirect(reverse('subgenre',args=[field_value]))
 @login_required
@@ -140,11 +154,14 @@ def addNewTheme(request):
     themeName = request.POST['themeName']
     themeDesc = request.POST['themeDesc']
     timeCreated = datetime.datetime.now()
+    admin = Account.objects.get(id=request.session['id'])
     theme = Themes(
         theme_name = themeName,
         theme_description = themeDesc,
         theme_createdAt = timeCreated,
-        theme_updatedAt = timeCreated
+        theme_updatedAt = timeCreated,
+        theme_createdBy = admin,
+        theme_updatedBy = admin
     )
     theme.save()
     return HttpResponseRedirect(reverse('themes'))
@@ -161,9 +178,11 @@ def updateTheme(request,id):
     themeName = request.POST['themeName']
     themeDesc = request.POST['themeDesc']
     themeUpdatedAt = datetime.datetime.now()
+    admin = Account.objects.get(id=request.session['id'])
     theme = Themes.objects.get(theme_id = id)
     theme.theme_name = themeName
     theme.theme_description = themeDesc
     theme.theme_updatedAt = themeUpdatedAt
+    theme.theme_updatedBy = admin
     theme.save()
     return HttpResponseRedirect(reverse('themes'))

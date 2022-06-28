@@ -7,7 +7,7 @@ from django.shortcuts import render
 from django.template import loader
 from django.urls import reverse
 
-from .models import Authors
+from .models import Authors, AuthorsRole
 from django.contrib.auth.decorators import login_required
 
 from ..accounts.models import Account
@@ -78,6 +78,7 @@ def updateProcess(request,id):
     authorBio = request.POST['authorBio']
     authorGender = request.POST['authorGender']
     authorUpdatedAt = datetime.datetime.now()
+    admin = Account.objects.get(id=request.session['id'])
     author = Authors.objects.get(author_id = id)
     author.author_name = authorName
     author.author_dateOfBirth = authorDoB
@@ -86,5 +87,20 @@ def updateProcess(request,id):
     author.author_nationalImgUrl = nationUrl
     author.author_gender = authorGender
     author.author_updatedAt = authorUpdatedAt
+    author.author_updatedBy = admin
     author.save()
     return HttpResponseRedirect(reverse('authorsIndex'))
+@login_required
+def authorRole(request):
+    authorsRole = AuthorsRole.objects.select_related()
+    template = loader.get_template('authors/author_roles.html')
+    def authorRoleCounter():
+        count = AuthorsRole.objects.all().count()
+        return count
+    x = authorRoleCounter()
+    context = {
+        'authorsRole' : authorsRole,
+        'x': x,
+    }
+    # str(authors.query)
+    return HttpResponse(template.render(context, request))

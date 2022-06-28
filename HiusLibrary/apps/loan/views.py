@@ -10,6 +10,9 @@ from django.urls import reverse
 from .models import loanStatus
 from django.contrib.auth.decorators import login_required
 
+from ..accounts.models import Account
+
+
 @login_required
 def index(request):
     loans = loanStatus.objects.all()
@@ -22,9 +25,11 @@ def index(request):
 def add(request):
     statusName = request.POST['statusName']
     loanCreatedAt = datetime.datetime.now()
-
+    admin = Account.objects.get(id=request.session['id'])
     loan = loanStatus(loanStatus_name = statusName,
                       loanStatus_createdAt = loanCreatedAt,
-                      loanStatus_updatedAt = loanCreatedAt,)
+                      loanStatus_updatedAt = loanCreatedAt,
+                      loanStatus_createdBy = admin,
+                      loanStatus_updatedBy = admin)
     loan.save()
     return HttpResponseRedirect(reverse('loanIndex'))

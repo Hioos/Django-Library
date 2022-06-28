@@ -139,8 +139,8 @@
                                            <td>{{genre.genre_description}}</td>
                                            <td>{{genre.genre_createdAt}}</td>
                                            <td>{{genre.genre_updatedAt}}</td>
-                                            <td>{{genre.genre_createdBy.administrator_name}}</td>
-                                            <td>{{genre.genre_updatedBy.administrator_name}}</td>
+                                            <td>{{genre.genre_createdBy.name}}</td>
+                                            <td>{{genre.genre_updatedBy.name}}</td>
                                            <td  style="text-align: center"><a class="btn btn-success btn-circle btn-sm" href="{% url  'subgenre' genre.id  %}"><i class="fas fa-flag"></i></a></td>
                                            <td  style="text-align: center"><a class="btn btn-warning btn-circle btn-sm" href="{% url 'genreUpdate' genre.id %}"><i class="fas fa-pen-fancy"></i></a></td>
                                         </tr>

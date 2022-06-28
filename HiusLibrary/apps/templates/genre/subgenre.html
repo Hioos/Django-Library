@@ -137,8 +137,8 @@
                                            <td>{{sub.subgenre_description}}</td>
                                            <td>{{sub.subgenre_createdAt}}</td>
                                            <td>{{sub.subgenre_updatedAt}}</td>
-                                            <td>{{sub.subgenre_createdBy.administrator_name}}</td>
-                                            <td>{{sub.subgenre_updatedBy.administrator_name}}</td>
+                                            <td>{{sub.subgenre_createdBy.name}}</td>
+                                            <td>{{sub.subgenre_updatedBy.name}}</td>
                                            <td  style="text-align: center"><a class="btn btn-warning btn-circle btn-sm" href="{% url 'subGenreUpdate' sub.id %}"><i class="fas fa-edit"></i></a></td>
                                         </tr>
                                     {% endfor %}

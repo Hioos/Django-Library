@@ -32,6 +32,7 @@ AUTH_USER_MODEL = "accounts.Account"
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
+    'django_countries',
     'django.contrib.contenttypes',
     'django_extensions',
     'django.contrib.sessions',
@@ -41,6 +42,8 @@ INSTALLED_APPS = [
     'apps.authors',
     'apps.loan',
     'apps.accounts',
+    'apps.publisher',
+    'apps.book'
 ]
 
 MIDDLEWARE = [

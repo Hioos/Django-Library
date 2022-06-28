@@ -24,3 +24,21 @@ class Authors(models.Model):
         on_delete=models.CASCADE,
         related_name='author_updatedBy'
     )
+class AuthorsRole(models.Model):
+    authorRole_id = models.IntegerField(auto_created=True,primary_key=True, serialize=False, verbose_name='ID')
+    authorRole_name = models.CharField(max_length=50,unique=True)
+    authorRole_createdAt = models.DateTimeField()
+    authorRole_updatedAt = models.DateTimeField()
+    authorRole_createdBy = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='authorRole_createdBy'
+    )
+    authorRole_updatedBy = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='authorRole_updatedBy'
+    )
+
+
+

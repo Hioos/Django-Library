@@ -23,5 +23,7 @@ urlpatterns = [
     path('admin/',include('apps.home.urls')),
     path('admin/genre/',include('apps.genre.urls')),
     path('admin/authors/', include('apps.authors.urls')),
-    path('admin/loan/',include('apps.loan.urls'))
+    path('admin/loan/',include('apps.loan.urls')),
+    path('admin/publisher/',include('apps.publisher.urls')),
+    path('admin/book/',include('apps.book.urls'))
 ]

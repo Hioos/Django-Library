@@ -118,8 +118,8 @@
                                         <td>{{theme.theme_description}}</td>
                                         <td>{{theme.theme_createdAt}}</td>
                                         <td>{{theme.theme_updatedAt}}</td>
-                                        <td>{{theme.theme_createdBy.administrator_name}}</td>
-                                        <td>{{theme.theme_updatedBy.administrator_name}}</td>
+                                        <td>{{theme.theme_createdBy.name}}</td>
+                                        <td>{{theme.theme_updatedBy.name}}</td>
                                         <td style="text-align: center;"><a class="btn btn-info btn-circle btn-sm"><i class="fas fa-book"></i></a>
                                         <a class="btn btn-warning btn-circle btn-sm" href="{% url 'editTheme' theme.theme_id %}"><i class="fas fa-marker"></i></a></td>
                                     </tr>
