@@ -10,3 +10,15 @@ function openForm() {
 function closeForm() {
   document.getElementById("myForm").style.display = "none";
 }
+$(document).ready(function() {
+    var table = $('#exampleTable').DataTable( {
+        scrollY:        "300px",
+        scrollX:        true,
+        scrollCollapse: true,
+        paging:         false,
+        fixedColumns:   {
+            left: 1,
+            right: 1
+        }
+    } );
+} );

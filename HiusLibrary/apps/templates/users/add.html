@@ -11,33 +11,33 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Add A New Member!</h1>
                             </div>
-                            <form class="user" name="registration-form" id="registration-form" action="{% url 'userAddNew'%}" method="post">
+                            <form class="user" name="registration-form" id="registration-form" action="{% url 'addUser'%}" method="post">
                                 {% csrf_token %}
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input type="text" class="form-control form-control-user" id="userName"
-                                            placeholder="User's Fullname" name="userName">
+                                            placeholder="User's Fullname" name="name">
                                     </div>
                                     <div class="col-sm-6">
                                         <input type="email" class="form-control form-control-user" id="adminUserName"
-                                            placeholder="User's Email" name="userEmail">
+                                            placeholder="User's Email" name="email">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                 <div class="col-sm-12 mb-3 mb-sm-0">
                                     <input type="text" class="form-control form-control-user" id="adminEmail"
-                                        placeholder="User's Address" name="userAddress">
+                                        placeholder="User's Address" name="address">
                                 </div>
 
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-7 mb-3 mb-sm-0">
                                         <input type="text" class="form-control form-control-user"
-                                            id="userNationalId" placeholder="National ID" name="userNationalId">
+                                            id="userNationalId" placeholder="National ID" name="national_id">
                                     </div>
                                     <div class="col-sm-5 mb-3 mb-sm-0">
                                         <input type="text" class="form-control form-control-user"
-                                            id="userPhone" placeholder="Phone Number" name="userPhone">
+                                            id="userPhone" placeholder="Phone Number" name="phone_number">
                                     </div>
 
                                 </div>
@@ -45,12 +45,12 @@
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <label for="userDoB">Date Of Birth</label>
                                     <input type="date" class="form-control form-control-user"
-                                        id="userDoB" placeholder="Date Of Birth" name="userDoB">
+                                        id="userDoB" placeholder="Date Of Birth" name="birth_date">
                                 </div>
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <label for="userEnd">Membership Expired Date</label>
                                     <input type="date" class="form-control form-control-user"
-                                        id="userEnd" placeholder="Date Of Birth" name="userEnd">
+                                        id="userEnd" placeholder="Date Of Birth" name="expired_date">
                                 </div>
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-user btn-block">

@@ -62,3 +62,8 @@ h4 {
 .modal-dialog{
   top:30%;
 }
+    th, td { white-space: nowrap; }
+    div.dataTables_wrapper {
+        width: 800px;
+        margin: 0 auto;
+    }

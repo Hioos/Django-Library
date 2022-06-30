@@ -1,16 +1,27 @@
+import datetime
+
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.db import models
 
 # Create your models here.
 class MyAccountManager(BaseUserManager):
-    def create_user(self,email, username,password=None):
+    def create_user(self,email, username,name,date_joined,phone_number,address,birth_date,expired_date,national_id,created_by,password=None):
         if not email:
             raise ValueError("User must have an Email")
         if not username:
             raise ValueError("User must have User Name")
         user = self.model(
-                        email= email,
-                          username=username,
+                        email=email,
+                        username=username,
+                        password=password,
+                        name=name,
+                        date_joined=date_joined,
+                        phone_number=phone_number,
+                        address=address,
+                        birth_date=birth_date,
+                        expired_date=expired_date,
+                        national_id=national_id,
+                        created_by=Account(pk=created_by)
                           )
         user.set_password(password)
         user.save(using=self._db)
@@ -35,12 +46,17 @@ class Account (AbstractBaseUser):
     username                    =models.CharField(max_length=30,unique=True)
     name                            =models.CharField(max_length=30)
     date_joined                 =models.DateTimeField(verbose_name="date joined",auto_now_add=True)
+    phone_number            = models.CharField(max_length=10, unique=True)
+    address                         = models.CharField(max_length=50)
     last_login                      =models.DateTimeField(verbose_name="last login",auto_now=True)
+    birth_date                      =models.DateField(default=datetime.date.today)
+    expired_date                = models.DateField(default=datetime.date.today)
     national_id                     =models.CharField(max_length=12,unique=True)
     is_admin                       =models.BooleanField(default=False)
     is_active                         = models.BooleanField(default=True)
     is_staff                            =models.BooleanField(default=False)
     is_superuser                     =models.BooleanField(default=False)
+    created_by                      =models.ForeignKey('self',blank=True,null=True,on_delete=models.CASCADE,related_name="user_created_by")
     profile_image                   =models.ImageField(max_length=255,upload_to=get_profile_image_filepath,null=True,blank=True,default=get_default_profile_image)
     objects=MyAccountManager()
     USERNAME_FIELD = 'username'

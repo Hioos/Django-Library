@@ -21,7 +21,6 @@
                                 <table  class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Id</th>
                                             <th>Status</th>
                                             <th>Created At</th>
                                             <th>Updated At</th>
@@ -33,7 +32,6 @@
                                     </thead>
                                     <tfoot>
                                         <tr>
-                                            <th>Id</th>
                                             <th>Status</th>
                                             <th>Created At</th>
                                             <th>Updated At</th>
@@ -46,7 +44,6 @@
                                     <tbody>
                                     {% for loan in loans %}
                                         <tr>
-                                           <td>{{loan.loanStatus_id}}</td>
                                            <td>{{loan.loanStatus_name}}</td>
                                            <td>{{loan.loanStatus_createdAt}}</td>
                                            <td>{{loan.loanStatus_updatedAt}}</td>

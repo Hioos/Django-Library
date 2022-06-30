@@ -104,3 +104,17 @@ def authorRole(request):
     }
     # str(authors.query)
     return HttpResponse(template.render(context, request))
+@login_required
+def addNewAuthor(request):
+    authorRoleName = request.POST['authorRoleName']
+    authorRoleCreatedAt = datetime.datetime.now()
+    authorRoleUpdatedAt = datetime.datetime.now()
+    authorRoleCreatedBy =  request.session['id']
+    admin = Account.objects.get(id = authorRoleCreatedBy)
+    authorRole = AuthorsRole(authorRole_name = authorRoleName,
+                     authorRole_createdAt = authorRoleCreatedAt,
+                     authorRole_updatedAt = authorRoleUpdatedAt,
+                     authorRole_createdBy = admin,
+                     authorRole_updatedBy = admin)
+    authorRole.save()
+    return HttpResponseRedirect(reverse('authorRole'))

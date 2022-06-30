@@ -23,7 +23,7 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 Number of Member</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{count}}</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{x}}</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-users fa-2x text-gray-300"></i>
@@ -41,7 +41,7 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                 Online</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ x }} {{ z }}</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-lightbulb fa-2x text-gray-300"></i>
@@ -104,21 +104,26 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table  class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                <table  class="table table-bordered " id="dataTable" width="100%" cellspacing="0" style=" margin: 0 auto;
+  width: 100%;
+  clear: both;
+  border-collapse: collapse;
+  table-layout: fixed;
+  word-wrap:break-word;
+    ">
                                     <thead >
-                                        <tr>
-                                            <th style="width: 500px;">Name</th>
-                                            <th>Address</th>
+                                        <tr >
+                                            <th style="width: 200px;">Name</th>
+                                            <th  style="width: 300px;">Address</th>
                                             <th>Email</th>
                                             <th>Phone Number</th>
                                             <th>National ID</th>
                                             <th style="text-align: center;"><i class="fas fa-key" style="color: #ecff3c"></i></th>
-                                            <th>Membership Start</th>
-                                            <th>Membership End</th>
-                                            <th>Created At</th>
-                                            <th>Updated At</th>
+                                            <th style="width: 170px;">Membership Start</th>
+                                            <th style="width: 170px;">Membership End</th>
+                                            <th style="width: 170px;">Joined At</th>
+                                            <th style="width: 170px;">Last Login</th>
                                             <th>Created By</th>
-                                            <th>Updated By</th>
                                             <th  style="text-align: center">Borrowing</th>
                                             <th  style="text-align: center">Block Member</th>
                                             <th  style="text-align: center">Extend Membership</th>
@@ -126,41 +131,39 @@
                                     </thead>
                                     <tfoot>
                                         <tr>
-                                            <th style="width: 500px;">Name</th>
-                                            <th>Address</th>
+                                            <th style="width: 200px;">Name</th>
+                                            <th  style="width: 300px;">Address</th>
                                             <th>Email</th>
                                             <th>Phone Number</th>
                                             <th>National ID</th>
                                             <th style="text-align: center;"><i class="fas fa-key" style="color: #ecff3c"></i></th>
-                                            <th>Membership Start</th>
-                                            <th>Membership End</th>
-                                            <th>Created At</th>
-                                            <th>Updated At</th>
+                                            <th style="width: 170px;">Membership Start</th>
+                                            <th style="width: 170px;">Membership End</th>
+                                            <th style="width: 170px;">Joined At</th>
+                                            <th style="width: 170px;">Last Login</th>
                                             <th>Created By</th>
-                                            <th>Updated By</th>
                                             <th  style="text-align: center">Borrowing</th>
                                             <th  style="text-align: center">Block Member</th>
                                             <th  style="text-align: center">Extend Membership</th>
                                         </tr>
                                     </tfoot>
-                                    <tbody>
-                                    {% for user in users %}
-                                        <tr>
-                                            <td style="width: 500px;"><b><i><u>{{user.user_name}}</u></i></b></td>
-                                           <td>{{user.user_address}}</td>
-                                           <td>{{user.user_email}}</td>
-                                           <td>{{user.user_phoneNumber}}</td>
-                                            <td>{{user.user_nationalIdentificationNumber}}</td>
-                                           <td>{{user.user_userName}}</td>
-                                            <td>{{user.user_membershipStart}}</td>
-                                            <td><b><i>{{user.user_membershipEnd}}</i></b></td>
-                                            <td>{{user.user_createdAt}}</td>
-                                            <td>{{user.user_updatedAt}}</td>
-                                            <td>{{user.user_createdBy.administrator_name}}</td>
-                                            <td>{{user.user_updatedBy.administrator_name}}</td>
-                                           <td  style="text-align: center"><a class="btn btn-success btn-circle btn-sm" href=""><i class="fas fa-flag"></i></a></td>
-                                           <td  style="text-align: center">{% if user.user_permission %}<a class="btn btn-danger btn-circle btn-sm" href="{% url 'block' user.user_id %}"><i class="fas fa-lock"></i></a></td>{% else %}<a class="btn btn-success btn-circle btn-sm" href="{% url 'block' user.user_id %}"><i class="fas fa-unlock"></i>{% endif %}</a></td>
-                                            <td  style="text-align: center"><a class="btn btn-info btn-circle btn-sm" href="{% url 'extend' user.user_id %}"><i class="fas fa-plus"></i></a></td>
+                                    <tbody >
+                                    {% for account in accounts %}
+                                        <tr >
+                                            <td class="align-middle" style="width: 200px;"><b><i>{{account.name}}</i></b></td>
+                                           <td class="align-middle"  style="width: 300px;">{{account.address}}</td>
+                                           <td class="align-middle">{{ account.email }}</td>
+                                           <td class="align-middle">{{account.phone_number}}</td>
+                                            <td class="align-middle">{{account.national_id}}</td>
+                                            <td class="align-middle">{{ account.username }}</td>
+                                            <td class="align-middle">{{account.date_joined}}</td>
+                                            <td class="align-middle"><b><i style="color: 	#ff3131;">{{ account.expired_date }}</i></b> <hr> {{ account.expired_date|timeuntil }}</td>
+                                            <td class="align-middle">{{account.date_joined}}</td>
+                                            <td class="align-middle">{{account.last_login}}</td>
+                                            <td class="align-middle">{{ account.created_by }}</td>
+                                           <td  class="align-middle" style="text-align: center"><a class="btn btn-success btn-circle btn-sm" href=""><i class="fas fa-flag"></i></a></td>
+                                           <td class="align-middle" style="text-align: center">{% if user.user_permission %}<a class="btn btn-danger btn-circle btn-sm" href="#"><i class="fas fa-lock"></i></a></td>{% else %}<a class="btn btn-success btn-circle btn-sm" href="#"><i class="fas fa-unlock"></i>{% endif %}</a></td>
+                                            <td class="align-middle" style="text-align: center"><a class="btn btn-info btn-circle btn-sm" href="#"><i class="fas fa-plus"></i></a></td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
