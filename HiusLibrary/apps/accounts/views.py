@@ -4,6 +4,7 @@ import string
 
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
+from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect, request
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login,logout
@@ -26,7 +27,7 @@ def login_user(request):
             current_user = request.user
             request.session['name'] = current_user.name
             request.session['id'] = current_user.id
-            messages.success(request, request.session['name'])
+            messages.success(request, 'Hello ' + request.session['name'] + ', Welcome Back !!!')
             return  redirect('index')
         else:
             messages.success(request,('Wrong Username Or Password !!!'))
@@ -101,4 +102,34 @@ def addUser(request):
     send_mail(subject, message, email_from, recipient_list)
     messages.success(request, "The user is successfully registered !!!")
     return HttpResponseRedirect(reverse('userIndex'))
-
+@login_required
+def adminIndex(request):
+    accounts = Account.objects.filter(is_staff = True)
+    template = loader.get_template('administrator/index.html')
+    def accountCounter():
+        count = Account.objects.filter(is_staff = True).count()
+        return count
+    x = accountCounter()
+    context = {
+        'accounts' : accounts,
+        'x': x,
+    }
+    # str(authors.query)
+    return HttpResponse(template.render(context, request))
+@login_required
+def updateProfile(request):
+    user = Account.objects.get(id=request.session['id'])
+    template = loader.get_template('administrator/update_profile.html')
+    context = {
+        'user' : user
+    }
+    # str(authors.query)
+    return HttpResponse(template.render(context, request))
+@login_required
+def info(request,id):
+    user = Account.objects.filter(Q(is_staff= True) | Q(is_admin = True ) | Q(is_superuser = True)).get(id=id)
+    template = loader.get_template('administrator/info.html')
+    context = {
+            'user' : user,
+    }
+    return HttpResponse(template.render(context, request))

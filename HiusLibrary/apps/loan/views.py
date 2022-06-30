@@ -1,5 +1,6 @@
 import datetime
 
+from django.contrib import messages
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
@@ -32,4 +33,5 @@ def add(request):
                       loanStatus_createdBy = admin,
                       loanStatus_updatedBy = admin)
     loan.save()
+    messages.success(request,statusName + ' added successfully !!!')
     return HttpResponseRedirect(reverse('loanIndex'))

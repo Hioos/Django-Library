@@ -5,7 +5,7 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Administrator
-                                    <a href="{% url 'adminAdd' %}" class="btn btn-success btn-icon-split btn-sm">
+                                    <a href="#" class="btn btn-success btn-icon-split btn-sm">
                                         <span class="icon text-white-50">
                                             <i class="fas fa-plus"></i>
                                         </span>
@@ -23,7 +23,7 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 Number of Administrators</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">14</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ x }}</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-user-tie fa-2x text-gray-300"></i>
@@ -106,58 +106,52 @@
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table  class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                                    <thead >
+                                    <thead>
                                         <tr>
-                                            <th>Fullname</th>
-                                            <th>Username</th>
+                                            <th style="width: 170px;">Fullname</th>
                                             <th>Email</th>
                                             <th>DoB</th>
-                                            <th>Role</th>
-                                            <th>National ID</th>
                                             <th>Status</th>
-                                            <th>Created At</th>
-                                            <th>Updated At</th>
+                                            <th>Joined At</th>
+                                            <th>Added By</th>
                                             <th>Last Login</th>
                                             <th  style="text-align: center">Lock</th>
                                             <th  style="text-align: center">Promote/ Demote</th>
+                                            <th style="text-align: center">Info</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
-                                            <th>Fullname</th>
-                                            <th>Username</th>
+                                            <th style="width: 170px;">Fullname</th>
                                             <th>Email</th>
                                             <th>DoB</th>
-                                            <th>Role</th>
-                                            <th>National ID</th>
                                             <th>Status</th>
-                                            <th>Created At</th>
-                                            <th>Updated At</th>
-                                            <th>Last Login</th>
+                                            <th>Joined At</th>
+                                            <th>Added By</th>
+                                            <th>Last  Login</th>
                                             <th  style="text-align: center">Lock</th>
                                             <th  style="text-align: center">Promote/ Demote</th>
+                                            <th style="text-align: center">Info</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
-                                    {% for admin in administratorMembers %}
+                                    {% for account in accounts %}
                                         <tr>
-                                           <td>{{admin.administrator_name}}</td>
-                                           <td>{{admin.administrator_username}}</td>
-                                           <td>{{admin.administrator_email}}</td>
-                                           <td>{{admin.administrator_dateOfBirth}}</td>
-                                           <td>{{admin.administrator_role}}</td>
-                                           <td>{{admin.administrator_nationalIdentificationNumber}}</td>
-                                           <td style="text-align: center">{% if admin.administrator_status %}
+                                           <td>{{account.name}}</td>
+                                           <td>{{account.email}}</td>
+                                           <td>{{account.birth_date}}</td>
+                                           <td style="text-align: center">{% if account.is_active %}
                                                <i class= "fas fa-circle" style="color:#1cc88a;"></i>
                                                {% else %}
                                                <i class= "fas fa-circle"></i>
                                                {% endif %}
                                            </td>
-                                           <td>{{admin.administrator_createdAt}}</td>
-                                           <td>{{admin.administrator_updatedAt}}</td>
-                                           <td>{{admin.administrator_lastLogin}}</td>
+                                           <td>{{account.date_joined}}</td>
+                                           <td>{{account.created_by}}</td>
+                                           <td>{{account.last_login}}</td>
                                            <td  style="text-align: center"><a class="btn btn-danger btn-circle btn-sm" href=""><i class="fas fa-lock"></i></a></td>
-                                           <td  style="text-align: center"><a class="btn btn-info btn-circle btn-sm" href="{% url 'adminChangeRole' admin.id %}"><i class="fas fa-highlighter"></i></a></td>
+                                           <td  style="text-align: center"><a class="btn btn-info btn-circle btn-sm" href="#"><i class="fas fa-highlighter"></i></a></td>
+                                            <td  style="text-align: center"><a class="btn btn-info btn-circle btn-sm" href="{% url 'adminInfo' account.id %}"><i class="fas fa-id-card-alt"></i></a></td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>

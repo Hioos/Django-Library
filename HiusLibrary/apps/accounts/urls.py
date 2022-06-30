@@ -6,5 +6,8 @@ urlpatterns = [
     path('logOut',views.logout_user,name="LogOutAdmin"),
     path('account/user',views.userIndex,name="userIndex"),
     path('account/user/add',views.add,name="userAdd"),
-    path('account/user/adding',views.addUser,name="addUser")
+    path('account/user/adding',views.addUser,name="addUser"),
+    path('account/admin/',views.adminIndex,name="adminIndex"),
+    path('profile_update',views.updateProfile,name="updateProfile"),
+    path('info/<int:id>',views.info,name="adminInfo")
     ]

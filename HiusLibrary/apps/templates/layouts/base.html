@@ -35,6 +35,16 @@
 
 <body id="page-top">
 
+                                    {% if messages %}
+                                        {% for message in messages %}
+                                                <div class="alert alert-success alert-dismissible fade show fixed-top" role="alert" style="width: 50%;left: 25%;">
+                                                  <strong>{{  message }}</strong>
+                                                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                  </button>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
     <!-- Page Wrapper -->
     <div id="wrapper">
 
@@ -111,7 +121,7 @@
             </div>
 
             <li class="nav-item">
-                <a class="nav-link" href="#">
+                <a class="nav-link" href="{% url 'adminIndex' %}">
                     <i class="fas fa-fw fa-user-secret"></i>
                     <span>Admin Member</span></a>
             </li>
@@ -146,18 +156,6 @@
                     </button>
 
                     <!-- Topbar Search -->
-                    <form
-                        class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-                        <div class="input-group">
-                            <input type="text" class="form-control bg-light border-0 small" placeholder="Search for..."
-                                aria-label="Search" aria-describedby="basic-addon2">
-                            <div class="input-group-append">
-                                <button class="btn btn-primary" type="button">
-                                    <i class="fas fa-search fa-sm"></i>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
 
                     <!-- Topbar Navbar -->
                     <ul class="navbar-nav ml-auto">
@@ -316,7 +314,7 @@
                             <!-- Dropdown - User Information -->
                             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
                                 aria-labelledby="userDropdown">
-                                <a class="dropdown-item" href="#">
+                                <a class="dropdown-item" href="{% url 'updateProfile' %}">
                                     <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
                                     Profile
                                 </a>
