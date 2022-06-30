@@ -99,5 +99,6 @@ def addUser(request):
     email_from = settings.EMAIL_HOST_USER
     recipient_list = [email, ]
     send_mail(subject, message, email_from, recipient_list)
+    messages.success(request, "The user is successfully registered !!!")
     return HttpResponseRedirect(reverse('userIndex'))
 
