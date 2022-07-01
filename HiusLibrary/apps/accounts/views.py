@@ -4,7 +4,7 @@ import string
 
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
-from django.db.models import Q
+from django.db.models import Q, Prefetch
 from django.http import HttpResponse, HttpResponseRedirect, request
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login,logout
@@ -129,7 +129,9 @@ def updateProfile(request):
 def info(request,id):
     user = Account.objects.filter(Q(is_staff= True) | Q(is_admin = True ) | Q(is_superuser = True)).get(id=id)
     template = loader.get_template('administrator/info.html')
+    createdBy = Account.objects.filter(created_by = id).prefetch_related(Prefetch('user_created_by', Account.objects.filter(created_by=id))).order_by('date_joined')[:10][::-1]
     context = {
             'user' : user,
+            'createdBy': createdBy
     }
     return HttpResponse(template.render(context, request))
