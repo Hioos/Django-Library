@@ -62,6 +62,7 @@ class Account (AbstractBaseUser):
     instagram                            = models.CharField(max_length=255, blank=True, null=True)
     facebook                            = models.CharField(max_length=255, blank=True, null=True)
     created_by                      =models.ForeignKey('self',blank=True,null=True,on_delete=models.CASCADE,related_name="user_created_by")
+    banned_by                       =models.ForeignKey('self',blank=True,null=True,on_delete=models.CASCADE,related_name="user_banned_by")
     profile_image                   =models.ImageField(max_length=255,upload_to=get_profile_image_filepath,null=True,blank=True,default=get_default_profile_image)
     objects=MyAccountManager()
     USERNAME_FIELD = 'username'

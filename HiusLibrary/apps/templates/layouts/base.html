@@ -405,8 +405,53 @@
     <!-- Page level custom scripts -->
     <script src="{% static 'js/demo/chart-area-demo.js' %}"></script>
     <script src="{% static 'js/demo/chart-pie-demo.js' %}"></script>
-    <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+                                    <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
+<script>
+
+$('.banbutton').click(function(e){
+        e.preventDefault();
+            var catid;
+            catid = $(this).attr("ban-data");
+            var NAME = document.getElementById("ban"+catid)
+            var isBanned = $(this).attr("is-banned");
+        $.ajax(
+            {
+                type:"GET",
+                url: "{% url 'banUser' %}",
+
+                data:{
+                    catid : catid,
+                },
+                success: function( data ) {
+
+                }
+             });
+
+})
+</script>
+<script>
+    $(document).ready(function(){
+      $(".banbutton").click(function(){
+          var catid;
+          catid = $(this).attr("ban-data");
+          var isBanned = $(this).attr("is-banned");
+            if(isBanned === 'FALSE') {
+                $("#ban" + catid).removeClass('btn-warning').addClass('btn-danger').html("<i class='fas fa-lock'></i>");
+                $("#ban"+catid).attr("is-banned","TRUE");
+                $('#extend' + catid).hide();
+                            }
+            else if(isBanned === 'TRUE' ) {
+                $("#ban" + catid).removeClass('btn-danger').addClass('btn-warning').html("<i class='fas fa-unlock'></i>");
+                $("#ban"+catid).attr("is-banned","FALSE");
+                $('#extend' + catid).show();
+            }
+      });
+    });
+</script>
 </body>
 
 </html>

@@ -1,7 +1,7 @@
 import datetime
 import random
 import string
-
+from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
 from django.db.models import Q, Prefetch
@@ -46,9 +46,11 @@ def userIndex(request):
     def accountCounter():
         count = Account.objects.filter(is_admin = False, is_staff= False, is_superuser=False).count()
         return count
+    currentlyOnline = Account.objects.filter(is_active=True).count()
     x = accountCounter()
     context = {
         'accounts' : accounts,
+        'currentlyOnline': currentlyOnline,
         'x': x,
     }
     # str(authors.query)
@@ -129,9 +131,34 @@ def updateProfile(request):
 def info(request,id):
     user = Account.objects.filter(Q(is_staff= True) | Q(is_admin = True ) | Q(is_superuser = True)).get(id=id)
     template = loader.get_template('administrator/info.html')
-    createdBy = Account.objects.filter(created_by = id).prefetch_related(Prefetch('user_created_by', Account.objects.filter(created_by=id))).order_by('date_joined')[:10][::-1]
+    createdBy = Account.objects.filter(created_by = id).prefetch_related(Prefetch('user_created_by', Account.objects.filter(created_by=id))).order_by('date_joined')[:5][::-1]
+    counter = Account.objects.filter(created_by=id).prefetch_related(
+        Prefetch('user_created_by', Account.objects.filter(created_by=id))).count()
+    a =request.session['id']
     context = {
             'user' : user,
+            'a' : a,
+            'counter': counter,
             'createdBy': createdBy
     }
     return HttpResponse(template.render(context, request))
+@login_required
+def extendMembership(request,id):
+    user = Account.objects.get(id = id)
+    user.expired_date = user.expired_date + datetime.timedelta ( seconds=1*31*24*60*60 )
+    user.save()
+    return HttpResponseRedirect(reverse('userIndex'))
+@login_required
+def banUser(request):
+    data = request.GET['catid']
+    admin = Account.objects.get(id=request.session['id'])
+    user =Account.objects.get(id = data)
+    if user.is_banned is True:
+        user.is_banned = False
+    elif user.is_banned is False:
+        user.is_banned = True
+        user.expired_date= datetime.datetime.today()
+        user.banned_by = admin
+    user.save()
+    return HttpResponseRedirect(reverse('userIndex'))
+

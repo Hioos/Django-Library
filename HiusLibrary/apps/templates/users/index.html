@@ -51,7 +51,7 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                 Online</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ currentlyOnline }}</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-lightbulb fa-2x text-gray-300"></i>
@@ -129,8 +129,10 @@
                                             <th style="width: 170px;">Membership Start</th>
                                             <th style="width: 170px;">Membership End</th>
                                             <th>Created By</th>
-                                            <th  style="text-align: center">Actions</th>
-
+                                            <th  style="text-align: center">Books</th>
+                                            <th  style="text-align: center">Ban/Unban</th>
+                                            <th  style="text-align: center">Extend</th>
+                                            <th  style="text-align: center">Lib. Card</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
@@ -141,7 +143,10 @@
                                             <th style="width: 170px;">Membership Start</th>
                                             <th style="width: 170px;">Membership End</th>
                                             <th>Created By</th>
-                                            <th  style="text-align: center">Actions</th>
+                                            <th  style="text-align: center">Books</th>
+                                            <th  style="text-align: center">Ban/Unban</th>
+                                            <th  style="text-align: center">Extend</th>
+                                            <th  style="text-align: center">Lib. Card</th>
                                         </tr>
                                     </tfoot>
                                     <tbody >
@@ -153,11 +158,14 @@
                                             <td class="align-middle">{{account.date_joined}}</td>
                                             <td class="align-middle"><b><i style="color: 	#ff3131;">{{ account.expired_date }}</i></b> <hr> {{ account.expired_date|timeuntil }}</td>
                                             <td class="align-middle">{{ account.created_by }}</td>
-                                           <td  class="align-middle" style="text-align: center"><a class="btn btn-success btn-circle btn-sm" href=""><i class="fas fa-flag"></i></a>
-                                           {% if user.user_permission %}<a class="btn btn-danger btn-circle btn-sm" href="#"><i class="fas fa-lock"></i></a></td>{% else %}<a class="btn btn-success btn-circle btn-sm" href="#"><i class="fas fa-unlock"></i>{% endif %}</a>
-                                        <br>
-                                            <a class="btn btn-info btn-circle btn-sm" href="#"><i class="fas fa-plus"></i></a>
-                                        <button type="button" class="btn btn-outline-primary btn-circle btn-sm" data-toggle="modal" data-target="#reqModal-{{ account.id }}"><i class="fas fa-eye"></i></button></td>
+                                            <td  class="align-middle" style="text-align: center"><a class="btn btn-success btn-circle btn-sm" href=""><i class="fas fa-flag"></i></a></td>
+                                           <td  class="align-middle" style="text-align: center">{% if account.is_banned %}
+                                               <a class="banbutton btn btn-danger btn-circle btn-sm"  id="ban{{ account.id }}" ban-data="{{ account.id }}" is-banned="TRUE"><i class="fas fa-lock"></i></a>
+                                           {% else %}
+                                               <a class="banbutton btn btn-warning btn-circle btn-sm" id="ban{{ account.id }}" ban-data="{{ account.id }}" is-banned="FALSE"><i class="fas fa-unlock"></i></a>
+                                           {% endif %}</td>
+                                          <td  class="align-middle" style="text-align: center"><a class="btn btn-info btn-circle btn-sm" id="extend{{ account.id }}" href="{% url 'extendMembership'  account.id  %}" {% if account.is_banned is True %}style="display: none;" {% endif %}><i class="fas fa-plus"></i></a></td>
+                                        <td  class="align-middle" style="text-align: center"><button type="button" class="btn btn-outline-primary btn-circle btn-sm" data-toggle="modal" data-target="#reqModal-{{ account.id }}"><i class="fas fa-eye"></i></button></td>
                                         </tr>
                                                                         <!-- Modal -->
                                 <div class="modal fade bd-example-modal-lg" id="reqModal-{{ account.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -176,26 +184,30 @@
                                                                                   <div class="card-body text-center">
                                                                                     <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
                                                                                       class="rounded-circle img-fluid" style="width: 150px;">
-                                                                                    <h5 class="my-3">{{ account.name }} {% if account.is_banned is True %} <i class="fas fa-ban" style="color:#ff2300;"></i> {%  endif %}</h5>
+                                                                                    <h5 class="my-3">{{ account.name }} {% if account.is_banned is True %} <i class="fas fa-ban" style="color:#ff2300;"></i>  {%  endif %}</h5>
                                                                                     <p class="text-muted mb-1 text-left"><i class="fas fa-key" style="color: #fff300;"></i> {{ account.username }} </p>
                                                                                     <p class="text-muted mb-1 text-left"><i class="fas fa-calendar-check" style="color: #00ffb2;"></i> {{ account.date_joined }}</p>
                                                                                     <p class="text-muted mb-1 text-left"><i class="fas fa-calendar-times" style="color: #ff2929;"></i> {{ account.expired_date }}</p>
                                                                                     <div class="d-flex justify-content-center mb-2">
                                                                                         <div class="row">
-                                                                                            <div class="col-6">
+                                                                                            <div class="col-4">
                                                                                       <a type="button" class="btn btn-success btn-circle ms-1"><i class="fas fa-book-open"></i></a>
                                                                                             </div>
-                                                                                            <div class="col-6">
-                                                                                      <a type="button" class="btn btn-danger btn-circle ms-1"><i class="fas fa-user-lock"></i></a>
+                                                                                            <div class="col-4">
+                                                                                        <a type="button" class="btn btn-danger btn-circle ms-1"><i class="fas fa-user-lock"></i></a>
+
+                                                                                            </div>
+                                                                                            <div class="col-4">
+                                                                                                <a type="button" class="btn btn-info ms-1"><i class="fas fa-bookmark"></i></a>
 
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
                                                                                       <hr>
-                                                                                      <a class="btn btn-circle btn-outline-primary btn-floating btn-sm"  {% if account.twitter is None  %} href="#" {% else %}  href="https://www.linkedin.com/in/{{ account.linkedin }}/" {% endif %}><i class="fab fa-linkedin-in  fa-lg"></i></a>
-                                                                                      <a class="btn btn-circle btn-outline-primary btn-floating btn-sm"  {% if account.twitter is None  %} href="#" {% else %} href="https://twitter.com/{{ account.twitter }}" {% endif %}><i class="fab fa-twitter  fa-lg"></i></a>
-                                                                                      <a class="btn btn-circle btn-outline-primary btn-floating btn-sm" {% if account.instagram is None  %} href="#" {% else %}  href="https://www.instagram.com/{{ account.instagram }}/" {% endif %}><i class="fab fa-instagram  fa-lg"></i></a>
-                                                                                      <a class="btn btn-circle btn-outline-primary btn-floating btn-sm" {% if account.facebook is None  %} href="#" {% else %}  href="https://www.facebook.com/{{account.facebook}}/" {% endif %}><i class="fab fa-facebook-f fa-lg"></i></a>
+                                                                                      <a class="btn btn-circle btn-outline-primary btn-floating btn-sm"  {% if account.twitter is None  %} href="#" style="pointer-events: none"{% else %}  href="https://www.linkedin.com/in/{{ account.linkedin }}/" {% endif %}><i class="fab fa-linkedin-in  fa-lg"></i></a>
+                                                                                      <a class="btn btn-circle btn-outline-primary btn-floating btn-sm"  {% if account.twitter is None  %} href="#" style="pointer-events: none"{% else %} href="https://twitter.com/{{ account.twitter }}" {% endif %}><i class="fab fa-twitter  fa-lg"></i></a>
+                                                                                      <a class="btn btn-circle btn-outline-primary btn-floating btn-sm" {% if account.instagram is None  %} href="#" style="pointer-events: none"{% else %}  href="https://www.instagram.com/{{ account.instagram }}/" {% endif %}><i class="fab fa-instagram  fa-lg"></i></a>
+                                                                                      <a class="btn btn-circle btn-outline-primary btn-floating btn-sm" {% if account.facebook is None  %} href="#" style="pointer-events: none"{% else %}  href="https://www.facebook.com/{{account.facebook}}/" {% endif %}><i class="fab fa-facebook-f fa-lg"></i></a>
                                                                                   </div>
                                                                                 </div>
 
@@ -268,12 +280,23 @@
                                                                                       <hr>
                                                                                     <div class="row">
                                                                                       <div class="col-sm-3">
-                                                                                        <p class="mb-0">Granted By</p>
+                                                                                        <p class="mb-0">Granted by</p>
                                                                                       </div>
                                                                                       <div class="col-sm-9">
                                                                                         <p class="text-muted mb-0">{{ account.created_by }}</p>
                                                                                       </div>
                                                                                     </div>
+                                                                                      {% if account.is_banned is True %}
+                                                                                      <hr>
+                                                                                    <div class="row">
+                                                                                      <div class="col-sm-3">
+                                                                                        <p class="mb-0">Banned by</p>
+                                                                                      </div>
+                                                                                      <div class="col-sm-9">
+                                                                                          <p class="text-muted mb-0"><u><i>{{ account.banned_by }}</i></u> at {{ account.expired_date }}</p>
+                                                                                      </div>
+                                                                                    </div>
+                                                                                        {% endif %}
                                                                                   </div>
                                                                                 </div>
 
@@ -283,6 +306,7 @@
                                     </div>
                                   </div>
                                 </div>
+
                                     {% endfor %}
                                     </tbody>
                                 </table>
@@ -291,4 +315,5 @@
                 </div>
 
 </div>
+
 {% endblock %}
