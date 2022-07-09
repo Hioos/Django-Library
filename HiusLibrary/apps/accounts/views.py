@@ -27,6 +27,7 @@ def login_user(request):
             current_user = request.user
             request.session['name'] = current_user.name
             request.session['id'] = current_user.id
+            # request.session['image'] = current_user.profile_image
             messages.success(request, 'Hello ' + request.session['name'] + ', Welcome Back !!!')
             return  redirect('index')
         else:
@@ -51,6 +52,7 @@ def userIndex(request):
     context = {
         'accounts' : accounts,
         'currentlyOnline': currentlyOnline,
+        'media_url': settings.MEDIA_URL,
         'x': x,
     }
     # str(authors.query)
@@ -78,19 +80,35 @@ def addUser(request):
     birth_date = request.POST['birth_date']
     expired_date = request.POST['expired_date']
     national_id = request.POST['national_id']
+    image = request.FILES.get('user_image')
     date_joined = datetime.datetime.now
     created_by = Account.objects.get(id=request.session['id'])
-    Account.objects.create_user(email=email,
-                                username=username,
-                                password=password,
-                                name=name,
-                                 date_joined=date_joined,
-                                 phone_number=phone_number,
-                                 address=address,
-                                 birth_date=birth_date,
-                                 expired_date=expired_date,
-                                 national_id=national_id,
-                                 created_by=created_by.id)
+    if image is None:
+        Account.objects.create_user(email=email,
+                                    username=username,
+                                    password=password,
+                                    name=name,
+                                     date_joined=date_joined,
+                                     phone_number=phone_number,
+                                     address=address,
+                                     birth_date=birth_date,
+                                     expired_date=expired_date,
+                                     national_id=national_id,
+                                     profile_image = 'NULL' ,
+                                     created_by=created_by.id)
+    else:
+        Account.objects.create_user(email=email,
+                                    username=username,
+                                    password=password,
+                                    name=name,
+                                     date_joined=date_joined,
+                                     phone_number=phone_number,
+                                     address=address,
+                                     birth_date=birth_date,
+                                     expired_date=expired_date,
+                                     national_id=national_id,
+                                    profile_image= image,
+                                     created_by=created_by.id)
     subject = 'Welcome to HiusLibrary'
     message = f'Hi {name}, thank you for registering in HiusLibrary. \n' \
                     f'This is your Access Key and Password for www.hiuslibrary.vn \n' \
@@ -123,7 +141,8 @@ def updateProfile(request):
     user = Account.objects.get(id=request.session['id'])
     template = loader.get_template('administrator/update_profile.html')
     context = {
-        'user' : user
+        'user' : user,
+        'media_url': settings.MEDIA_URL,
     }
     # str(authors.query)
     return HttpResponse(template.render(context, request))
@@ -139,12 +158,14 @@ def info(request,id):
             'user' : user,
             'a' : a,
             'counter': counter,
+        'media_url': settings.MEDIA_URL,
             'createdBy': createdBy
     }
     return HttpResponse(template.render(context, request))
 @login_required
-def extendMembership(request,id):
-    user = Account.objects.get(id = id)
+def extendMembership(request):
+    data = request.GET['catid']
+    user = Account.objects.get(id = data)
     user.expired_date = user.expired_date + datetime.timedelta ( seconds=1*31*24*60*60 )
     user.save()
     return HttpResponseRedirect(reverse('userIndex'))
@@ -161,4 +182,3 @@ def banUser(request):
         user.banned_by = admin
     user.save()
     return HttpResponseRedirect(reverse('userIndex'))
-

@@ -5,24 +5,40 @@ from django.db import models
 
 # Create your models here.
 class MyAccountManager(BaseUserManager):
-    def create_user(self,email, username,name,date_joined,phone_number,address,birth_date,expired_date,national_id,created_by,password=None):
+    def create_user(self,email, username,name,date_joined,phone_number,address,birth_date,expired_date,national_id,created_by,profile_image,password=None):
         if not email:
             raise ValueError("User must have an Email")
         if not username:
             raise ValueError("User must have User Name")
-        user = self.model(
-                        email=email,
-                        username=username,
-                        password=password,
-                        name=name,
-                        date_joined=date_joined,
-                        phone_number=phone_number,
-                        address=address,
-                        birth_date=birth_date,
-                        expired_date=expired_date,
-                        national_id=national_id,
-                        created_by=Account(pk=created_by)
-                          )
+        if profile_image == 'NULL':
+            user = self.model(
+                            email=email,
+                            username=username,
+                            password=password,
+                            name=name,
+                            date_joined=date_joined,
+                            phone_number=phone_number,
+                            address=address,
+                            birth_date=birth_date,
+                            expired_date=expired_date,
+                            national_id=national_id,
+                            created_by=Account(pk=created_by)
+                              )
+        else:
+            user = self.model(
+                            email=email,
+                            username=username,
+                            password=password,
+                            name=name,
+                            date_joined=date_joined,
+                            phone_number=phone_number,
+                            address=address,
+                            birth_date=birth_date,
+                            expired_date=expired_date,
+                            national_id=national_id,
+                            profile_image = profile_image,
+                            created_by=Account(pk=created_by)
+                              )
         user.set_password(password)
         user.save(using=self._db)
         return user
@@ -40,7 +56,7 @@ class MyAccountManager(BaseUserManager):
 def get_profile_image_filepath(self,filename):
     return f'images/{self.pk}/{"profile_image.png"}'
 def get_default_profile_image():
-    return "HiusLibrary/apps/images/default.jpg"
+    return f'images/default.jpg'
 class Account (AbstractBaseUser):
     email                           =models.EmailField(verbose_name="email",max_length=60,unique=True)
     username                    =models.CharField(max_length=30,unique=True)

@@ -10,6 +10,6 @@ urlpatterns = [
     path('account/admin/',views.adminIndex,name="adminIndex"),
     path('profile_update',views.updateProfile,name="updateProfile"),
     path('info/<int:id>',views.info,name="adminInfo"),
-    path('extend/<int:id>',views.extendMembership,name="extendMembership"),
+    path('extend/',views.extendMembership,name="extendMembership"),
     path('ban',views.banUser,name="banUser")
     ]
