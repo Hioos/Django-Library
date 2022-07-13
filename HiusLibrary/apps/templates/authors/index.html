@@ -107,47 +107,38 @@
                                 <table  class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                     <tr>
+                                            <th>No.</th>
+                                            <th>Pseudonym</th>
                                             <th>Image</th>
                                             <th>Name</th>
-                                            <th>Nationality</th>
                                             <th>Gender</th>
                                             <th>DoB</th>
                                             <th>Biography</th>
-                                            <th>Created At</th>
-                                            <th>Updated At</th>
-                                            <th>Created By</th>
-                                            <th>Updated By</th>
                                             <th  style="text-align: center">Edit</th>
                                     </tr>
                                   </thead>
                                     <tfoot>
                                     <tr>
+                                            <th>No.</th>
+                                            <th>Pseudonym</th>
                                             <th>Image</th>
                                             <th>Name</th>
-                                            <th>Nationality</th>
                                             <th>Gender</th>
                                             <th>DoB</th>
                                             <th>Biography</th>
-                                            <th>Created At</th>
-                                            <th>Updated At</th>
-                                            <th>Created By</th>
-                                            <th>Updated By</th>
                                             <th  style="text-align: center">Edit</th>
                                     </tr>
                                     </tfoot>
                                     <tbody>
                                     {% for author in authors %}
                                         <tr>
-                                            <td style="width:10%;text-align:center;vertical-align: middle;"><img src="{{ author.author_imgUrl}}"  width="125" height="125" class="rounded-circle" ></td>
-                                            <td style="text-align:center;vertical-align: middle;font-family: 'Dancing Script', cursive; ">{{ author.author_name}}</td>
-                                            <td style="width:2%;text-align:center;vertical-align: middle;"><img src ="{{ author.author_nationalImgUrl }}" width="50" height="33.3" style="border: 1.5px solid;border-style: solid;border-radius: 5px;padding: 0px;"></td>
+                                            <td style="width:5%;text-align:center;vertical-align: middle;">{{ forloop.counter }}</td>
+                                            <td style="width:10%;text-align:center;vertical-align: middle;font-family: 'Dancing Script', cursive; "><b>{{ author.author_pseudonym }}</b></td>
+                                            <td style="width:10%;text-align:center;vertical-align: middle;"><img src="{{ author.author_imgUrl.url}}"  width="125" height="125" class="rounded-circle" ></td>
+                                            <td style="text-align:center;vertical-align: middle;">{{ author.author_name}}</td>
                                             <td style="width:2%;text-align:center;vertical-align: middle;">{% if author.author_gender %} <i class="fas fa-mars fa-2x"></i> {% else %} <i class="fas fa-venus fa-2x"></i> {% endif %} </td>
                                             <td style="width:5%;text-align:center;vertical-align: middle;">{{ author.author_dateOfBirth }}</td>
-                                            <td style="width:90%;text-align:center;vertical-align: middle;">{{ author.author_biography}}</td>
-                                            <td style="width:5%;text-align:center;vertical-align: middle;">{{ author.author_createdAt }}</td>
-                                            <td style="width:5%;text-align:center;vertical-align: middle;">{{ author.author_updatedAt }}</td>
-                                            <td style="width:5%;text-align:center;vertical-align: middle;">{{ author.author_createdBy.name}} </td>
-                                            <td style="width:5%;text-align:center;vertical-align: middle;">{{ author.author_updatedBy.name }}</td>
+                                            <td style="width:90%;vertical-align: middle;">{{ author.author_biography}}</td>
                                             <td style="width:5%;text-align:center;vertical-align: middle;"><a class="btn btn-warning btn-circle btn-sm" href="{% url 'updateAuthor' author.author_id %}"><i class="fas fa-edit"></i></a></td>
                                         </tr>
                                     {% endfor %}

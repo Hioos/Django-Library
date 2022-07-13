@@ -104,22 +104,20 @@
                                 <table  class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>Publisher's Name</th>
-                                            <th>Created At</th>
-                                            <th>Updated At</th>
-                                            <th>Created By</th>
-                                            <th>Updated By</th>
+                                            <th style="text-align:center;vertical-align: middle;">No.</th>
+                                            <th style="text-align:center;vertical-align: middle;">Publisher's Name</th>
+                                            <th style="text-align:center;vertical-align: middle;">Books In Library</th>
+                                            <th style="text-align:center;vertical-align: middle;">All Books</th>
                                             <th  style="text-align: center">View</th>
                                             <th  style="text-align: center">Edit</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
-                                            <th>Publisher's Name</th>
-                                            <th>Created At</th>
-                                            <th>Updated At</th>
-                                            <th>Created By</th>
-                                            <th>Updated By</th>
+                                            <th style="text-align:center;vertical-align: middle;">No.</th>
+                                            <th style="text-align:center;vertical-align: middle;">Publisher's Name</th>
+                                            <th style="text-align:center;vertical-align: middle;">Books In Library</th>
+                                            <th style="text-align:center;vertical-align: middle;">All Books</th>
                                             <th  style="text-align: center">View</th>
                                             <th  style="text-align: center">Edit</th>
                                         </tr>
@@ -127,11 +125,10 @@
                                     <tbody>
                                     {% for publisher in publishers %}
                                         <tr>
-                                           <td>{{publisher.publisher_name}}</td>
-                                           <td>{{publisher.publisher_createdAt}}</td>
-                                           <td>{{publisher.publisher_updatedAt}}</td>
-                                            <td>{{ publisher.publisher_createdBy.name }}</td>
-                                            <td>{{ publisher.publisher_updatedBy.name }}</td>
+                                            <td style="text-align:center;vertical-align: middle;">{{ forloop.counter }}</td>
+                                           <td  style="text-align:center;vertical-align: middle;">{{publisher.publisher_name}}</td>
+                                            <td style="text-align:center;vertical-align: middle;">4</td>
+                                            <td></td>
                                            <td  style="text-align: center"><a class="btn btn-success btn-circle btn-sm" href=""><i class="fas fa-flag"></i></a></td>
                                            <td  style="text-align: center"><a class="btn btn-warning btn-circle btn-sm" href=""><i class="fas fa-pen-fancy"></i></a></td>
                                         </tr>

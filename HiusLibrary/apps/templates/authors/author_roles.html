@@ -22,10 +22,6 @@
                                     <thead>
                                         <tr>
                                             <th>Type</th>
-                                            <th>Created At</th>
-                                            <th>Updated At</th>
-                                            <th>Created By</th>
-                                            <th>Updated By</th>
                                             <th  style="text-align: center">View</th>
                                             <th  style="text-align: center">Edit</th>
                                         </tr>
@@ -33,10 +29,6 @@
                                     <tfoot>
                                         <tr>
                                             <th>Type</th>
-                                            <th>Created At</th>
-                                            <th>Updated At</th>
-                                            <th>Created By</th>
-                                            <th>Updated By</th>
                                             <th  style="text-align: center">View</th>
                                             <th  style="text-align: center">Edit</th>
                                         </tr>
@@ -45,10 +37,6 @@
                                     {% for authorsRoles in authorsRole %}
                                         <tr>
                                            <td>{{authorsRoles.authorRole_name}}</td>
-                                           <td>{{authorsRoles.authorRole_createdAt}}</td>
-                                           <td>{{authorsRoles.authorRole_updatedAt}}</td>
-                                            <td>{{ authorsRoles.authorRole_createdBy.name }}</td>
-                                            <td>{{ authorsRoles.authorRole_updatedBy.name }}</td>
                                            <td  style="text-align: center"><a class="btn btn-success btn-circle btn-sm" href=""><i class="fas fa-flag"></i></a></td>
                                            <td  style="text-align: center"><a class="btn btn-warning btn-circle btn-sm" href=""><i class="fas fa-pen-fancy"></i></a></td>
                                         </tr>
@@ -66,7 +54,7 @@
       <div class="modal-body">
         <button data-dismiss="modal" class="close">&times;</button>
         <h4>New Author Role Type</h4>
-        <form class="user" name="registration-form" id="registration-form" action="{% url 'addNewAuthor' %}" method="post">
+        <form class="user" name="registration-form" id="registration-form" action="{% url 'addNewAuthorRole' %}" method="post">
             {% csrf_token %}
             <div class="form-group row">
                 <div class="col-sm-10 mb-3 mb-sm-0">

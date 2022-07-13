@@ -43,20 +43,56 @@ class MyAccountManager(BaseUserManager):
         user.save(using=self._db)
         return user
     def create_superuser(self,email,username,password):
-        user = self.create_user(
+        user = self.model(
             email=email,
             username=username,
             password=password,
         )
+        user.set_password(password)
         user.is_admin = True
         user.is_staff = True
         user.is_superuser = True
         user.save(using=self.db)
         return user
+    def create_staff(self,email, username,name,date_joined,phone_number,address,birth_date,national_id,created_by,profile_image,is_admin,is_staff,password=None):
+        if profile_image == 'NULL':
+            user = self.model(
+                            email=email,
+                            username=username,
+                            password=password,
+                            name=name,
+                            date_joined=date_joined,
+                            phone_number=phone_number,
+                            address=address,
+                            birth_date=birth_date,
+                            national_id=national_id,
+                            is_admin = is_admin,
+                            is_staff = is_staff,
+                            created_by=Account(pk=created_by)
+                              )
+        else:
+            user = self.model(
+                            email=email,
+                            username=username,
+                            password=password,
+                            name=name,
+                            date_joined=date_joined,
+                            phone_number=phone_number,
+                            address=address,
+                            birth_date=birth_date,
+                            national_id=national_id,
+                            is_admin=is_admin,
+                            is_staff=is_staff,
+                            profile_image=profile_image,
+                            created_by=Account(pk=created_by)
+            )
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
 def get_profile_image_filepath(self,filename):
     return f'images/{self.pk}/{"profile_image.png"}'
 def get_default_profile_image():
-    return f'images/default.jpg'
+    return f'images/default.png'
 class Account (AbstractBaseUser):
     email                           =models.EmailField(verbose_name="email",max_length=60,unique=True)
     username                    =models.CharField(max_length=30,unique=True)

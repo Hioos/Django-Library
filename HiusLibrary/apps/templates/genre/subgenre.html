@@ -107,38 +107,29 @@
                                 <table  class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead >
                                         <tr>
+                                            <th>No.</th>
                                             <th>Sub-Genre</th>
                                             <th>Code</th>
                                             <th>Description</th>
-                                            <th>Created At</th>
-                                            <th>Updated At</th>
-                                            <th>Created By</th>
-                                            <th>Updated By</th>
                                             <th  style="text-align: center">Edit</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
+                                            <th>No.</th>
                                             <th>Sub-Genre</th>
                                             <th>Code</th>
                                             <th>Description</th>
-                                            <th>Created At</th>
-                                            <th>Updated At</th>
-                                            <th>Created By</th>
-                                            <th>Updated By</th>
                                             <th  style="text-align: center">Edit</th>
                                         </tr>
                                     </tfoot>
                                     <tbody>
                                     {% for sub in subGenre %}
                                         <tr>
-                                            <td><i><u>{{sub.subgenre_name}}</u></i></td>
-                                           <td>{{sub.subgenre_code}}</td>
+                                            <td style="text-align:center;vertical-align: middle;">{{ forloop.counter }}</td>
+                                            <td style="text-align:center;vertical-align: middle;"><i><u>{{sub.subgenre_name}}</u></i></td>
+                                           <td style="text-align:center;vertical-align: middle;">{{sub.subgenre_code}}</td>
                                            <td>{{sub.subgenre_description}}</td>
-                                           <td>{{sub.subgenre_createdAt}}</td>
-                                           <td>{{sub.subgenre_updatedAt}}</td>
-                                            <td>{{sub.subgenre_createdBy.name}}</td>
-                                            <td>{{sub.subgenre_updatedBy.name}}</td>
                                            <td  style="text-align: center"><a class="btn btn-warning btn-circle btn-sm" href="{% url 'subGenreUpdate' sub.id %}"><i class="fas fa-edit"></i></a></td>
                                         </tr>
                                     {% endfor %}
