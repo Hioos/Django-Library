@@ -107,26 +107,20 @@
                                 <table  class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead >
                                         <tr>
+                                            <th>No.</th>
                                             <th>Genre</th>
                                             <th>Code</th>
                                             <th>Description</th>
-                                            <th>Created At</th>
-                                            <th>Updated At</th>
-                                            <th>Created By</th>
-                                            <th>Updated By</th>
                                             <th  style="text-align: center">Sub-genres</th>
                                             <th  style="text-align: center">Edit</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
+                                            <th>No.</th>
                                             <th>Genre</th>
                                             <th>Code</th>
                                             <th>Description</th>
-                                            <th>Created At</th>
-                                            <th>Updated At</th>
-                                            <th>Created By</th>
-                                            <th>Updated By</th>
                                             <th  style="text-align: center">Sub-genres</th>
                                             <th  style="text-align: center">Edit</th>
                                         </tr>
@@ -134,13 +128,10 @@
                                     <tbody>
                                     {% for genre in genres %}
                                         <tr>
-                                            <td><b><i><u>{{genre.genre_name}}</u></i></b></td>
-                                           <td>{{genre.genre_code}}</td>
+                                            <td style="text-align:center;vertical-align: middle;">{{ forloop.counter }}</td>
+                                            <td style="text-align:center;vertical-align: middle;"><b><i><u>{{genre.genre_name}}</u></i></b></td>
+                                           <td style="text-align:center;vertical-align: middle;">{{genre.genre_code}}</td>
                                            <td>{{genre.genre_description}}</td>
-                                           <td>{{genre.genre_createdAt}}</td>
-                                           <td>{{genre.genre_updatedAt}}</td>
-                                            <td>{{genre.genre_createdBy.name}}</td>
-                                            <td>{{genre.genre_updatedBy.name}}</td>
                                            <td  style="text-align: center"><a class="btn btn-success btn-circle btn-sm" href="{% url  'subgenre' genre.id  %}"><i class="fas fa-flag"></i></a></td>
                                            <td  style="text-align: center"><a class="btn btn-warning btn-circle btn-sm" href="{% url 'genreUpdate' genre.id %}"><i class="fas fa-pen-fancy"></i></a></td>
                                         </tr>

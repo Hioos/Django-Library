@@ -1,30 +1,46 @@
+import datetime
+
 from django.db import models
 from django.conf import settings
 
 # Create your models here.
 from django_countries.fields import CountryField
-
-
+from apps.accounts.models import Account
+def get_language_image_filepath(self,filename):
+    return f'images/language/{self.pk}/{"language_image.png"}'
+def get_default_language_image():
+    return f'images/language/default.png'
+def get_profile_image_filepath(self,filename):
+    return f'images/book/{self.pk}/{"book_image.png"}'
+def get_default_profile_image():
+    return f'images/book/default.png'
 class Books(models.Model):
     book_id = models.IntegerField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     book_name = models.CharField(max_length=255)
-    book_image = models.CharField(max_length=255)
-    book_description = models.CharField(max_length=255)
-    book_language = CountryField()
+    book_image =models.ImageField(max_length=255,upload_to=get_profile_image_filepath,null=True,blank=True,default=get_default_profile_image)
+    book_description = models.TextField()
+    book_language = models.ForeignKey('Language',on_delete=models.CASCADE,related_name='book_language')
     book_publisher = models.ForeignKey('publisher.Publisher',on_delete=models.CASCADE,related_name='book_publisher')
     book_released = models.IntegerField()
-    book_updatedAt = models.DateTimeField()
-    book_createdAt = models.DateTimeField()
-    book_createdBy = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='book_createdBy'
-    )
-    book_updatedBy = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
-        on_delete=models.CASCADE,
-        related_name='book_updatedBy'
-    )
+    class Meta:
+        get_latest_by = ['book_id']
+    def __str__(self):
+        return self.book_name
+    def has_module_perms(self,app_label):
+        return True
+    def get_profile_image_filename (self):
+        return str(self.book_image)[str(self.book_image).index(f'images/book/{self.pk}/'):]
+class Language(models.Model):
+    language_id = models.IntegerField(auto_created=True,primary_key=True,serialize=False,verbose_name='ID')
+    language_name = models.CharField(max_length=255,unique=True)
+    language_code = models.CharField(max_length=5,unique=True)
+    language_image = models.ImageField(max_length=255,upload_to=get_language_image_filepath,null=True,blank=True,default=get_default_language_image)
+    def __str__(self):
+        return self.language_name
+    def has_module_perms(self,app_label):
+        return True
+    def get_language_image_filename (self):
+        return str(self.language_image)[str(self.language_image).index(f'images/language/{self.pk}/'):]
 class BookThemes(models.Model):
     bookthemes_bookId = models.ForeignKey('Books',on_delete=models.CASCADE,related_name='book_Themes_bookId')
     bookthemes_themeId = models.ForeignKey('genre.Themes',on_delete=models.CASCADE,related_name='book_Themes_themeId')
@@ -48,11 +64,21 @@ class BookSubGenre(models.Model):
 class BookAuthorship(models.Model):
     bookauthorship_bookId = models.ForeignKey('Books',on_delete=models.CASCADE,related_name='book_Authorship_bookId')
     bookauthorship_authorId = models.ForeignKey('authors.Authors',on_delete=models.CASCADE,related_name='book_Authorship_authorId')
-    bookauthorship_authorRole = models.ForeignKey('authors.AuthorsRole',on_delete=models.CASCADE,related_name='book_Authorship_authorRole')
 
     class Meta:
         constraints = [
             models.UniqueConstraint(
-                fields=['bookauthorship_bookId', 'bookauthorship_authorId','bookauthorship_authorRole'], name='book_author_ship_combination'
+                fields=['bookauthorship_bookId', 'bookauthorship_authorId'], name='book_author_ship_combination'
             )
         ]
+class LoanedBook(models.Model):
+    loanedBook_id = models.IntegerField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
+    loanedBook_user = models.ForeignKey('accounts.Account',on_delete=models.CASCADE,related_name='loanedBook_userId')
+    loanedBook_book = models.ForeignKey('Books',on_delete=models.CASCADE,related_name='loanedBook_bookId')
+    loanedBook_startDate = models.DateField( blank=True, null=True)
+    loanedBook_dueDate = models.DateField(blank=True,null = True)
+    loanedBook_returnedDate = models.DateField(blank = True,null=True)
+    loanedBook_statusId = models.ForeignKey('loan.loanStatus',on_delete=models.CASCADE,related_name='loanedBook_loanStatus')
+    loanedBook_timestamp = models.DateTimeField(default=datetime.datetime.now)
+    def __str__(self):
+        return self.loanedBook_book

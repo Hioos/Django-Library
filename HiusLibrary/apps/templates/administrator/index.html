@@ -5,7 +5,7 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Administrator
-                                    <a href="#" class="btn btn-success btn-icon-split btn-sm">
+                                    <a href="{%  url 'addAdmin' %}" class="btn btn-success btn-icon-split btn-sm">
                                         <span class="icon text-white-50">
                                             <i class="fas fa-plus"></i>
                                         </span>
@@ -108,13 +108,14 @@
                                 <table  class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th style="width: 170px;">Fullname</th>
-                                            <th>Email</th>
-                                            <th>DoB</th>
-                                            <th>Status</th>
-                                            <th>Joined At</th>
-                                            <th>Added By</th>
-                                            <th>Last Login</th>
+                                            <th style="text-align:center;vertical-align: middle;">No.</th>
+                                            <th style="width: 170px;text-align:center;vertical-align: middle;">Fullname</th>
+                                            <th style="text-align:center;vertical-align: middle;">Email</th>
+                                            <th style="text-align:center;vertical-align: middle;">DoB</th>
+                                            <th style="text-align:center;vertical-align: middle;">Status</th>
+                                            <th style="text-align:center;vertical-align: middle;">Joined At</th>
+                                            <th style="text-align:center;vertical-align: middle;">Added By</th>
+                                            <th style="text-align:center;vertical-align: middle;">Last Login</th>
                                             <th  style="text-align: center">Lock</th>
                                             <th  style="text-align: center">Promote/ Demote</th>
                                             <th style="text-align: center">Info</th>
@@ -122,13 +123,14 @@
                                     </thead>
                                     <tfoot>
                                         <tr>
-                                            <th style="width: 170px;">Fullname</th>
-                                            <th>Email</th>
-                                            <th>DoB</th>
-                                            <th>Status</th>
-                                            <th>Joined At</th>
-                                            <th>Added By</th>
-                                            <th>Last  Login</th>
+                                            <th style="text-align:center;vertical-align: middle;">No.</th>
+                                            <th style="width: 170px;text-align:center;vertical-align: middle;">Fullname</th>
+                                            <th style="text-align:center;vertical-align: middle;">Email</th>
+                                            <th style="text-align:center;vertical-align: middle;">DoB</th>
+                                            <th style="text-align:center;vertical-align: middle;">Status</th>
+                                            <th style="text-align:center;vertical-align: middle;">Joined At</th>
+                                            <th style="text-align:center;vertical-align: middle;">Added By</th>
+                                            <th style="text-align:center;vertical-align: middle;">Last  Login</th>
                                             <th  style="text-align: center">Lock</th>
                                             <th  style="text-align: center">Promote/ Demote</th>
                                             <th style="text-align: center">Info</th>
@@ -137,18 +139,19 @@
                                     <tbody>
                                     {% for account in accounts %}
                                         <tr>
-                                           <td>{{account.name}}</td>
-                                           <td>{{account.email}}</td>
-                                           <td>{{account.birth_date}}</td>
+                                            <td style="text-align:center;vertical-align: middle;">{{ forloop.counter }}</td>
+                                           <td style="text-align:center;vertical-align: middle;">{{account.name}}</td>
+                                           <td style="text-align:center;vertical-align: middle;">{{account.email}}</td>
+                                           <td style="text-align:center;vertical-align: middle;">{{account.birth_date}}</td>
                                            <td style="text-align: center">{% if account.is_active %}
                                                <i class= "fas fa-circle" style="color:#1cc88a;"></i>
                                                {% else %}
                                                <i class= "fas fa-circle"></i>
                                                {% endif %}
                                            </td>
-                                           <td>{{account.date_joined}}</td>
-                                           <td>{{account.created_by}}</td>
-                                           <td>{{account.last_login}}</td>
+                                           <td style="text-align:center;vertical-align: middle;">{{account.date_joined}}</td>
+                                           <td style="text-align:center;vertical-align: middle;">{{account.created_by}}</td>
+                                           <td style="text-align:center;vertical-align: middle;">{{account.last_login}}</td>
                                            <td  style="text-align: center"><a class="btn btn-danger btn-circle btn-sm" href=""><i class="fas fa-lock"></i></a></td>
                                            <td  style="text-align: center"><a class="btn btn-info btn-circle btn-sm" href="#"><i class="fas fa-highlighter"></i></a></td>
                                             <td  style="text-align: center"><a class="btn btn-info btn-circle btn-sm" href="{% url 'adminInfo' account.id %}"><i class="fas fa-id-card-alt"></i></a></td>

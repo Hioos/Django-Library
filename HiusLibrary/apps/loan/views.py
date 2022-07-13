@@ -1,6 +1,9 @@
 import datetime
+from venv import create
 
 from django.contrib import messages
+from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
+from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
@@ -13,6 +16,14 @@ from django.contrib.auth.decorators import login_required
 
 from ..accounts.models import Account
 
+def LogEntryAdd(idUser,modelName,objectId,reason,after):
+    LogEntry.objects.log_action(
+        user_id=idUser,
+        content_type_id=ContentType.objects.get_for_model(modelName).pk,
+        object_id=objectId,
+        object_repr=reason,
+        change_message=after,
+        action_flag=ADDITION if create else CHANGE)
 
 @login_required
 def index(request):
@@ -25,13 +36,8 @@ def index(request):
 
 def add(request):
     statusName = request.POST['statusName']
-    loanCreatedAt = datetime.datetime.now()
-    admin = Account.objects.get(id=request.session['id'])
-    loan = loanStatus(loanStatus_name = statusName,
-                      loanStatus_createdAt = loanCreatedAt,
-                      loanStatus_updatedAt = loanCreatedAt,
-                      loanStatus_createdBy = admin,
-                      loanStatus_updatedBy = admin)
+    loan = loanStatus(loanStatus_name = statusName)
     loan.save()
+    LogEntryAdd(request.session['id'], loan, '', '', statusName)
     messages.success(request,statusName + ' added successfully !!!')
     return HttpResponseRedirect(reverse('loanIndex'))

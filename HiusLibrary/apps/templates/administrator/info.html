@@ -10,7 +10,7 @@
         <div class="card mb-4">
           <div class="card-body text-center">
             <img src="{{ user.profile_image.url }}" alt="avatar"
-              class="rounded-circle img-fluid" style="width: 150px;">
+              class="rounded-circle img-fluid" style="width: 150px;height:150px;">
               <h5 class="my-3"><b>{{ user.username }} </b>{% if user.is_superuser %} <i class="fas fa-star" style="color: #fcff00"></i> {% endif %}                                                             {% if user.is_banned %}
                                                     <i class="fas fa-ban " style="color: #ff4a35"></i>
                                                             {% endif %}</h5>

@@ -182,3 +182,36 @@ def banUser(request):
         user.banned_by = admin
     user.save()
     return HttpResponseRedirect(reverse('userIndex'))
+@login_required
+def addAdmin(request):
+    template = loader.get_template('administrator/add.html')
+    return HttpResponse(template.render({},request))
+@login_required
+def addAdminProccess(request):
+    name = request.POST['name']
+    username = request.POST['username']
+    email = request.POST['email']
+    birth_date = request.POST['birth_date']
+    password = request.POST['password']
+    national_id = request.POST['national_id']
+    adminRole = request.POST['adminRole']
+    phone_number = request.POST['phone_number']
+    address = request.POST['address']
+    created_by = Account.objects.get(id=request.session['id'])
+    date_joined = datetime.datetime.now
+    Account.objects.create_staff(                            email=email,
+                                                                                username=username,
+                                                                                password=password,
+                                                                                name=name,
+                                                                                date_joined=date_joined,
+                                                                                phone_number=phone_number,
+                                                                                address=address,
+                                                                                birth_date=birth_date,
+                                                                                national_id=national_id,
+                                                                                is_admin=adminRole,
+                                                                                is_staff=True,
+                                                                                profile_image='NULL',
+                                                                                created_by=created_by.id
+                                                             )
+    messages.success(request, "The user is successfully registered !!!")
+    return HttpResponseRedirect(reverse('adminIndex'))

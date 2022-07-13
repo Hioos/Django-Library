@@ -42,8 +42,12 @@
                                     </div>
                                 </div>
                                 <div class="form-group row">
-                                    <div class="col-sm-11 mb-3 mb-sm-0">
+                                    <div class="col-sm-5 mb-3 mb-sm-0">
                                         <textarea class="form-control "  id="authorBio" name="authorBio"  rows="3" style="resize: none;height: 300px;">{{author.author_biography}}</textarea>
+                                    </div>
+
+                                    <div class="col-sm-5 mb-3 mb-sm-0">
+                                        <textarea class="form-control "  id="reason" name="reason"  rows="3" style="resize: none;height: 300px;" placeholder="Update Reason ..." required></textarea>
                                     </div>
                                     <div class="col-sm-1">
                                         <div class="text-left custom-control custom-radio align-items-center">
@@ -56,6 +60,7 @@
                                             </div>
                                     </div>
                                 </div>
+
                                 <button type="submit" class="btn btn-primary btn-user btn-block">
                                     Update
                                 </button>

@@ -1,5 +1,7 @@
 import datetime
-
+from venv import create
+from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
+from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
@@ -7,12 +9,19 @@ from django.shortcuts import render
 from django.template import loader
 from django.urls import reverse
 
-from .models import Authors, AuthorsRole
 from django.contrib.auth.decorators import login_required
 
+from .models import Authors
 from ..accounts.models import Account
 
-
+def LogEntryAdd(idUser,modelName,objectId,reason,after):
+    LogEntry.objects.log_action(
+        user_id=idUser,
+        content_type_id=ContentType.objects.get_for_model(modelName).pk,
+        object_id=objectId,
+        object_repr=reason,
+        change_message=after,
+        action_flag=ADDITION if create else CHANGE)
 @login_required
 def index(request):
     authors = Authors.objects.select_related()
@@ -34,26 +43,19 @@ def add(request):
 @login_required
 def addNewAuthor(request):
     authorName = request.POST['authorName']
+    authorPseudonym = request.POST['authorPseudonym']
     authorDoB = request.POST['authorDoB']
     authorBio = request.POST['authorBio']
-    authorImgUrl = request.POST['imgUrl']
-    authorNationalityURL = request.POST['nationUrl']
+    authorImage = request.FILES.get('image')
     authorGender = request.POST['authorGender']
-    authorCreatedAt = datetime.datetime.now()
-    authorUpdatedAt = datetime.datetime.now()
-    authorCreatedBy =  request.session['id']
-    admin = Account.objects.get(id = authorCreatedBy)
     author = Authors(author_name = authorName,
+                     author_pseudonym = authorPseudonym,
                      author_dateOfBirth = authorDoB,
                      author_biography = authorBio,
-                     author_imgUrl = authorImgUrl,
-                     author_nationalImgUrl = authorNationalityURL,
-                     author_createdAt = authorCreatedAt,
-                     author_updatedAt = authorUpdatedAt,
-                     author_gender = authorGender,
-                     author_createdBy = admin,
-                     author_updatedBy = admin)
+                     author_imgUrl = authorImage,
+                     author_gender = authorGender,)
     author.save()
+    LogEntryAdd(request.session['id'], author,'','', authorName)
     return HttpResponseRedirect(reverse('authorsIndex'))
 @login_required
 def update(request,id):
@@ -72,13 +74,12 @@ def update(request,id):
 @login_required
 def updateProcess(request,id):
     authorName = request.POST['authorName']
+    reason = request.POST['reason']
     authorDoB = request.POST['authorDoB']
     imgUrl = request.POST['imgUrl']
     nationUrl = request.POST['nationUrl']
     authorBio = request.POST['authorBio']
     authorGender = request.POST['authorGender']
-    authorUpdatedAt = datetime.datetime.now()
-    admin = Account.objects.get(id=request.session['id'])
     author = Authors.objects.get(author_id = id)
     author.author_name = authorName
     author.author_dateOfBirth = authorDoB
@@ -86,35 +87,6 @@ def updateProcess(request,id):
     author.author_imgUrl = imgUrl
     author.author_nationalImgUrl = nationUrl
     author.author_gender = authorGender
-    author.author_updatedAt = authorUpdatedAt
-    author.author_updatedBy = admin
     author.save()
+    LogEntryAdd(request.session['id'], author,'',reason, authorName)
     return HttpResponseRedirect(reverse('authorsIndex'))
-@login_required
-def authorRole(request):
-    authorsRole = AuthorsRole.objects.select_related()
-    template = loader.get_template('authors/author_roles.html')
-    def authorRoleCounter():
-        count = AuthorsRole.objects.all().count()
-        return count
-    x = authorRoleCounter()
-    context = {
-        'authorsRole' : authorsRole,
-        'x': x,
-    }
-    # str(authors.query)
-    return HttpResponse(template.render(context, request))
-@login_required
-def addNewAuthor(request):
-    authorRoleName = request.POST['authorRoleName']
-    authorRoleCreatedAt = datetime.datetime.now()
-    authorRoleUpdatedAt = datetime.datetime.now()
-    authorRoleCreatedBy =  request.session['id']
-    admin = Account.objects.get(id = authorRoleCreatedBy)
-    authorRole = AuthorsRole(authorRole_name = authorRoleName,
-                     authorRole_createdAt = authorRoleCreatedAt,
-                     authorRole_updatedAt = authorRoleUpdatedAt,
-                     authorRole_createdBy = admin,
-                     authorRole_updatedBy = admin)
-    authorRole.save()
-    return HttpResponseRedirect(reverse('authorRole'))

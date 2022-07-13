@@ -11,41 +11,22 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Add A New Author!</h1>
                             </div>
-                            <form class="user" name="registration-form" id="registration-form" action="{% url 'authorsAddNew' %}" method="post">
+                            <form class="user" name="registration-form" enctype="multipart/form-data" id="registration-form" action="{% url 'authorsAddNew' %}" method="post">
                                 {% csrf_token %}
                                 <div class="form-group row">
-                                    <div class="col-sm-9 mb-3 mb-sm-0">
+                                    <div class="col-sm-4 mb-3 mb-sm-0">
                                         <input type="text" class="form-control form-control-user" id="authorName"
                                             placeholder="Author's Fullname" name="authorName">
+                                    </div>
+                                    <div class="col-sm-4 mb-3 mb-sm-0">
+                                        <input type="text" class="form-control form-control-user" id="auhtorPseudonym"
+                                            placeholder="Author's Pseudonym" name="authorPseudonym">
                                     </div>
                                     <div class="col-sm-3">
                                         <input type="date" class="form-control form-control-user"
                                         id="authorDoB" placeholder="Date Of Birth" name="authorDoB">
                                     </div>
-                                </div>
-                                <div class="form-group row">
-                                <div class="col-sm-9 mb-3 mb-sm-0">
-                                    <input type="text" class="form-control form-control-user" id="imgUrl"
-                                        placeholder="Image URL" name="imgUrl">
-                                </div>
-                                <div class="col-sm-3 mb-3 mb-sm-0">
-                                    <img>
-                                </div>
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-sm-6 mb-3 mb-sm-0">
-                                        <input type="text" class="form-control form-control-user" id="nationUrl"
-                                        placeholder="Nationality URL" name="nationUrl">
-                                    </div>
-                                    <div class="col-sm-6">
-
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <div class="col-sm-11 mb-3 mb-sm-0">
-                                        <textarea class="form-control "  id="authorBio" name="authorBio"  rows="3" style="resize: none;height: 300px;"></textarea>
-                                    </div>
-                                    <div class="col-sm-1">
+                                                                       <div class="col-sm-1">
                                         <div class="text-left custom-control custom-radio align-items-center">
                                                 <input type="radio" class="custom-control-input" id="a" name="authorGender" value = "True">
                                             <label class="custom-control-label" for="a"><i class="fas fa-mars  fa-2x"></i></label>
@@ -55,6 +36,24 @@
                                                 <label class="custom-control-label" for="s"><i class="fas fa-venus  fa-2x"></i></label>
                                             </div>
                                     </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-7 mb-3 mb-sm-0">
+                                        <textarea class="form-control "  id="authorBio" name="authorBio"  rows="3" style="resize: none;height: 300px;"></textarea>
+                                    </div>
+                                                                    <div class="col-sm-1 mb-3 mb-sm-0">
+                                                            <label for="file-upload" class="btn btn-circle" style="border: 1px solid #ccc;
+                                                                                                                                            display: inline-block;
+                                                                                                                                            padding: 6px 12px;
+                                                                                                                                            cursor: pointer;
+                                                                                                                                            word-wrap: break-word">
+                                                            <i class="fas fa-upload"></i>
+                                                            </label>
+                            <input id="file-upload" type="file" name="image" onchange="loadFile(event)" accept="image/*" class="form-control form-control-user" style="display: none;"/>
+                                </div>
+                                    <div class="col-sm-3 mb-3 mb-sm-0">
+                                    <img id="output"  src="https://www.kindpng.com/picc/m/47-475813_transparent-smiling-face-png-funny-faces-cartoon-png.png" class="d-flex align-items-center"  style="width: 100%;margin: auto;height: 100%;border-radius: 10px;border:1px;border-color: #ff2929" />
+                                </div>
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-user btn-block">
                                     Add

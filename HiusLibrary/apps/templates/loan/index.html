@@ -22,22 +22,16 @@
                                 <table  class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
+                                            <th>No.</th>
                                             <th>Status</th>
-                                            <th>Created At</th>
-                                            <th>Updated At</th>
-                                            <th>Created By</th>
-                                            <th>Updated By</th>
                                             <th  style="text-align: center">View</th>
                                             <th  style="text-align: center">Edit</th>
                                         </tr>
                                     </thead>
                                     <tfoot>
                                         <tr>
+                                            <th>No.</th>
                                             <th>Status</th>
-                                            <th>Created At</th>
-                                            <th>Updated At</th>
-                                            <th>Created By</th>
-                                            <th>Updated By</th>
                                             <th  style="text-align: center">View</th>
                                             <th  style="text-align: center">Edit</th>
                                         </tr>
@@ -45,11 +39,8 @@
                                     <tbody>
                                     {% for loan in loans %}
                                         <tr>
+                                            <td>{{ forloop.counter }}</td>
                                             <td><i>{{loan.loanStatus_name}}</i></td>
-                                           <td>{{loan.loanStatus_createdAt}}</td>
-                                           <td>{{loan.loanStatus_updatedAt}}</td>
-                                            <td>{{ loan.loanStatus_createdBy }}</td>
-                                            <td>{{ loan.loanStatus_updatedBy }}</td>
                                            <td  style="text-align: center"><a class="btn btn-success btn-circle btn-sm" href=""><i class="fas fa-flag"></i></a></td>
                                            <td  style="text-align: center"><a class="btn btn-warning btn-circle btn-sm" href=""><i class="fas fa-pen-fancy"></i></a></td>
                                         </tr>

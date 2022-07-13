@@ -10,10 +10,13 @@
         <div class="card mb-4">
           <div class="card-body text-center">
             <img src="{{ user.profile_image.url }}" alt="avatar"
-              class="rounded-circle img-fluid" style="width: 150px;">
-            <h5 class="my-3">John Smith</h5>
-            <p class="text-muted mb-1">Full Stack Developer</p>
-            <p class="text-muted mb-4">Bay Area, San Francisco, CA</p>
+              class="rounded-circle img-fluid" style="width: 150px;height:150px">
+            <h5 class="my-3">{{ user.name }}</h5>
+            <p class="text-muted mb-1">{% if  user.is_staff %} <span class="badge badge-pill badge-info">Staff</span>{% endif %}
+                                                        {% if  user.is_admin %} <span class="badge badge-pill badge-warning">Admin</span>{% endif %}
+                                                        {% if  user.is_superuser %}<span><i class="fa fa-crow"></i></span> {% endif %}
+            </p>
+            <p class="text-muted mb-4">{{ user.address }}</p>
             <div class="d-flex justify-content-center mb-2">
               <button type="button" class="btn btn-primary">Follow</button>
               <button type="button" class="btn btn-outline-primary ms-1">Message</button>
@@ -75,7 +78,7 @@
                 <p class="mb-0">Phone</p>
               </div>
               <div class="col-sm-9">
-                <input type="text" class="text-muted mb-0 invisibleText" style=" border: none;background-color: transparent;outline: none;" value="{{ user.phone }}">
+                <input type="text" class="text-muted mb-0 invisibleText" style=" border: none;background-color: transparent;outline: none;" value="{{ user.phone_number }}">
               </div>
             </div>
             <hr>
