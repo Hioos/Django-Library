@@ -1,0 +1,106 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+    <div class="container">
+
+        <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="row">
+                    <div class="col-7">
+                    <div class="col">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4">Add A New Books!</h1>
+                            </div>
+                            <form class="user" name="registration-form" id="registration-form" enctype="multipart/form-data" action="{% url 'addBook' %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-group row">
+                                    <div class="col-sm-9 mb-3 mb-sm-0">
+                                        <label for="bookName">Book's Name</label>
+                                        <input type="text" class="form-control form-control-user" id="bookName"
+                                            placeholder="Book's Name" name="book_name">
+                                    </div>
+                                    <div class="col-sm-3">
+                                        <label for="bookReleased">Released Year:</label>
+                                        <input type="number" class="form-control form-control-user"
+                                        id="bookReleased" placeholder="Year" name="book_released" max=2022>
+                                    </div>
+                                </div>
+                                <div class=" form-group row ">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                                        <label for="dataPicker">Language:</label>
+                                                          <select id="dataPicker" name="language" class="selectpicker form-control" data-size="5" data-live-search="true" title="Choose Language">
+                                                              {% for language in languages %}
+                                                              <option data-content="<img src ='{{ language.language_image.url }}' style='width:30px;height:20px' data-subtext='{{ language.language_code }}'/> {{ language.language_name }}" value="{{ language.language_id }}"> </option>
+                                                              {% endfor %}
+                                                          </select>
+                                    </div>
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <label for="dataPicker2">Genres:</label>
+                                        <select id="dataPicker2" name="subgenre" class="selectpicker form-control " data-size="5" data-live-search="true" title="Choose Genre(s)" data-selected-text-format="count"  multiple>
+                                                              {% for subgenre in subgenres %}
+                                                              <option data-tokens="{{ subgenre.subgenre_ofGenre.genre_code }}{{ subgenre.subgenre_code }}" value="{{ subgenre.id }}" title="{{ subgenre.subgenre_name }}"  data-subtext="{{ subgenre.subgenre_ofGenre.genre_name }}" data-actions-box="true">{{ subgenre.subgenre_name }}</option>
+                                                              {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class=" form-group row ">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                                        <label for="dataPicker3">Theme:</label>
+                                                          <select id="dataPicker3" name="theme" class="selectpicker form-control" data-size="5" data-live-search="true" title="Choose Theme(s)" data-selected-text-format="count" data-actions-box="true" multiple>
+                                                              {% for theme in themes %}
+                                                              <option value="{{ theme.theme_id }}">{{ theme.theme_name }}</option>
+                                                              {% endfor %}
+                                                          </select>
+                                    </div>
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                                        <label for="dataPicker4">Publisher:</label>
+                                                          <select id="dataPicker4" name="publisher" class="selectpicker form-control" data-size="5" data-live-search="true" title="Choose Publisher" data-actions-box="true">
+                                                              {% for publisher in publishers %}
+                                                              <option value="{{ publisher.publisher_id }}">{{ publisher.publisher_name }}</option>
+                                                              {% endfor %}
+                                                          </select>
+                                    </div>
+                                </div>
+                                <div class=" form-group row ">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                                        <label for="dataPicker5">Author:</label>
+                                                          <select id="dataPicker5" name="author" class="selectpicker form-control" data-size="5" data-live-search="true" title="Choose Author(s)" data-selected-text-format="count" data-actions-box="true" multiple>
+                                                              {% for author in authors %}
+                                                              <option value="{{ author.author_id }}">{{ author.author_pseudonym }}</option>
+                                                              {% endfor %}
+                                                          </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row justify-content-center">
+                                        <div class="col-10">
+                                            <textarea name="description" placeholder="Description...." class="form-control" style="resize: none;"  rows="8"></textarea>
+                                        </div>
+                                        <div class="col-2">
+                                        <label for="file-upload" class="btn btn-circle" style="border: 1px solid #ccc;
+                                                                                                                                            display: inline-block;
+                                                                                                                                            cursor: pointer;
+                                                                                                                                            word-wrap: break-word">
+                                            <i class="fas fa-upload"></i>
+                                        </label>
+                                        <input id="file-upload" name="image" type="file" onchange="loadFile(event)" accept="image/*" class="form-control form-control-user" style="display: none;"/>
+                                </div>
+
+                                </div>
+
+                                <button type="submit" class="btn btn-primary btn-user btn-block">
+                                    Add
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-5 d-flex align-items-center">
+                    <img id="output" src="https://static.vecteezy.com/system/resources/previews/002/219/582/original/illustration-of-book-icon-free-vector.jpg" class="d-flex align-items-center"  style="width: 80%;height: 80%;  margin: auto; border-radius:10px 30px; border-color: #000000 ;box-shadow: 5px 5px rgba(0,0,0,.15);" />
+                </div>
+            </div>
+        </div>
+
+    </div>
+    </div>
+{% endblock %}
