@@ -22,6 +22,8 @@ class Books(models.Model):
     book_language = models.ForeignKey('Language',on_delete=models.CASCADE,related_name='book_language')
     book_publisher = models.ForeignKey('publisher.Publisher',on_delete=models.CASCADE,related_name='book_publisher')
     book_released = models.IntegerField()
+    book_amount = models.IntegerField()
+    book_pages = models.IntegerField()
     class Meta:
         get_latest_by = ['book_id']
     def __str__(self):
@@ -71,14 +73,19 @@ class BookAuthorship(models.Model):
                 fields=['bookauthorship_bookId', 'bookauthorship_authorId'], name='book_author_ship_combination'
             )
         ]
+class Receipt(models.Model):
+    receipt_id = models.IntegerField(auto_created=True,primary_key=True,serialize=False,verbose_name='ID')
+    receipt_user = models.ForeignKey('accounts.Account',on_delete=models.CASCADE,related_name='receipt_user')
+    receipt_timestamp = models.DateTimeField(verbose_name="receipt_timestamp",auto_now_add=True)
+    def __str__(self):
+        return self.receipt_user
 class LoanedBook(models.Model):
     loanedBook_id = models.IntegerField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
-    loanedBook_user = models.ForeignKey('accounts.Account',on_delete=models.CASCADE,related_name='loanedBook_userId')
     loanedBook_book = models.ForeignKey('Books',on_delete=models.CASCADE,related_name='loanedBook_bookId')
+    loanedBook_receipt = models.ForeignKey('Receipt',on_delete=models.CASCADE,related_name='loanedBook_receipt')
     loanedBook_startDate = models.DateField( blank=True, null=True)
     loanedBook_dueDate = models.DateField(blank=True,null = True)
     loanedBook_returnedDate = models.DateField(blank = True,null=True)
     loanedBook_statusId = models.ForeignKey('loan.loanStatus',on_delete=models.CASCADE,related_name='loanedBook_loanStatus')
-    loanedBook_timestamp = models.DateTimeField(default=datetime.datetime.now)
     def __str__(self):
         return self.loanedBook_book

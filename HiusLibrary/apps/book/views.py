@@ -25,7 +25,7 @@ def LogEntryAdd(idUser,modelName,objectId,reason,after):
         action_flag=ADDITION if create else CHANGE)
 @login_required
 def index(request):
-    books = Books.objects.all().prefetch_related().select_related()
+    books = Books.objects.all().prefetch_related('book_Authorship_bookId')
     template = loader.get_template('books/index.html')
     def bookCounter():
         count = Books.objects.all().count()
@@ -87,13 +87,17 @@ def addBook(request):
     author = request.POST.getlist('author')
     subgenre = request.POST.getlist('subgenre')
     theme = request.POST.getlist('theme')
+    book_amount=request.POST['book_amount']
+    book_pages=request.POST['book_page']
     book = Books(
         book_name=book_name,
         book_image=image,
         book_description=description,
         book_language=Language.objects.get(language_id=language),
         book_publisher=Publisher.objects.get(publisher_id=publisher),
-        book_released=book_released
+        book_released=book_released,
+        book_amount=book_amount,
+        book_pages=book_pages
     )
     book.save()
     LastInsertId = Books.objects.latest()
