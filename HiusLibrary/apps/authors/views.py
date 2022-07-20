@@ -1,5 +1,7 @@
 import datetime
 from venv import create
+
+from django.contrib import messages
 from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
 from django.contrib.contenttypes.models import ContentType
 from django.http import HttpResponse, HttpResponseRedirect
@@ -56,19 +58,14 @@ def addNewAuthor(request):
                      author_gender = authorGender,)
     author.save()
     LogEntryAdd(request.session['id'], author,'','', authorName)
+    messages.success(request, (authorName + ' Added Successfully !!!'))
     return HttpResponseRedirect(reverse('authorsIndex'))
 @login_required
 def update(request,id):
     author = Authors.objects.get(author_id = id)
-    authorGender = Authors.objects.values('author_gender').filter(author_id=id)
-    if authorGender:
-        x = 1
-    else:
-        x = 0
     template = loader.get_template('authors/update.html')
     context = {
-        'author': author,
-        'x' : x
+        'author': author
     }
     return HttpResponse(template.render(context,request))
 @login_required
@@ -76,17 +73,25 @@ def updateProcess(request,id):
     authorName = request.POST['authorName']
     reason = request.POST['reason']
     authorDoB = request.POST['authorDoB']
-    imgUrl = request.POST['imgUrl']
-    nationUrl = request.POST['nationUrl']
+    authorPseudonym = request.POST['authorPseudonym']
+    imgUrl = request.FILES.get('image')
     authorBio = request.POST['authorBio']
     authorGender = request.POST['authorGender']
     author = Authors.objects.get(author_id = id)
-    author.author_name = authorName
-    author.author_dateOfBirth = authorDoB
-    author.author_biography = authorBio
-    author.author_imgUrl = imgUrl
-    author.author_nationalImgUrl = nationUrl
-    author.author_gender = authorGender
+    if imgUrl is None:
+        author.author_name = authorName
+        author.author_dateOfBirth = authorDoB
+        author.author_biography = authorBio
+        author.author_pseudonym = authorPseudonym
+        author.author_gender = authorGender
+    else:
+        author.author_name = authorName
+        author.author_dateOfBirth = authorDoB
+        author.author_biography = authorBio
+        author.author_imgUrl = imgUrl
+        author.author_pseudonym = authorPseudonym
+        author.author_gender = authorGender
     author.save()
     LogEntryAdd(request.session['id'], author,'',reason, authorName)
+    messages.success(request, (authorName + ' Updated Successfully !!!'))
     return HttpResponseRedirect(reverse('authorsIndex'))
