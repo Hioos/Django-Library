@@ -1,0 +1,246 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+<div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Books
+                                    <a href="{% url 'booksAdd' %}" class="btn btn-danger btn-icon-split btn-sm">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                        <span class="text">New Book</span>
+                                    </a></h1>
+                    </div>
+
+                    <div class="row">
+
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Number of Books in Library</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{x}}</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-user-ninja fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Earnings (Annual) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                Online</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">3</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-lightbulb fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tasks Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-info shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks
+                                            </div>
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col-auto">
+                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="progress progress-sm mr-2">
+                                                        <div class="progress-bar bg-info" role="progressbar"
+                                                            style="width: 50%" aria-valuenow="50" aria-valuemin="0"
+                                                            aria-valuemax="100"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pending Requests Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-warning shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                Most Popular Book this Week</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Horror</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-trophy fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                   <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Authors</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table  class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                    <tr>
+                                            <th  style="text-align:center;vertical-align: middle;">No.</th>
+                                            <th  style="text-align:center;vertical-align: middle;">Image</th>
+                                            <th  style="text-align:center;vertical-align: middle;">Name</th>
+                                            <th  style="text-align:center;vertical-align: middle;">Language</th>
+                                            <th  style="text-align:center;vertical-align: middle;">Publisher</th>
+                                            <th  style="text-align:center;vertical-align: middle;">Released</th>
+                                            <th  style="text-align:center;vertical-align: middle;">Authors</th>
+                                            <th    style="text-align:center;vertical-align: middle;">Pages</th>
+                                            <th    style="text-align:center;vertical-align: middle;">Owned</th>
+                                            <th style="text-align:center;vertical-align: middle;">Information</th>
+                                            <th style="text-align:center;vertical-align: middle;">Edit</th>
+                                    </tr>
+                                  </thead>
+                                    {% comment %} <tfoot>
+                                    <tr>
+                                            <th  style="text-align:center;vertical-align: middle;">No.</th>
+                                            <th  style="text-align:center;vertical-align: middle;">Image</th>
+                                            <th  style="text-align:center;vertical-align: middle;">Name</th>
+                                            <th  style="text-align:center;vertical-align: middle;">Language</th>
+                                            <th  style="text-align:center;vertical-align: middle;">Publisher</th>
+                                            <th  style="text-align:center;vertical-align: middle;">Released</th>
+                                            <th  style="text-align:center;vertical-align: middle;">Authors</th>
+                                            <th    style="text-align:center;vertical-align: middle;">Pages</th>
+                                            <th    style="text-align:center;vertical-align: middle;">Owned</th>
+                                            <th style="text-align:center;vertical-align: middle;">Information</th>
+                                            <th style="text-align:center;vertical-align: middle;">Edit</th>
+                                    </tr>
+                                    </tfoot> {% endcomment %}
+                                    <tbody>
+                                    {% for book in books %}
+                                        <tr>
+                                            <td  style="text-align:center;vertical-align: middle;">{{ forloop.counter }}</td>
+                                            <td  style="text-align:center;vertical-align: middle;"><img src="{{ book.book_image.url }}" style="width: 50px;height:75px;"/></td>
+                                            <td  style="text-align:center;vertical-align: middle;"><b>{{ book.book_name }}</b></td>
+                                            <td  style="text-align:center;vertical-align: middle;"><img src="{{ book.book_language.language_image.url }}" style="width: 50px;height:33px;border-radius: 7px" data-toggle="tooltip" data-placement="bottom" title="{{ book.book_language.language_name }}"/></td>
+                                            <td  style="text-align:center;vertical-align: middle;">{{ book.book_publisher }}</td>
+                                            <td  style="text-align:center;vertical-align: middle;">{{ book.book_released }}</td>
+                                            <td  style="text-align:center;vertical-align: middle;font-family: 'Dancing Script', cursive; ">{% for author in book.book_Authorship_bookId.all %}{{ author.bookauthorship_authorId.author_pseudonym }} {% endfor %}</td>
+                                            <td  style="text-align:center;vertical-align: middle;">{{ book.book_pages }}</td>
+                                            <td  style="text-align:center;vertical-align: middle;">{{ book.book_amount }}</td>
+                                            <td  style="text-align:center;vertical-align: middle;"><button type="button" class="btn btn-outline-primary btn-circle btn-sm" data-toggle="modal" data-target="#reqModal-{{ book.book_id }}"><i class="fas fa-info"></i></button></td>
+                                            <td style="text-align:center;vertical-align: middle;"><a class="btn btn-warning btn-circle btn-sm" href="{% url 'editBook' book.book_id %}"><i class="fas fa-edit"></i></a></td>
+                                        </tr>
+                                        <!--Modal -->
+                                <div class="modal fade bd-example-modal-lg" id="reqModal-{{ book.book_id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5><b><u><i>{{ book.book_name }}</i></u></b>({{ book.book_released }})<img src="{{ book.book_language.language_image.url }}" style="width: 21px;height: 14px" /></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                      <div class="modal-body">
+                                          <!--Body -->
+                                          <div class="container-fluid">
+                                          <div class="row">
+                                              <div class="col-lg-8">
+                                               <div class="row">
+                                                  <div class="col-sm-3">
+                                                      <p class="mb-0"><b>Author</b></p>
+                                                  </div>
+                                                  <div class="col-sm-9">
+                                                      <p class="text-muted mb-0">{% for author in book.book_Authorship_bookId.all %}<i>{{ author.bookauthorship_authorId.author_pseudonym }}</i><br> {% endfor %}</p>
+                                                  </div>
+                                               </div>
+                                                <hr>
+                                                    <div class="row">
+                                                  <div class="col-sm-3">
+                                                      <p class="mb-0"><b>Sub-Genre</b></p>
+                                                  </div>
+                                                  <div class="col-sm-9">
+                                                      <p class="text-muted mb-0">{% for subgenre in book.book_Subgenre_bookId.all %}<i>{{ subgenre.booksubgenre_subgenreId.subgenre_name }}</i> <sub><span class="badge badge-pill badge-dark"> <i>{{ subgenre.booksubgenre_subgenreId.subgenre_ofGenre }} </i></span></sub><br>{% endfor %}</p>
+                                                  </div>
+                                                    </div>
+                                                <hr>
+                                                  <div class="row">
+                                                  <div class="col-sm-3">
+                                                      <p class="mb-0"><b>Publisher</b></p>
+                                                  </div>
+                                                  <div class="col-sm-9">
+                                                    <p class="text-muted mb-0">{{ book.book_publisher.publisher_name }}</p>
+                                                  </div>
+                                                    </div>
+                                                <hr>
+                                                <div class="row">
+                                                  <div class="col-sm-3">
+                                                      <p class="mb-0"><b>In Library</b></p>
+                                                  </div>
+                                                  <div class="col-sm-9">
+                                                    <p class="text-muted mb-0">{{ book.book_amount }}</p>
+                                                  </div>
+                                                    </div>
+                                                <hr>
+                                                  <div class="row">
+                                                  <div class="col-sm-3">
+                                                      <p class="mb-0"><b>Page(s)</b></p>
+                                                  </div>
+                                                  <div class="col-sm-9">
+                                                    <p class="text-muted mb-0">{{ book.book_pages }}</p>
+                                                  </div>
+                                                    </div>
+                                                <hr>
+                                                  <div class="row">
+                                                      <div class="col-sm-3">
+                                                          <p class="mb-0"><b>Themes</b></p>
+                                                      </div>
+                                                      <div class="col-sm-9">
+                                                          <p class="text-muted mb-0">{% for theme in book.book_Themes_bookId.all %}<i>{{ theme.bookthemes_themeId.theme_name }}</i><br>{% endfor %}</p>
+                                                      </div>
+                                                        </div>
+                                                    <hr>
+                                              </div>
+                                              <div class="col-lg-4">
+                                                  <img src="{{ book.book_image.url }}" style="width: 100%;height: 80%;border-radius: 10px" />
+                                              </div>
+                                                <div class="row">
+                                                    <div class="container-fluid">
+                                                    <p class="text-muted mb-0">{{ book.book_description }}</p>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                          </div>
+                                          </div>
+                                          <!--Body -->
+                                        </div>
+                                  </div>
+                                </div>
+                                                                        </div>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+</div>
+{% endblock %}

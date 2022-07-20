@@ -1,0 +1,83 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+    <div class="container">
+
+        <div class="card o-hidden border-0 shadow-lg my-5">
+            <div class="card-body p-0">
+                <!-- Nested Row within Card Body -->
+                <div class="row">
+                    <div class="col">
+                        <div class="p-5">
+                            <div class="text-center">
+                                <h1 class="h4 text-gray-900 mb-4">Add A New Administrator!</h1>
+                            </div>
+                            <form class="user" name="registration-form" id="registration-form" action="{% url 'addAdminProccess' %}" method="post">
+                                {% csrf_token %}
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="text" class="form-control form-control-user" id="adminName"
+                                            placeholder="Admin's Fullname" name="name" >
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control form-control-user" id="adminUserName"
+                                            placeholder="Admin's Username" name="username">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                <div class="col-sm-9 mb-3 mb-sm-0">
+                                    <input type="email" class="form-control form-control-user" id="adminEmail"
+                                        placeholder="Email Address" name="email">
+                                </div>
+                                <div class="col-sm-3 mb-3 mb-sm-0">
+                                    <input type="date" class="form-control form-control-user"
+                                        id="adminDoB" placeholder="Date Of Birth" name="birth_date" required >
+                                </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="password" class="form-control form-control-user"
+                                            id="adminPassword" placeholder="Password" name="password">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="password" class="form-control form-control-user"
+                                            id="adminConfirmPassword" placeholder="Repeat Password" name="confirmpassword">
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-10 mb-3 mb-sm-0">
+                                        <input type="text" class="form-control form-control-user"
+                                            id="adminNationalId" placeholder="National ID" name="national_id">
+                                    </div>
+                                    <div class="col-sm-2">
+                                        <div class="text-left custom-control custom-radio align-items-center">
+                                                <input type="radio" class="custom-control-input" id="a" name="adminRole" value = "False" checked>
+                                                <label class="custom-control-label" for="a">Staff</label>
+                                            </div>
+                                        <div class="text-left custom-control custom-radio align-items-center">
+                                                <input type="radio" class="custom-control-input" id="s" name="adminRole"  value="True">
+                                                <label class="custom-control-label" for="s">Admin</label>
+                                            </div>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <input type="text" class="form-control form-control-user"
+                                            id="adminPassword" placeholder="Phone Number" name="phone_number">
+                                    </div>
+                                    <div class="col-sm-6">
+                                        <input type="text" class="form-control form-control-user"
+                                            id="adminConfirmPassword" placeholder="Address" name="address">
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-primary btn-user btn-block">
+                                    Register Account
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

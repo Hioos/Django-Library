@@ -1,0 +1,170 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+<div class="container-fluid">
+
+                    <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">Languages
+                                    <a href="" class="btn btn-danger btn-icon-split btn-sm" href="#" data-target="#login" data-toggle="modal">
+                                        <span class="icon text-white-50">
+                                            <i class="fas fa-plus"></i>
+                                        </span>
+                                        <span class="text">Add</span>
+                                    </a></h1>
+                    </div>
+
+                    <div class="row">
+                        <!-- Earnings (Annual) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                        </div>
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Number of Books in Library</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{x}}</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-user-ninja fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <!-- Tasks Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-info shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks
+                                            </div>
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col-auto">
+                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="progress progress-sm mr-2">
+                                                        <div class="progress-bar bg-info" role="progressbar"
+                                                            style="width: 50%" aria-valuenow="50" aria-valuemin="0"
+                                                            aria-valuemax="100"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pending Requests Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-warning shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                Most Popular Book this Week</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Horror</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-trophy fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                   <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Languages</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table  class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                    <tr>
+                                            <th style="text-align:center;vertical-align: middle;">No.</th>
+                                            <th style="text-align:center;vertical-align: middle;">Image</th>
+                                            <th style="text-align:center;vertical-align: middle;">Language</th>
+                                            <th style="text-align:center;vertical-align: middle;">Code</th>
+                                            <th  style="text-align: center">Edit</th>
+                                    </tr>
+                                  </thead>
+                                    {% comment %} <tfoot>
+                                    <tr>
+                                            <th style="text-align:center;vertical-align: middle;">No.</th>
+                                            <th style="text-align:center;vertical-align: middle;">Image</th>
+                                            <th style="text-align:center;vertical-align: middle;">Language</th>
+                                            <th style="text-align:center;vertical-align: middle;">Code</th>
+                                            <th  style="text-align: center">Edit</th>
+                                    </tr>
+                                    </tfoot> {% endcomment %}
+                                    <tbody>
+                                    {% for language in languages %}
+                                        <tr>
+                                        <td style="text-align:center;vertical-align: middle;">{{ forloop.counter }}</td>
+                                        <td style="text-align:center;vertical-align: middle;"><img src="{{ language.language_image.url }}" style="width: 75px;height: 50px"></td>
+                                        <td style="text-align:center;vertical-align: middle;">{{ language.language_name }}</td>
+                                        <td style="text-align:center;vertical-align: middle;">{{ language.language_code }}</td>
+                                        <td></td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+</div>
+    <div id="login" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <div class="modal-content">
+      <div class="modal-body">
+        <button data-dismiss="modal" class="close">&times;</button>
+        <h4 style="text-align: center;">Add Language</h4>
+              <div class="container">
+        <form class="user" name="registration-form" id="registration-form" enctype="multipart/form-data" action="{% url 'languageAdd' %}" method="post">
+            {% csrf_token %}
+            <div class="form-group row">
+                <div class="col-sm-9 mb-3 mb-sm-0">
+                                <div class="form-group row">
+          <input type="text" name="language" placeholder="Language" class="username form-control form-control-user"/>
+                                </div>
+                                <div class="form-group row">
+            <input type="text" name="code" placeholder="Code" class="username form-control form-control-user"/>
+                                </div>
+                                <div class="form-group row justify-content-center">
+                        <label for="file-upload" class="btn btn-circle" style="border: 1px solid #ccc;
+                                                                                                                                            display: inline-block;
+                                                                                                                                            padding: 6px 12px;
+                                                                                                                                            cursor: pointer;
+                                                                                                                                            word-wrap: break-word">
+                            <i class="fas fa-upload"></i>
+                        </label>
+                        <input id="file-upload" type="file" name="flag" onchange="loadFile(event)" accept="image/*" class="form-control form-control-user" style="display: none;"/>
+                        <button class="btn" type="submit">Save<i class="fas fa-check"></i></button>
+                        </div>
+                    </div>
+                <div class="col-3 d-flex align-items-center">
+
+                    <img id="output"  src="https://static.vecteezy.com/system/resources/previews/005/185/897/original/country-flag-icon-in-the-world-free-vector.jpg" class="d-flex align-items-center"  style="width: 75px;margin: auto;height: 50px;border-radius: 10px;border:1px;border-color: #ff2929" />
+                </div>
+            </div>
+        </form>
+      </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}
