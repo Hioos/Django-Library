@@ -25,7 +25,7 @@ def LogEntryAdd(idUser,modelName,objectId,reason,after):
         action_flag=ADDITION if create else CHANGE)
 @login_required
 def index(request):
-    books = Books.objects.all().prefetch_related('book_Authorship_bookId')
+    books = Books.objects.all().prefetch_related('book_Authorship_bookId','book_Subgenre_bookId','book_Themes_bookId')
     template = loader.get_template('books/index.html')
     def bookCounter():
         count = Books.objects.all().count()
@@ -116,6 +116,78 @@ def addBook(request):
     for themeId in theme:
         bookTheme = BookThemes(
             bookthemes_bookId = Books.objects.get(book_id=LastInsertId.book_id),
+            bookthemes_themeId = Themes.objects.get(theme_id= themeId)
+        )
+        bookTheme.save()
+    return HttpResponseRedirect(reverse('booksIndex'))
+@login_required
+def edit(request,id):
+    books = Books.objects.all().prefetch_related('book_Authorship_bookId','book_Subgenre_bookId','book_Themes_bookId').get(book_id = id)
+    publishers = Publisher.objects.all().prefetch_related().select_related()
+    languages = Language.objects.all()
+    subgenres = SubGenre.objects.all().select_related('subgenre_ofGenre').order_by('subgenre_ofGenre_id')
+    themes = Themes.objects.all()
+    authors = Authors.objects.all()
+    template = loader.get_template('books/edit.html')
+    context = {
+        'books' : books,
+        'publishers': publishers,
+        'languages': languages,
+        'subgenres': subgenres,
+        'themes': themes,
+        'authors': authors
+    }
+    return HttpResponse(template.render(context,request))
+@login_required
+def update(request,id):
+    book_name = request.POST['book_name']
+    book_released = request.POST['book_released']
+    language = request.POST['languageSelectEdit']
+    description = request.POST['description']
+    image = request.FILES.get('image')
+    publisher = request.POST['publisherSelect']
+    author = request.POST.getlist('authorSelectEdit')
+    subgenre = request.POST.getlist('subgenreSelectEdit')
+    theme = request.POST.getlist('themeSelectEdit')
+    book_amount=request.POST['book_amount']
+    book_pages=request.POST['book_page']
+    book = Books.objects.get(book_id=id)
+    if image is None:
+        book.book_name= book_name
+        book.book_description = description
+        book.book_language = Language.objects.get(language_id=language)
+        book.book_publisher = Publisher.objects.get(publisher_id=publisher)
+        book.book_released = book_released
+        book.book_amount = book_amount
+        book.book_pages = book_pages
+    else:
+        book.book_name= book_name
+        book.book_image = image
+        book.book_description = description
+        book.book_language = Language.objects.get(language_id=language)
+        book.book_publisher = Publisher.objects.get(publisher_id=publisher)
+        book.book_released = book_released
+        book.book_amount = book_amount
+        book.book_pages = book_pages
+    book.save()
+    BookAuthorship.objects.filter(bookauthorship_bookId=id).delete()
+    BookSubGenre.objects.filter(booksubgenre_bookId=id).delete()
+    BookThemes.objects.filter(bookthemes_bookId=id).delete()
+    for authorId in author:
+        bookAuthor = BookAuthorship(
+            bookauthorship_bookId = Books.objects.get(book_id=id),
+            bookauthorship_authorId = Authors.objects.get(author_id=authorId)
+        )
+        bookAuthor.save()
+    for subgenreId in subgenre:
+        bookSubGenre = BookSubGenre(
+            booksubgenre_bookId = Books.objects.get(book_id=id),
+            booksubgenre_subgenreId = SubGenre.objects.get(id = subgenreId)
+        )
+        bookSubGenre.save()
+    for themeId in theme:
+        bookTheme = BookThemes(
+            bookthemes_bookId = Books.objects.get(book_id=id),
             bookthemes_themeId = Themes.objects.get(theme_id= themeId)
         )
         bookTheme.save()

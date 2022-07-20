@@ -537,6 +537,13 @@ $("#dataPicker").selectpicker("refresh");
               URL.revokeObjectURL(output.src) // free memory
             }
           };
+        $('select[name=languageSelectEdit]').val({{ books.book_language.language_id }});
+        $('select[name=subgenreSelectEdit]').val([{% for subgenre in books.book_Subgenre_bookId.all %}{{ subgenre.booksubgenre_subgenreId.id }},{% endfor %}]);
+        $('select[name=themeSelectEdit]').val([{% for theme in books.book_Themes_bookId.all %}{{ theme.bookthemes_themeId.theme_id }},{% endfor %}]);
+        $('.selectpicker').selectpicker('refresh')
+        $('select[name=publisherSelect]').val({{ books.book_publisher.publisher_id }});
+        $('select[name=authorSelectEdit]').val([{% for author in books.book_Authorship_bookId.all %}{{ author.bookauthorship_authorId.author_id }},{% endfor %}]);
+        $('.selectpicker').selectpicker('refresh')
     </script>
 </body>
 

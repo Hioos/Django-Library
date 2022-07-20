@@ -46,7 +46,8 @@ class Language(models.Model):
 class BookThemes(models.Model):
     bookthemes_bookId = models.ForeignKey('Books',on_delete=models.CASCADE,related_name='book_Themes_bookId')
     bookthemes_themeId = models.ForeignKey('genre.Themes',on_delete=models.CASCADE,related_name='book_Themes_themeId')
-
+    def __str__(self):
+        return self.bookthemes_bookId
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -57,6 +58,8 @@ class BookSubGenre(models.Model):
     booksubgenre_bookId = models.ForeignKey('Books',on_delete=models.CASCADE,related_name='book_Subgenre_bookId')
     booksubgenre_subgenreId = models.ForeignKey('genre.SubGenre',on_delete=models.CASCADE,related_name='book_Subgenre_subgenreId')
 
+    def __str__(self):
+        return self.booksubgenre_bookId
     class Meta:
         constraints = [
             models.UniqueConstraint(
@@ -67,6 +70,8 @@ class BookAuthorship(models.Model):
     bookauthorship_bookId = models.ForeignKey('Books',on_delete=models.CASCADE,related_name='book_Authorship_bookId')
     bookauthorship_authorId = models.ForeignKey('authors.Authors',on_delete=models.CASCADE,related_name='book_Authorship_authorId')
 
+    def __str__(self):
+        return self.bookauthorship_bookId
     class Meta:
         constraints = [
             models.UniqueConstraint(

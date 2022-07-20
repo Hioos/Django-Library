@@ -20,7 +20,7 @@
                                     </div>
                                     <div class="col-sm-3">
                                         <input type="date" class="form-control form-control-user"
-                                        id="authorDoB" placeholder="Date Of Birth" name="authorDoB" value="{{ author.author_dateOfBirth  }}">
+                                        id="authorDoB" placeholder="Date Of Birth" name="authorDoB" value="{{ author.author_dateOfBirth|date:"SHORT_DATE_FORMAT"}}" >
                                     </div>
                                 </div>
                                 <div class="form-group row">
