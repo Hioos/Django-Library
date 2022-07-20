@@ -107,17 +107,17 @@
                                 <table  class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                     <tr>
-                                            <th>No.</th>
-                                            <th>Pseudonym</th>
-                                            <th>Image</th>
-                                            <th>Name</th>
-                                            <th>Gender</th>
-                                            <th>DoB</th>
-                                            <th>Biography</th>
-                                            <th  style="text-align: center">Edit</th>
+                                            <th style="text-align: center">No.</th>
+                                            <th style="text-align: center">Pseudonym</th>
+                                            <th style="text-align: center">Image</th>
+                                            <th style="text-align: center">Name</th>
+                                            <th style="text-align: center">Gender</th>
+                                            <th style="text-align: center">DoB</th>
+                                            <th style="text-align: center">Biography</th>
+                                            <th style="text-align: center">Edit</th>
                                     </tr>
                                   </thead>
-                                    <tfoot>
+                                    {% comment %} <tfoot>
                                     <tr>
                                             <th>No.</th>
                                             <th>Pseudonym</th>
@@ -128,17 +128,17 @@
                                             <th>Biography</th>
                                             <th  style="text-align: center">Edit</th>
                                     </tr>
-                                    </tfoot>
+                                    </tfoot> {% endcomment %}
                                     <tbody>
                                     {% for author in authors %}
                                         <tr>
                                             <td style="width:5%;text-align:center;vertical-align: middle;">{{ forloop.counter }}</td>
                                             <td style="width:10%;text-align:center;vertical-align: middle;font-family: 'Dancing Script', cursive; "><b>{{ author.author_pseudonym }}</b></td>
-                                            <td style="width:10%;text-align:center;vertical-align: middle;"><img src="{{ author.author_imgUrl.url}}"  width="125" height="125" class="rounded-circle" ></td>
+                                            <td style="width:10%;text-align:justify;vertical-align: middle;"><img src="{{ author.author_imgUrl.url}}"  width="125" height="125" class="rounded-circle" ></td>
                                             <td style="text-align:center;vertical-align: middle;">{{ author.author_name}}</td>
                                             <td style="width:2%;text-align:center;vertical-align: middle;">{% if author.author_gender %} <i class="fas fa-mars fa-2x"></i> {% else %} <i class="fas fa-venus fa-2x"></i> {% endif %} </td>
-                                            <td style="width:5%;text-align:center;vertical-align: middle;">{{ author.author_dateOfBirth }}</td>
-                                            <td style="width:90%;vertical-align: middle;">{{ author.author_biography}}</td>
+                                            <td style="width:5%;text-align:justify;vertical-align: middle;">{{ author.author_dateOfBirth }}</td>
+                                            <td style="text-align: justify; width: 500px;overflow: hidden;text-overflow: ellipsis;line-height: 25px;-webkit-line-clamp: 6;height: 140px;display: -webkit-box;    -webkit-box-orient: vertical;">{{ author.author_biography}}</td>
                                             <td style="width:5%;text-align:center;vertical-align: middle;"><a class="btn btn-warning btn-circle btn-sm" href="{% url 'updateAuthor' author.author_id %}"><i class="fas fa-edit"></i></a></td>
                                         </tr>
                                     {% endfor %}
