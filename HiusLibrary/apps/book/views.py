@@ -119,6 +119,7 @@ def addBook(request):
             bookthemes_themeId = Themes.objects.get(theme_id= themeId)
         )
         bookTheme.save()
+    messages.success(request, (book_name + ' Added Successfully !!!'))
     return HttpResponseRedirect(reverse('booksIndex'))
 @login_required
 def edit(request,id):
@@ -191,4 +192,5 @@ def update(request,id):
             bookthemes_themeId = Themes.objects.get(theme_id= themeId)
         )
         bookTheme.save()
+    messages.success(request, (book_name+' Updated Successfully !!!'))
     return HttpResponseRedirect(reverse('booksIndex'))
