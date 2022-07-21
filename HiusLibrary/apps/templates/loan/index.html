@@ -1,48 +1,58 @@
 {% extends 'layouts/base.html' %}
 {% block content %}
 <div class="container-fluid">
-    <div class="d-sm-flex align-items-center justify-content-between mb-4">
+      <!-- Page Heading -->
+                    <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Loan Status
-</h1>
-                    </div>
-<div class="card shadow mb-4">
-                        <div class="card-header py-3">
-
-                            <div class="row ml-1">
-                                <div class="ml-auto mr-3" >
-                            <a class="login-trigger btn btn-primary btn-icon-split btn-sm" href="#" data-target="#login" data-toggle="modal">                                        <span class="icon text-white-50">
+                                    <a href="" class="btn btn-danger btn-icon-split btn-sm" href="#" data-target="#login" data-toggle="modal">
+                                        <span class="icon text-white-50">
                                             <i class="fas fa-plus"></i>
                                         </span>
-                                        <span class="text">New Status</span></a>
-                                    </div>
-                            </div>
-                        </div>
+                                        <span class="text">New Status</span>
+                                    </a></h1>
+                    </div>
+<!--    <div class="d-sm-flex align-items-center justify-content-between mb-4">-->
+<!--&lt;!&ndash;                        <h1 class="h3 mb-0 text-gray-800">Loan Status&ndash;&gt;-->
+<!--&lt;!&ndash;</h1>&ndash;&gt;-->
+<!--                    </div>-->
+<div class="card shadow mb-4">
+<!--                        <div class="card-header py-3">-->
+
+<!--                            <div class="row ml-1">-->
+<!--                                <div class="ml-auto mr-3" >-->
+<!--                            <a class="login-trigger btn btn-primary btn-icon-split btn-sm" href="#" data-target="#login" data-toggle="modal">                                        <span class="icon text-white-50">-->
+<!--                                            <i class="fas fa-plus"></i>-->
+<!--                                        </span>-->
+<!--                                        <span class="text">New Status</span></a>-->
+<!--                                    </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table  class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                                     <thead>
                                         <tr>
-                                            <th>No.</th>
-                                            <th>Status</th>
-                                            <th  style="text-align: center">View</th>
-                                            <th  style="text-align: center">Edit</th>
+                                            <th style="text-align: center">No.</th>
+                                            <th style="text-align: center">Status</th>
+                                            <th style="text-align: center">View</th>
+                                            <th style="text-align: center">Edit</th>
                                         </tr>
                                     </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th>No.</th>
-                                            <th>Status</th>
-                                            <th  style="text-align: center">View</th>
-                                            <th  style="text-align: center">Edit</th>
-                                        </tr>
-                                    </tfoot>
+<!--                                    <tfoot>-->
+<!--                                        <tr>-->
+<!--                                            <th>No.</th>-->
+<!--                                            <th>Status</th>-->
+<!--                                            <th  style="text-align: center">View</th>-->
+<!--                                            <th  style="text-align: center">Edit</th>-->
+<!--                                        </tr>-->
+<!--                                    </tfoot>-->
                                     <tbody>
                                     {% for loan in loans %}
                                         <tr>
-                                            <td>{{ forloop.counter }}</td>
-                                            <td><i>{{loan.loanStatus_name}}</i></td>
-                                           <td  style="text-align: center"><a class="btn btn-success btn-circle btn-sm" href=""><i class="fas fa-flag"></i></a></td>
-                                           <td  style="text-align: center"><a class="btn btn-warning btn-circle btn-sm" href=""><i class="fas fa-pen-fancy"></i></a></td>
+                                            <td style="text-align: center">{{ forloop.counter }}</td>
+                                            <td style="text-align: center"><i>{{loan.loanStatus_name}}</i></td>
+                                            <td style="text-align: center"><a class="btn btn-success btn-circle btn-sm" href=""><i class="fas fa-flag"></i></a></td>
+                                            <td style="text-align: center"><a class="btn btn-warning btn-circle btn-sm" href=""><i class="fas fa-pen-fancy"></i></a></td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>

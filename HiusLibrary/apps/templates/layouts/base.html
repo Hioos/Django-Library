@@ -545,6 +545,15 @@ $("#dataPicker").selectpicker("refresh");
         $('select[name=authorSelectEdit]').val([{% for author in books.book_Authorship_bookId.all %}{{ author.bookauthorship_authorId.author_id }},{% endfor %}]);
         $('.selectpicker').selectpicker('refresh')
     </script>
+                                        <script type="text/javascript">
+                                            $(function () {
+                                                  $("#datepicker").datepicker({
+                                                    autoclose: true,
+                                                    todayHighlight: true
+                                              }).datepicker('update', new Date());
+                                            });
+
+                                        </script>
 </body>
 
 </html>

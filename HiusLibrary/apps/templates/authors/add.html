@@ -16,30 +16,32 @@
                                 <div class="form-group row">
                                     <div class="col-sm-4 mb-3 mb-sm-0">
                                         <input type="text" class="form-control form-control-user" id="authorName"
-                                            placeholder="Author's Fullname" name="authorName">
+                                            placeholder="Author's Fullname" name="authorName" required>
                                     </div>
                                     <div class="col-sm-4 mb-3 mb-sm-0">
                                         <input type="text" class="form-control form-control-user" id="auhtorPseudonym"
-                                            placeholder="Author's Pseudonym" name="authorPseudonym">
+                                            placeholder="Author's Pseudonym" name="authorPseudonym" required>
                                     </div>
                                     <div class="col-sm-3">
                                         <input type="date" class="form-control form-control-user"
-                                        id="authorDoB" placeholder="Date Of Birth" name="authorDoB">
+                                        id="authorDoB" placeholder="Date Of Birth" name="authorDoB"required>
                                     </div>
                                                                        <div class="col-sm-1">
                                         <div class="text-left custom-control custom-radio align-items-center">
-                                                <input type="radio" class="custom-control-input" id="a" name="authorGender" value = "True">
+                                                <input type="radio" class="custom-control-input" id="a"
+                                                       name="authorGender" value = "True" required>
                                             <label class="custom-control-label" for="a"><i class="fas fa-mars  fa-2x"></i></label>
                                             </div>
                                         <div class="text-left custom-control custom-radio align-items-center">
-                                                <input type="radio" class="custom-control-input" id="s" name="authorGender" checked value= "False">
+                                                <input type="radio" class="custom-control-input" id="s" name="authorGender"
+                                                       checked value= "False" required>
                                                 <label class="custom-control-label" for="s"><i class="fas fa-venus  fa-2x"></i></label>
                                             </div>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-7 mb-3 mb-sm-0">
-                                        <textarea class="form-control "  id="authorBio" name="authorBio"  rows="3" style="resize: none;height: 300px;"></textarea>
+                                        <textarea class="form-control "  id="authorBio" name="authorBio"  rows="3" style="resize: none;height: 300px;" required></textarea>
                                     </div>
                                                                     <div class="col-sm-1 mb-3 mb-sm-0">
                                                             <label for="file-upload" class="btn btn-circle" style="border: 1px solid #ccc;
@@ -49,7 +51,7 @@
                                                                                                                                             word-wrap: break-word">
                                                             <i class="fas fa-upload"></i>
                                                             </label>
-                            <input id="file-upload" type="file" name="image" onchange="loadFile(event)" accept="image/*" class="form-control form-control-user" style="display: none;"/>
+                            <input id="file-upload" type="file" name="image" onchange="loadFile(event)" accept="image/*" class="form-control form-control-user" style="display: none;" required/>
                                 </div>
                                     <div class="col-sm-3 mb-3 mb-sm-0">
                                     <img id="output"  src="https://www.kindpng.com/picc/m/47-475813_transparent-smiling-face-png-funny-faces-cartoon-png.png" class="d-flex align-items-center"  style="width: 100%;margin: auto;height: 100%;border-radius: 10px;border:1px;border-color: #ff2929" />

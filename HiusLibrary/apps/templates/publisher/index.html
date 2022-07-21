@@ -3,15 +3,26 @@
 <div class="container-fluid">
 
  <!-- Page Heading -->
+     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800">Publisher
-                                   <a class="login-trigger btn btn-success btn-icon-split btn-sm" href="#" data-target="#login" data-toggle="modal">
+                                    <a href="#" class="btn btn-danger btn-icon-split btn-sm"  data-target="#login" data-toggle="modal">
+<!--                                        <a class="login-trigger btn btn-success btn-icon-split btn-sm" href="#" data-target="#login" data-toggle="modal">-->
                                         <span class="icon text-white-50">
                                             <i class="fas fa-plus"></i>
                                         </span>
                                         <span class="text">New Publisher</span>
                                     </a></h1>
                     </div>
+<!--                    <div class="d-sm-flex align-items-center justify-content-between mb-4">-->
+<!--                        <h1 class="h3 mb-0 text-gray-800">Publisher-->
+<!--                                   <a class="login-trigger btn btn-success btn-icon-split btn-sm" href="#" data-target="#login" data-toggle="modal">-->
+<!--                                        <span class="icon text-white-50">-->
+<!--                                            <i class="fas fa-plus"></i>-->
+<!--                                        </span>-->
+<!--                                        <span class="text">New Publisher</span>-->
+<!--                                    </a></h1>-->
+<!--                    </div>-->
 
                     <div class="row">
 
@@ -112,16 +123,16 @@
                                             <th  style="text-align: center">Edit</th>
                                         </tr>
                                     </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th style="text-align:center;vertical-align: middle;">No.</th>
-                                            <th style="text-align:center;vertical-align: middle;">Publisher's Name</th>
-                                            <th style="text-align:center;vertical-align: middle;">Books In Library</th>
-                                            <th style="text-align:center;vertical-align: middle;">All Books</th>
-                                            <th  style="text-align: center">View</th>
-                                            <th  style="text-align: center">Edit</th>
-                                        </tr>
-                                    </tfoot>
+<!--                                    <tfoot>-->
+<!--                                        <tr>-->
+<!--                                            <th style="text-align:center;vertical-align: middle;">No.</th>-->
+<!--                                            <th style="text-align:center;vertical-align: middle;">Publisher's Name</th>-->
+<!--                                            <th style="text-align:center;vertical-align: middle;">Books In Library</th>-->
+<!--                                            <th style="text-align:center;vertical-align: middle;">All Books</th>-->
+<!--                                            <th  style="text-align: center">View</th>-->
+<!--                                            <th  style="text-align: center">Edit</th>-->
+<!--                                        </tr>-->
+<!--                                    </tfoot>-->
                                     <tbody>
                                     {% for publisher in publishers %}
                                         <tr>
@@ -145,7 +156,7 @@
     <div class="modal-content">
       <div class="modal-body">
         <button data-dismiss="modal" class="close">&times;</button>
-        <h4>New Publisher Name</h4>
+        <h4 style="text-align: center;">New Publisher Name</h4>
         <form class="user" name="registration-form" id="registration-form" action="{% url 'publisherAdd' %}" method="post">
             {% csrf_token %}
             <div class="form-group row">

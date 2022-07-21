@@ -100,15 +100,15 @@
                                             <th  style="text-align: center">Edit</th>
                                     </tr>
                                   </thead>
-                                    <tfoot>
-                                    <tr>
-                                            <th style="text-align:center;vertical-align: middle;">No.</th>
-                                            <th style="text-align:center;vertical-align: middle;">Image</th>
-                                            <th style="text-align:center;vertical-align: middle;">Language</th>
-                                            <th style="text-align:center;vertical-align: middle;">Code</th>
-                                            <th  style="text-align: center">Edit</th>
-                                    </tr>
-                                    </tfoot>
+<!--                                    <tfoot>-->
+<!--                                    <tr>-->
+<!--                                            <th style="text-align:center;vertical-align: middle;">No.</th>-->
+<!--                                            <th style="text-align:center;vertical-align: middle;">Image</th>-->
+<!--                                            <th style="text-align:center;vertical-align: middle;">Language</th>-->
+<!--                                            <th style="text-align:center;vertical-align: middle;">Code</th>-->
+<!--                                            <th  style="text-align: center">Edit</th>-->
+<!--                                    </tr>-->
+<!--                                    </tfoot>-->
                                     <tbody>
                                     {% for language in languages %}
                                         <tr>
@@ -131,7 +131,7 @@
     <div class="modal-content">
       <div class="modal-body">
         <button data-dismiss="modal" class="close">&times;</button>
-        <h4>Add Language</h4>
+        <h4 style="text-align: center;">Add Language</h4>
               <div class="container">
         <form class="user" name="registration-form" id="registration-form" enctype="multipart/form-data" action="{% url 'languageAdd' %}" method="post">
             {% csrf_token %}

@@ -104,64 +104,62 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table  class="table table-bordered" id="dataTable"  style="  width: 100%;
-                                                                                                                                  word-wrap:break-word;
-                                                                                                                                    ">
+                                <table  class="table table-bordered" id="dataTable"  style="  width: 100%; word-wrap:break-word; ">
                                     <thead >
                                         <tr >
-                                            <th >Name</th>
-                                            <th>Phone Number</th>
-                                            <th ><i class="fas fa-key" style="color: #ecff3c"></i></th>
-                                            <th >Membership Start</th>
-                                            <th >Membership End</th>
-                                            <th>Created By</th>
-                                            <th  style="text-align: center">Books</th>
-                                            <th  style="text-align: center">Ban/Unban</th>
-                                            <th  style="text-align: center">Extend</th>
-                                            <th  style="text-align: center">Lib. Card</th>
+                                            <th style="text-align:center;vertical-align: middle;">Name</th>
+                                            <th style="text-align:center;vertical-align: middle;">Phone Number</th>
+                                            <th style="text-align:center;vertical-align: middle;">Account <i class="fas fa-key" style="color: #FF0000"></i></th>
+                                            <th style="text-align:center;vertical-align: middle;">Membership Start</th>
+                                            <th style="text-align:center;vertical-align: middle;">Membership End</th>
+                                            <th style="text-align:center;vertical-align: middle;">Created By</th>
+                                            <th style="text-align:center;vertical-align: middle;">Books</th>
+                                            <th style="text-align:center;vertical-align: middle;">Ban/Unban</th>
+                                            <th style="text-align:center;vertical-align: middle;">Extend</th>
+                                            <th style="text-align:center;vertical-align: middle;">Lib.Card</th>
                                         </tr>
                                     </thead>
-                                    <tfoot>
-                                        <tr>
-                                            <th >Name</th>
-                                            <th>Phone Number</th>
-                                            <th ><i class="fas fa-key" style="color: #ecff3c"></i></th>
-                                            <th >Membership Start</th>
-                                            <th >Membership End</th>
-                                            <th>Created By</th>
-                                            <th  style="text-align: center">Books</th>
-                                            <th  style="text-align: center">Ban/Unban</th>
-                                            <th  style="text-align: center">Extend</th>
-                                            <th  style="text-align: center">Lib. Card</th>
-                                        </tr>
-                                    </tfoot>
+<!--                                    <tfoot>-->
+<!--                                        <tr>-->
+<!--                                            <th >Name</th>-->
+<!--                                            <th>Phone Number</th>-->
+<!--                                            <th ><i class="fas fa-key" style="color: #ecff3c"></i></th>-->
+<!--                                            <th >Membership Start</th>-->
+<!--                                            <th >Membership End</th>-->
+<!--                                            <th>Created By</th>-->
+<!--                                            <th  style="text-align: center">Books</th>-->
+<!--                                            <th  style="text-align: center">Ban/Unban</th>-->
+<!--                                            <th  style="text-align: center">Extend</th>-->
+<!--                                            <th  style="text-align: center">Lib. Card</th>-->
+<!--                                        </tr>-->
+<!--                                    </tfoot>-->
                                     <tbody >
                                     {% for account in accounts %}
                                         <tr id="userRow">
                                             <td class="align-middle" style="width: 200px;"><b><i>{{account.name}}</i></b></td>
-                                           <td class="align-middle">{{account.phone_number}}</td>
+                                            <td class="align-middle">{{account.phone_number}}</td>
                                             <td class="align-middle">{{ account.username }}</td>
                                             <td class="align-middle" >{{account.date_joined}}</td>
                                             <td class="align-middle"><b><i id="expiredDate{{ account.id }}" style="color: 	#ff3131;">{{ account.expired_date }}</i></b></td>
                                             <td class="align-middle">{{ account.created_by }}</td>
                                             <td  class="align-middle" style="text-align: center"><a class="btn btn-success btn-circle btn-sm" href=""><i class="fas fa-flag"></i></a></td>
-                                           <td  class="align-middle" style="text-align: center">{% if account.is_banned %}
+                                            <td  class="align-middle" style="text-align: center">{% if account.is_banned %}
                                                <a class="banbutton btn btn-danger btn-circle btn-sm"  id="ban{{ account.id }}" ban-data="{{ account.id }}" is-banned="TRUE"><i class="fas fa-lock"></i></a>
                                            {% else %}
                                                <a class="banbutton btn btn-warning btn-circle btn-sm" id="ban{{ account.id }}" ban-data="{{ account.id }}" is-banned="FALSE"><i class="fas fa-unlock"></i></a>
                                            {% endif %}</td>
-                                          <td  class="align-middle" style="text-align: center"><a class="extendbutton btn btn-info btn-circle btn-sm" id="extend{{ account.id }}" extend="{{ account.id }}" {% if account.is_banned is True %}style="display: none;" {% endif %}><i class="fas fa-plus"></i></a></td>
-                                        <td  class="align-middle" style="text-align: center"><button type="button" class="btn btn-outline-primary btn-circle btn-sm" data-toggle="modal" data-target="#reqModal-{{ account.id }}"><i class="fas fa-eye"></i></button></td>
+                                            <td  class="align-middle" style="text-align: center"><a class="extendbutton btn btn-info btn-circle btn-sm" id="extend{{ account.id }}" extend="{{ account.id }}" {% if account.is_banned is True %}style="display: none;" {% endif %}><i class="fas fa-plus"></i></a></td>
+                                            <td  class="align-middle" style="text-align: center"><button type="button" class="btn btn-outline-primary btn-circle btn-sm" data-toggle="modal" data-target="#reqModal-{{ account.id }}"><i class="fas fa-eye"></i></button></td>
                                         </tr>
                                                                         <!-- Modal -->
                                 <div class="modal fade bd-example-modal-lg" id="reqModal-{{ account.id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
                                     <div class="modal-content">
-                                      <div class="modal-header">
-                                          <h5>Library Card</h5>
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                          <span aria-hidden="true">&times;</span>
-                                        </button>
+                                        <div class="modal-header">
+                                            <h5>Library Card</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
                                       </div>
                                       <div class="modal-body">
                                                                             <div class="row">
@@ -170,9 +168,9 @@
                                                                                   <div class="card-body text-center">
                                                                                     <img src="{{ account.profile_image.url }}" alt="avatar" class="rounded-circle img-fluid shadow-4 " style="width:150px;height:150px;">
                                                                                     <h5 class="my-3">{{ account.name }} {% if account.is_banned is True %} <i class="fas fa-ban" style="color:#ff2300;"></i>  {%  endif %}</h5>
-                                                                                    <p class="text-muted mb-1 text-left"><i class="fas fa-id-badge" style=""></i> {{ account.username }} </p>
-                                                                                    <p class="text-muted mb-1 text-left"><i class="fas fa-calendar-check" style="color: #00ffb2;"></i> {{ account.date_joined }}</p>
-                                                                                    <p class="text-muted mb-1 text-left"><i class="fas fa-calendar-times" style="color: #ff2929;"></i> <span  id="modalexpired{{ account.id }}"> {{ account.expired_date }} </span></p>
+                                                                                    <p class="text-muted mb-1 text-left"><i class="fas fa-key" style="color: #FF0000"></i> {{ account.username }} </p>
+                                                                                    <p class="text-muted mb-1 text-left"><i class="fas fa-calendar-check" style="color: #FF0000;"></i> {{ account.date_joined }}</p>
+                                                                                    <p class="text-muted mb-1 text-left"><i class="fas fa-calendar-times" style="color: #FF0000;"></i> <span  id="modalexpired{{ account.id }}"> {{ account.expired_date }} </span></p>
                                                                                     <div class="d-flex justify-content-center mb-2">
                                                                                         <div class="row">
                                                                                             <div class="col-4">
@@ -238,7 +236,7 @@
                                                                                       <hr>
                                                                                     <div class="row">
                                                                                       <div class="col-sm-3">
-                                                                                        <p class="mb-0">N. ID</p>
+                                                                                        <p class="mb-0">Nationl ID</p>
                                                                                       </div>
                                                                                       <div class="col-sm-9">
                                                                                         <p class="text-muted mb-0">{{ account.national_id }}</p>
