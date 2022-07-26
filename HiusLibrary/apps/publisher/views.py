@@ -2,6 +2,7 @@ import datetime
 from venv import create
 from django.contrib import messages
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import Count
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 # Create your views here.
@@ -12,6 +13,9 @@ from .models import Publisher
 from django.contrib.auth.decorators import login_required
 from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
 from ..accounts.models import Account
+from ..book import models
+from ..book.models import Books
+
 
 def LogEntryAdd(idUser,modelName,objectId,reason,after):
     LogEntry.objects.log_action(
@@ -23,7 +27,7 @@ def LogEntryAdd(idUser,modelName,objectId,reason,after):
         action_flag=ADDITION if create else CHANGE)
 @login_required
 def index(request):
-    publishers = Publisher.objects.all()
+    publishers = Publisher.objects.annotate(num_assets=Count('book_publisher'))
     x = Publisher.objects.count()
     template = loader.get_template('publisher/index.html')
     context = {

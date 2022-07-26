@@ -31,6 +31,7 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/pdfmake.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.36/vfs_fonts.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.bundle.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css">
 <script type="text/javascript" src="https://cdn.datatables.net/v/bs5/jszip-2.5.0/dt-1.12.1/af-2.4.0/b-2.2.3/b-colvis-2.2.3/b-html5-2.2.3/b-print-2.2.3/cr-1.5.6/date-1.1.2/fc-4.1.0/fh-3.2.3/kt-2.7.0/r-2.3.0/rg-1.2.0/rr-1.2.8/sc-2.0.6/sb-1.3.3/sp-2.0.1/sl-1.4.0/sr-1.1.1/datatables.min.js"></script>
@@ -55,7 +56,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'index' %}">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{% url 'indexOfAdmin' %}">
                 <div class="sidebar-brand-icon rotate-n-15">
                     <i class="fas fa-scroll"></i>
                 </div>
@@ -66,8 +67,8 @@
             <hr class="sidebar-divider my-0">
 
             <!-- Nav Item - Dashboard -->
-            <li class="nav-item{% if request.resolver_match.view_name == 'index' %} active{% endif %}">
-                <a class="nav-link" href="{% url 'index' %}">
+            <li class="nav-item{% if request.resolver_match.view_name == 'indexOfAdmin' %} active{% endif %}">
+                <a class="nav-link" href="{% url 'indexOfAdmin' %}">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
@@ -99,7 +100,12 @@
                     </div>
                 </div>
             </li>
-
+            <li class="nav-item{% if request.resolver_match.view_name == 'lendingPage' %} active{% endif %}">
+                <a class="nav-link" href="{% url 'lendingPage' %}">
+                    <i class="fas fa-fw fa-shopping-basket"></i>
+                    <span>Lending</span>
+                </a>
+            </li>
             <!-- Nav Item - Utilities Collapse Menu -->
             <li class="nav-item{% if request.resolver_match.view_name == 'loanIndex' or request.resolver_match.view_name == 'languageIndex' %} active{% endif %}">
                 <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
@@ -410,6 +416,7 @@
 
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+                                        <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.8/js/select2.min.js"></script>
         <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.bundle.min.js"></script>
 {#    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>#}
@@ -554,6 +561,25 @@ $("#dataPicker").selectpicker("refresh");
                                             });
 
                                         </script>
+<script>
+$(document).ready(function() {
+	// The next line is in comment to make this code run, uncomment it in your code that include the matching library.
+  $('.asset-selection').select2({maximumSelectionLength: 5});
+  function hide_all_elements() {
+  	$(".asset").hide();
+  }
+  $('.selectpicker').change(function(){
+  	let className = $('.selectpicker').val();
+    $.each(className, function (i, v) {
+    	className[i] = "." + v;
+    });
+    hide_all_elements();
+    $(className.join(",")).show();
+  });
+
+  hide_all_elements();
+});
+</script>
 </body>
 
 </html>

@@ -26,7 +26,7 @@ def LogEntryAdd(idUser,modelName,objectId,reason,after):
         action_flag=ADDITION if create else CHANGE)
 @login_required
 def index(request):
-    authors = Authors.objects.select_related()
+    authors = Authors.objects.select_related().order_by('-author_id')
     template = loader.get_template('authors/index.html')
     def authorCounter():
         count = Authors.objects.all().count()

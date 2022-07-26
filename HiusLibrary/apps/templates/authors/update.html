@@ -9,7 +9,7 @@
                     <div class="col">
                         <div class="p-5">
                             <div class="text-center">
-                                <h1 class="h4 text-gray-900 mb-4" style="font-family: 'Dancing Script', cursive;">{{author.author_name}}</h1>
+                                <h1 class="h4 text-gray-900 mb-4" style="font-family: 'Dancing Script', cursive;">{{author.author_pseudonym}}</h1>
                             </div>
                             <form class="user" name="registration-form" enctype="multipart/form-data" id="registration-form" action="{% url 'updateProcess' author.author_id %}" method="post">
                                 {% csrf_token %}

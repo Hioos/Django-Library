@@ -8,5 +8,8 @@ urlpatterns = [
     path('edit/<int:id>',views.edit,name='editBook'),
     path('update/<int:id>',views.update,name='updateBook'),
     path('language/',views.languageIndex,name='languageIndex'),
-    path('language/add',views.addLanguageProc,name='languageAdd')
+    path('language/add',views.addLanguageProc,name='languageAdd'),
+    path('lending',views.lendingPage,name='lendingPage'),
+    path('lending/addNew',views.lendingAdd,name='lendingAdd'),
+    path('lending/lendingAddProcess',views.lendingAddProcess,name='lendingAddProcess')
     ]
