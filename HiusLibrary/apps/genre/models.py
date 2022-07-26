@@ -20,6 +20,6 @@ class SubGenre(models.Model):
 class Themes(models.Model):
     theme_id = models.IntegerField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     theme_name = models.CharField(max_length=50)
-    theme_description = models.CharField(max_length=255)
+    theme_description = models.CharField(max_length=1000)
     def __str__(self):
         return self.theme_name
