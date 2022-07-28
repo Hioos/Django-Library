@@ -49,11 +49,11 @@
                                     </div>
                                     <div class="col-sm-3 mb-3 mb-sm-0">
                                       <label for="dept">    Start:</label>
-                                      <input name="start{{ book.book_id }}" class="form-control form-control-user" type="date" value="{% now 'Y-m-d' %}">
+                                      <input name="start{{ book.book_id }}" class="form-control form-control-user" type="date" value="{% now 'Y-m-d' %}" required>
                                     </div>
                                     <div class="col-sm-3 mb-3 mb-sm-0">
                                       <label for="dept">    Due:</label>
-                                      <input name="due{{ book.book_id }}" class="form-control form-control-user" type="date">
+                                      <input name="due{{ book.book_id }}" class="form-control form-control-user" type="date" required>
                                     </div>
                                     </div>
                                         </div>
