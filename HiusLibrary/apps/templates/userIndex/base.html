@@ -7,7 +7,7 @@
     <meta name="keywords" content="Ogani, unica, creative, html">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>HiusLibrary || User</title>
+    <title>Hius Library</title>
 
     <!-- Google Font -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
@@ -39,7 +39,7 @@
         <div class="humberger__menu__cart">
             <ul>
                 <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+                <li><a href="{% url 'cart' %}"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
             </ul>
             <div class="header__cart__price">item: <span>$150.00</span></div>
         </div>
@@ -71,7 +71,7 @@
         </div>
         <div class="humberger__menu__contact">
             <ul>
-                <li><i class="fa fa-envelope"></i>thuynguyen@media-one.vn</li>
+                <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
             </ul>
         </div>
     </div>
@@ -85,14 +85,14 @@
                     <div class="col-lg-6 col-md-6">
                         <div class="header__top__left">
                             <ul>
-                                <li><i class="fa fa-envelope"></i>thuynguyen@media-one.vn</li>
+                                <li><i class="fa fa-envelope"></i> hello@colorlib.com</li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6">
                         <div class="header__top__right">
                             <div class="header__top__right__auth">
-                                <a href="#"><i class="fa fa-user"></i> Login</a>
+                <a href="" class="btn btn-default btn-rounded mb-4" data-toggle="modal" data-target="#modalLoginForm"><i class="fa fa-user"></i>Login</a>
                             </div>
                         </div>
                     </div>
@@ -103,7 +103,7 @@
             <div class="row">
                 <div class="col-lg-3">
                     <div class="header__logo">
-                        <a href="{% url 'indexOfUser' %}"><img src="https://dynamic.brandcrowd.com/preview/logodraft/7cdab6d6-8cf1-4acb-8cb5-50b5290229f8/image/large.png" style="width: 100px; height: 100px;"></a>
+                        <a href="{% url 'indexOfUser' %}"><img src="" alt=""></a>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -125,7 +125,7 @@
                     <div class="header__cart">
                         <ul>
                             <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                            <li><a href="#"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+                            <li><a href="{% url 'cart' %}"><i class="fa fa-shopping-cart"></i> <span>3</span></a></li>
                         </ul>
                     </div>
                 </div>
@@ -165,7 +165,7 @@
                                 <i class="fa fa-phone"></i>
                             </div>
                             <div class="hero__search__phone__text">
-                                <h5>0337851718</h5>
+                                <h5>+65 11.188.888</h5>
                                 <span>support 24/7 time</span>
                             </div>
                         </div>
@@ -215,15 +215,46 @@
 
     <!-- Latest Product Section End -->
 
+    <!-- Login Modal -->
+    <div class="modal fade" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">Sign in</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <i class="fa fa-envelope prefix grey-text"></i> Access Key
+          <input type="email" id="defaultForm-email" class="form-control validate">
+          <label data-error="wrong" data-success="right" for="defaultForm-email"></label>
+            <br>
+          <i class="fa fa-lock prefix grey-text"></i> Password
+          <input type="password" id="defaultForm-pass" class="form-control validate">
+          <label data-error="wrong" data-success="right" for="defaultForm-pass"></label>
+        </div>
 
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button class="btn btn-outline-info">Login</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+    <!-- End Login Modal -->
     <!-- Footer Section Begin -->
     <footer class="footer spad">
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-6 col-sm-6">
-                    <div class="footer__about" style="width: 1000px;">
+                    <div class="footer__about">
                         <div class="footer__about__logo">
-                            <a href="{% url 'indexOfUser' %}"><img src="https://dynamic.brandcrowd.com/preview/logodraft/7cdab6d6-8cf1-4acb-8cb5-50b5290229f8/image/large.png" style="width: 100px; height: 100px;"></a>
+                            <a href="{% url 'indexOfUser' %}"><img src="" alt=""></a>
                         </div>
                         <ul>
                             <li>Address: 132A Giảng Võ - Ba Đình - Hà Nội</li>
@@ -274,5 +305,16 @@
 
 
 </body>
+<script>
+    $(document).ready(function(){
 
+    });
+    function addCart(id){
+        alert(id);
+        $.post('addCart',{'id':id,'csrfmiddlewaretoken':'{{ csrf_token }}'}, function(data)
+        {
+
+        });
+    }
+</script>
 </html>
