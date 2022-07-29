@@ -47,3 +47,8 @@ select {
   background: linear-gradient(to bottom, #ffffff 0%, #e5e5e5 100%);
 
 }
+.btn-succes{
+    color: #fff;
+    background-color: #1cc88a;
+    border-color: #1cc88a;
+}
