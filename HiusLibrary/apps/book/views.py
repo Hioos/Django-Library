@@ -16,7 +16,7 @@ from ..authors.models import Authors
 from ..genre.models import SubGenre, Themes
 from ..loan.models import loanStatus
 from ..publisher.models import Publisher
-
+from datetime import date
 
 def LogEntryAdd(idUser, modelName, objectId, reason, after):
     LogEntry.objects.log_action(
@@ -219,16 +219,21 @@ def update(request, id):
 
 @login_required
 def lendingPage(request):
-    receipts = Receipt.objects.raw('SELECT * FROM book_receipt INNER JOIN book_loanedbook ON receipt_id = loanedBook_receipt_id WHERE loanedBook_statusId_id !=4  GROUP BY receipt_id ORDER BY receipt_timestamp DESC')
+    receipts = Receipt.objects.raw('SELECT * FROM book_receipt INNER JOIN book_loanedbook ON receipt_id = loanedBook_receipt_id WHERE loanedBook_statusId_id =1 OR loanedBook_statusId_id =2 OR loanedBook_statusId_id = 6 GROUP BY receipt_id ORDER BY receipt_timestamp DESC')
     loanedBooks = LoanedBook.objects.all()
     pending = Receipt.objects.raw('SELECT * FROM book_receipt INNER JOIN book_loanedbook ON receipt_id = loanedBook_receipt_id WHERE loanedBook_statusId_id =4  GROUP BY receipt_id ORDER BY receipt_timestamp DESC')
+    done = Receipt.objects.raw(
+        'SELECT * FROM book_receipt INNER JOIN book_loanedbook ON receipt_id = loanedBook_receipt_id WHERE loanedBook_statusId_id =3     OR loanedBook_statusId_id =5 OR loanedBook_statusId_id = 7  GROUP BY receipt_id ORDER BY receipt_timestamp DESC')
     x = Receipt.objects.count()
+    loans = loanStatus.objects.all()
     template = loader.get_template('lending/index.html')
     context = {
         'receipts': receipts,
         'x': x,
         'loanedBooks': loanedBooks,
-        'pending': pending
+        'pending': pending,
+        'loans':loans,
+        'done':done
     }
     return HttpResponse(template.render(context, request))
 
@@ -295,4 +300,15 @@ def denyAll(request,id):
         book.loanedBook_dueDate = None
         book.loanedBook_startDate = None
         book.save()
+    return HttpResponseRedirect(reverse('lendingPage'))
+@login_required
+def lendingAction(request):
+    books = request.POST.getlist('bookInReceipts')
+    for book in books:
+        bookReceipt = LoanedBook.objects.get(loanedBook_id = book)
+        selected = request.POST['selectStatus' + book]
+        bookReceipt.loanedBook_statusId_id = selected
+        today = datetime.datetime.today()
+        bookReceipt.loanedBook_returnedDate = today
+        bookReceipt.save()
     return HttpResponseRedirect(reverse('lendingPage'))

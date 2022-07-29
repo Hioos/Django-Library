@@ -98,6 +98,8 @@
                             </div>
                         </div>
                     </div>
+<div class="row">
+    <div class="col-lg-7">
                    <div class="card shadow mb-4">
                    <!--Start-->
                    <div class="card-header py-3">
@@ -209,7 +211,9 @@
                             </div>
                         </div>
                    </div>
+    </div>
                    <!--End-->
+<div class="col-lg-5">
                     <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary">Receipts</h6>
@@ -260,7 +264,10 @@
                                       <div class="modal-body">
                                           <!--Body -->
                                           <div class="container-fluid">
+                                        <form method="post" action="{% url 'lendingAction' %}">
+                                            {% csrf_token %}
                                           <div class="row">
+
                                               {% for book in receipt.loanedBook_receipt.all %}
                                                   <div class="col-sm-6">
                                                   <div class="container">
@@ -268,9 +275,10 @@
                                                       <div class="col-sm-3 justify-content-center" style="align-content: center">
                                                         <img src="{{ book.loanedBook_book.book_image.url }}" style="width: 66.6px;height:100px;"/>
                                                       </div>
-                                                      <div class="col-sm-9">
+                                                      <div class="col-sm-9"><input type="text" name="bookInReceipts" value="{{ book.loanedBook_id }}" hidden>
                                                           <b>{{ book.loanedBook_book.book_name }}{% if book.loanedBook_statusId_id == 5 %} <span class="badge badge-danger">Denied</span>{% endif %}</b>
                                                           <hr>
+
                                                                          <div class="row justify-content-center">
                                                                   <div class="col-sm-3">
                                                                       <p class="mb-0"><b><i class="fas fa-calendar-check" style="color: #1cc88a"></i></b></p>
@@ -297,14 +305,26 @@
                                                                       <p class="text-muted mb-0"><i>{% if book.loanedBook_returnedDate is None %} <i class="fas fa-times-circle" style="color: #ff2929"></i> {% else %}{{ book.loanedBook_returnedDate }} {% endif %} </i><br></p>
                                                                   </div>
                                                                     </div>
-                                                                                                                                                                       <hr>
+                                                        <hr>
+                                                                                       <label for="dataPicker{{ book.loanedBook_id }}">Status:</label>
+                                                            <select name="selectStatus{{ book.loanedBook_id }}" class="form-control" id="dataPicker{{ book.loanedBook_id }}" {% if book.loanedBook_statusId_id == 7 or book.loanedBook_statusId_id == 3 or book.loanedBook_statusId_id == 5%} disabled {% endif %}>
+                                                                {% for loan in loans %}
+                                                                    <option value="{{ loan.loanStatus_id }}" {% if loan.loanStatus_id == book.loanedBook_statusId_id %} selected {% endif %}>{{ loan.loanStatus_name }}</option>
+                                                                    {% endfor %}
+                                                            </select>
+                                                      <hr>
                                                       </div>
 
                                                   </div>
                                                   </div>
                                                   </div>
                                               {% endfor %}
+
                                           </div>
+                                            <div class="row justify-content-center">
+                                              <button type="submit" class="btn btn-warning">Update</button>
+                                            </div>
+                                          </form>
                                           </div>
                                           <!--Body -->
                                         </div>
@@ -317,5 +337,125 @@
                             </div>
                         </div>
                     </div>
+</div>
+</div>
+<!-- Start -->
+<div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary">Done</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table  class="table table-bordered" id="dataTable3" width="100%" cellspacing="0">
+                                    <thead>
+                                    <tr>
+                                            <th style="text-align: center">No.</th>
+                                            <th style="text-align: center">Receipt ID</th>
+                                            <th style="text-align: center">Member</th>
+                                            <th style="text-align: center">At</th>
+                                            <th style="text-align: center">Info</th>
+                                    </tr>
+                                  </thead>
+                                    <tfoot>
+                                    <tr>
+                                            <th style="text-align: center">No.</th>
+                                            <th style="text-align: center">Receipt ID</th>
+                                            <th style="text-align: center">Member</th>
+                                            <th style="text-align: center">At</th>
+                                            <th style="text-align: center">Info</th>
+                                    </tr>
+                                    </tfoot>
+                                    <tbody>
+                                    {% for receipt in done %}
+                                        <tr>
+                                        <td style="width:5%;text-align:center;vertical-align: middle;">{{ forloop.counter }}</td>
+                                        <td style="text-align:center;vertical-align: middle;">HLrc00{{ receipt.receipt_id}}</td>
+                                        <td style="text-align:center;vertical-align: middle;">{{ receipt.receipt_user.name}}</td>
+                                        <td style="text-align:center;vertical-align: middle;">{{ receipt.receipt_timestamp}}</td>
+                                        <td style="text-align:center;vertical-align: middle;"><button type="button" class="btn btn-outline-info btn-sm btn-circle" data-toggle="modal" data-target="#reqModal-{{ receipt.receipt_id }}"><i class="fas fa-box-open"></i></button></td>
+                                        </tr>
+                                        <!-- Modal -->
+                                        <div class="modal fade bd-example-modal-lg" id="reqModal-{{ receipt.receipt_id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5><b><i>#{{ receipt.receipt_id }}</i></b> by <b><i>{{ receipt.receipt_user.name }}</i></b></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                      <div class="modal-body">
+                                          <!--Body -->
+                                          <div class="container-fluid">
+                                          <div class="row">
+
+                                              {% for book in receipt.loanedBook_receipt.all %}
+                                                  <div class="col-sm-6">
+                                                  <div class="container">
+                                                  <div class="row justify-content-center">
+                                                      <div class="col-sm-3 justify-content-center" style="align-content: center">
+                                                        <img src="{{ book.loanedBook_book.book_image.url }}" style="width: 66.6px;height:100px;"/>
+                                                      </div>
+                                                      <div class="col-sm-9"><input type="text" name="bookInReceipts" value="{{ book.loanedBook_id }}" hidden>
+                                                          <b>{{ book.loanedBook_book.book_name }}{% if book.loanedBook_statusId_id == 5 %} <span class="badge badge-danger">Denied</span>{% endif %}</b>
+                                                          <hr>
+
+                                                                         <div class="row justify-content-center">
+                                                                  <div class="col-sm-3">
+                                                                      <p class="mb-0"><b><i class="fas fa-calendar-check" style="color: #1cc88a"></i></b></p>
+                                                                  </div>
+                                                                  <div class="col-sm-9">
+                                                                      <p class="text-muted mb-0"><i>{{ book.loanedBook_startDate }}</i><br></p>
+                                                                  </div>
+                                                                    </div>
+                                                                <hr>
+                                                                       <div class="row justify-content-center">
+                                                                  <div class="col-sm-3">
+                                                                      <p class="mb-0"><b><i class="fas fa-calendar-times" style="color: #ff2929"></i></b></p>
+                                                                  </div>
+                                                                  <div class="col-sm-9">
+                                                                      <p class="text-muted mb-0"><i>{{ book.loanedBook_dueDate }}</i><br></p>
+                                                                  </div>
+                                                                    </div>
+                                                                <hr>
+                                                                        <div class="row justify-content-center">
+                                                                  <div class="col-sm-3">
+                                                                      <p class="mb-0"><b><i class="fas fa-rotate-left"></i></b></p>
+                                                                  </div>
+                                                                  <div class="col-sm-9">
+                                                                      <p class="text-muted mb-0"><i>{% if book.loanedBook_returnedDate is None %} <i class="fas fa-times-circle" style="color: #ff2929"></i> {% else %}{{ book.loanedBook_returnedDate }} {% endif %} </i><br></p>
+                                                                  </div>
+                                                                    </div>
+                                                        <hr>
+                                                                                       <label for="dataPicker{{ book.loanedBook_id }}">Status:</label>
+                                                            <select name="select" class="form-control" id="dataPicker{{ book.loanedBook_id }}" {% if book.loanedBook_statusId_id == 7 or book.loanedBook_statusId_id == 3 or book.loanedBook_statusId_id == 5%} disabled {% endif %}>
+                                                                {% for loan in loans %}
+                                                                    <option value="{{ loan.loanStatus_id }}" {% if loan.loanStatus_id == book.loanedBook_statusId_id %} selected {% endif %}>{{ loan.loanStatus_name }}</option>
+                                                                    {% endfor %}
+                                                            </select>
+                                                      <hr>
+                                                      </div>
+
+                                                  </div>
+                                                  </div>
+                                                  </div>
+
+                                          </div>
+                                                                               {% endfor %}
+                                          </div>
+
+                                          <!--Body -->
+                                        </div>
+                                  </div>
+                                </div>
+                                                                        </div>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+<!-- End -->
+
 </div>
 {% endblock %}
