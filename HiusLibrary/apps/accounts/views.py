@@ -250,3 +250,34 @@ def addAdminProccess(request):
                                  )
     messages.success(request, "The user is successfully registered !!!")
     return HttpResponseRedirect(reverse('adminIndex'))
+def loginForUser(request):
+    if request.method == "POST":
+        username = request.POST['userkey']
+        password = request.POST['userpassword']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            current_user = request.user
+            login(request, user)
+            is_banned = request.user.is_banned
+            if is_banned is False:
+                request.session['name'] = current_user.name
+                request.session['id'] = current_user.id
+                # request.session['image'] = current_user.profile_image
+                messages.success(request, 'Hello ' + request.session['name'] + ', Welcome Back !!!')
+                return redirect('indexOfUser')
+            else:
+                logout(request)
+                messages.success(request, "You don't have permission to login to this page !!!")
+                return redirect('indexOfUser')
+        else:
+            messages.success(request, 'Wrong Username Or Password !!!')
+            return redirect('indexOfUser')
+    else:
+        return render(request, 'indexOfUser', {})
+
+
+def logoutForUser(request):
+    logout(request)
+    messages.success(request, "See You Soon !!")
+    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+

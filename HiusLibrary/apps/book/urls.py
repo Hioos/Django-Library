@@ -11,5 +11,7 @@ urlpatterns = [
     path('language/add',views.addLanguageProc,name='languageAdd'),
     path('lending',views.lendingPage,name='lendingPage'),
     path('lending/addNew',views.lendingAdd,name='lendingAdd'),
-    path('lending/lendingAddProcess',views.lendingAddProcess,name='lendingAddProcess')
+    path('lending/lendingAddProcess',views.lendingAddProcess,name='lendingAddProcess'),
+    path('lending/acceptAll/<int:id>',views.acceptAll,name='acceptAll'),
+    path('lending/denyAll/<int:id>',views.denyAll,name='denyAll')
     ]

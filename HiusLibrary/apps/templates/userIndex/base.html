@@ -30,7 +30,30 @@
         <div class="loader"></div>
     </div>
 
+                                    {% if messages %}
+                                        {% for message in messages %}
+                                                <div class="alert alert-success alert-dismissible fade show fixed-top" role="alert" style="width: 50%;left: 25%;">
+                                                  <strong>{{  message }}</strong>
+                                                  <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                  </button>
+                                            </div>
+                                        {% endfor %}
+                                    {% endif %}
     <!-- Humberger Begin -->
+    <div class="row justify-content-center">
+        <div class="col-md-5"></div>
+        <div class="col-md-5 col-md-offset-1">
+            <div class="alert alert-success" id="clock" role="alert" style="z-index: 99;position: fixed;display: none">
+  Added Successfully !!
+    <button type="button" class="close" data-hide="alert" aria-label="Close">
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+        </div>
+        <div class="col-md-2"></div>
+
+  </div>
     <div class="humberger__menu__overlay"></div>
     <div class="humberger__menu__wrapper">
         <div class="humberger__menu__logo">
@@ -39,7 +62,7 @@
         <div class="humberger__menu__cart">
             <ul>
                 <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                <li><a href="{% url 'cart' %}"><i class="fa fa-shopping-bag"></i> <span>3</span></a></li>
+                <li><a href="{% url 'cart' %}"><i class="fa fa-shopping-bag"></i> <span id="amount1">{{ count }}</span></a></li>
             </ul>
             <div class="header__cart__price">item: <span>$150.00</span></div>
         </div>
@@ -125,7 +148,7 @@
                     <div class="header__cart">
                         <ul>
                             <li><a href="#"><i class="fa fa-heart"></i> <span>1</span></a></li>
-                            <li><a href="{% url 'cart' %}"><i class="fa fa-shopping-cart"></i> <span>3</span></a></li>
+                            <li><a href="{% url 'cart' %}"><i class="fa fa-shopping-cart"></i> <span id="amount2">{{ count }}</span></a></li>
                         </ul>
                     </div>
                 </div>
@@ -216,8 +239,11 @@
     <!-- Latest Product Section End -->
 
     <!-- Login Modal -->
+
     <div class="modal fade" id="modalLoginForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
   aria-hidden="true">
+            <form method="POST" action="{% url 'loginForUser' %}">
+                {% csrf_token %}
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header text-center">
@@ -229,11 +255,11 @@
       <div class="modal-body mx-3">
         <div class="md-form mb-5">
           <i class="fa fa-envelope prefix grey-text"></i> Access Key
-          <input type="email" id="defaultForm-email" class="form-control validate">
+          <input type="text" name="userkey" id="defaultForm-email" class="form-control validate">
           <label data-error="wrong" data-success="right" for="defaultForm-email"></label>
             <br>
           <i class="fa fa-lock prefix grey-text"></i> Password
-          <input type="password" id="defaultForm-pass" class="form-control validate">
+          <input type="password" name="userpassword" id="defaultForm-pass" class="form-control validate">
           <label data-error="wrong" data-success="right" for="defaultForm-pass"></label>
         </div>
 
@@ -243,6 +269,7 @@
       </div>
     </div>
   </div>
+            </form>
 </div>
 
 
@@ -319,5 +346,38 @@
 
         });
     }
+        $(document).ready(function () {
+    $('.addCart').click(function (e) {
+        e.preventDefault();
+        var catid;
+        var myClock = document.getElementById('clock');
+        var displaySetting = myClock.style.display;
+        catid = $(this).attr("book-data");
+        var y = document.getElementById("amount1").textContent;
+        var x = parseInt(y) + 1
+        $.ajax(
+            {
+                type: "GET",
+                url: "{% url 'addToCart' %}",
+                data: {
+                    catid: catid,
+                },
+                success: function (data) {
+
+                }
+            });
+        $("[data-hide]").on("click", function(){
+        $(this).closest("." + $(this).attr("data-hide")).hide();
+
+
+
+    })
+                $('.alert').show()
+        document.getElementById("amount1").innerHTML = x
+        document.getElementById("amount2").innerHTML = x
+        $('#addCart'+catid).hide()
+       })
+
+        });
 </script>
 </html>

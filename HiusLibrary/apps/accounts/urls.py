@@ -13,5 +13,6 @@ urlpatterns = [
     path('profile_update',views.updateProfile,name="updateProfile"),
     path('info/<int:id>',views.info,name="adminInfo"),
     path('extend/',views.extendMembership,name="extendMembership"),
-    path('ban',views.banUser,name="banUser")
+    path('ban',views.banUser,name="banUser"),
+    path('loginForUser',views.loginForUser,name="loginForUser")
     ]

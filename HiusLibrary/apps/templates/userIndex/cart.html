@@ -18,14 +18,13 @@
                   <th scope="col">Delete</th>
               </tr>
             </thead>
-              {% for book in cart %}
             <tbody>
+                          {% for book in cart %}
+                              <div>
               <tr>
                 <th scope="row">
                     <input type="text" name="bookId" value="{{ book.id }}" hidden>
                   <div class="d-flex align-items-center">
-                    <img src="{{ book.image.url }}" class="img-fluid rounded-3"
-                      style="width: 120px;" alt="Book">
                     <div class="flex-column ms-4">
                       <p class="mb-2">{{ book.name }}</p>
                       <p class="mb-0">{{ book.bookauthorship_authorId.author_pseudonym }}</p>
@@ -34,44 +33,29 @@
                 </th>
                 <td class="align-middle">
                   <div class="d-flex flex-row">
-                    <button class="btn btn-link px-2"
-                      onclick="this.parentNode.querySelector('input[type=date]').stepDown()">
-                      <i class="fa fa-minus"></i>
-                    </button>
-
                     <input id="form1" min="0" name="dateStart{{ book.id }}" value="{{ x|date:'Y-m-d' }}" type="date"
                       class="form-control form-control-sm" style="width: 100%;" />
-
-                    <button class="btn btn-link px-2"
-                      onclick="this.parentNode.querySelector('input[type=date]').stepUp()">
-                      <i class="fa fa-plus"></i>
-                    </button>
                   </div>
                 </td>
                 <td class="align-middle">
                   <div class="d-flex flex-row">
-                    <button class="btn btn-link px-2"
-                      onclick="this.parentNode.querySelector('input[type=date]').stepDown()">
-                      <i class="fa fa-minus"></i>
-                    </button>
-
                     <input id="form2" min="0" name="dateDue{{ book.id }}" value="{{ x|date:'Y-m-d' }}" type="date"
                       class="form-control form-control-sm" style="width: 100%;" />
-
-                    <button class="btn btn-link px-2"
-                      onclick="this.parentNode.querySelector('input[type=date]').stepUp()">
-                      <i class="fa fa-plus"></i>
-                    </button>
                   </div>
                 </td>
                 <td>
                     <a href="{% url 'deleteCart' book.id  %}">Delete</a>
                 </td>
               </tr>
+                              </div>
               {% endfor %}
-          <button type="submit">Request</button>
+
             </tbody>
           </table>
+
+        </div>
+              <div class="row justify-content-center">
+        <button class="btn btn-outline-success btn-circle" type="submit">Request</button>
         </div>
       </form>
       </div>

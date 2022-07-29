@@ -5,6 +5,7 @@ from django.contrib import messages
 from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
+from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
@@ -218,14 +219,16 @@ def update(request, id):
 
 @login_required
 def lendingPage(request):
-    receipts = Receipt.objects.all().prefetch_related('loanedBook_receipt').order_by('-receipt_timestamp')
+    receipts = Receipt.objects.raw('SELECT * FROM book_receipt INNER JOIN book_loanedbook ON receipt_id = loanedBook_receipt_id WHERE loanedBook_statusId_id !=4  GROUP BY receipt_id ORDER BY receipt_timestamp DESC')
     loanedBooks = LoanedBook.objects.all()
+    pending = Receipt.objects.raw('SELECT * FROM book_receipt INNER JOIN book_loanedbook ON receipt_id = loanedBook_receipt_id WHERE loanedBook_statusId_id =4  GROUP BY receipt_id ORDER BY receipt_timestamp DESC')
     x = Receipt.objects.count()
     template = loader.get_template('lending/index.html')
     context = {
         'receipts': receipts,
         'x': x,
-        'loanedBooks': loanedBooks
+        'loanedBooks': loanedBooks,
+        'pending': pending
     }
     return HttpResponse(template.render(context, request))
 
@@ -246,20 +249,50 @@ def lendingAdd(request):
 def lendingAddProcess(request):
     books = request.POST.getlist('books')
     user = request.POST['user']
-    book_receipt = Receipt(
-        receipt_user_id=user
-    )
-    book_receipt.save()
-    LastInsertId = Receipt.objects.latest()
+    error = 0
+    failed = []
     for book in books:
-        inStart = request.POST['start' + book]
-        inDue = request.POST['due' + book]
-        loaned_book = LoanedBook(
-            loanedBook_startDate=inStart,
-            loanedBook_dueDate=inDue,
-            loanedBook_book_id=book,
-            loanedBook_receipt_id=LastInsertId.receipt_id,
-            loanedBook_statusId=loanStatus.objects.get(loanStatus_id=1)
+        usedBook = LoanedBook.objects.filter(
+            Q(loanedBook_book_id=book) & (Q(loanedBook_statusId_id=6) | Q(loanedBook_statusId_id=3))).count()
+        bookAmount = Books.objects.get(book_id=book)
+        if bookAmount.book_amount - usedBook <= 0:
+            error = error + 1
+            failed.append(bookAmount.book_name)
+    if error == 0:
+        book_receipt = Receipt(
+            receipt_user_id=user
         )
-        loaned_book.save()
+        book_receipt.save()
+        LastInsertId = Receipt.objects.latest()
+        for book in books:
+            inStart = request.POST['start' + book]
+            inDue = request.POST['due' + book]
+            loaned_book = LoanedBook(
+                loanedBook_startDate=inStart,
+                loanedBook_dueDate=inDue,
+                loanedBook_book_id=book,
+                loanedBook_receipt_id=LastInsertId.receipt_id,
+                loanedBook_statusId=loanStatus.objects.get(loanStatus_id=6)
+            )
+            loaned_book.save()
+        return HttpResponseRedirect(reverse('lendingPage'))
+    else:
+        for fail in failed:
+            messages.success(request, (fail + 'Is not enough in Library !!!'))
+        return HttpResponseRedirect(reverse('lendingAdd'))
+@login_required
+def acceptAll(request,id):
+    loanedBook = LoanedBook.objects.filter(loanedBook_receipt_id=id).only('loanedBook_statusId_id')
+    for book in loanedBook:
+        book.loanedBook_statusId_id = 6
+        book.save()
+    return HttpResponseRedirect(reverse('lendingPage'))
+@login_required
+def denyAll(request,id):
+    loanedBook = LoanedBook.objects.filter(loanedBook_receipt_id=id).only('loanedBook_statusId_id')
+    for book in loanedBook:
+        book.loanedBook_statusId_id = 5
+        book.loanedBook_dueDate = None
+        book.loanedBook_startDate = None
+        book.save()
     return HttpResponseRedirect(reverse('lendingPage'))

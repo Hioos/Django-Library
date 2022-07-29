@@ -42,7 +42,16 @@
                         {% for subgenre in book.book_Subgenre_bookId.all %}
                             {{ subgenre.booksubgenre_subgenreId.subgenre_ofGenre  }} <i class="fa fa-arrow-right"></i> {{ subgenre.booksubgenre_subgenreId.subgenre_name  }}<hr>
                         {% endfor %}
-                        <a href="{% url 'addToCart' book.book_id %}" class="primary-btn">ADD TO CARD</a>
+                        <a id="addCart{{ book.book_id }}" href="javascript:void(0)"  book-data ="{{ book.book_id }}"
+                                {% if left <= 0 %}
+                                        class="btn btn-secondary disabled" style="pointer-events: none"
+                                    {% else %}
+                           {% if mtfk > 0 %}
+                                class="addCart btn btn-success disabled"
+                            {% else %}
+                                class="addCart btn btn-success"
+                               {% endif %}
+                                {% endif %}>ADD TO CART</a>
                         <ul>
                             <li><b>Language</b> <span><img src="{{ book.book_language.language_image.url }}" style="width: 30px;height: 20px"></span></li>
                             <li><b>Amount</b><span>{{ book.book_amount }}</span></li>
@@ -50,7 +59,6 @@
                             <li><b>Themes</b>  <span>{% for theme in book.book_Themes_bookId.all %} <u>{{ theme.bookthemes_themeId.theme_name  }}</u> {% endfor %}</span></li>
                             <li><b>Publisher</b> <span>{{ book.book_publisher }}</span></li>
                             <li><b>Released</b> <span>{{ book.book_released }}</span></li>
-                            
                         </ul>
                     </div>
                 </div>
