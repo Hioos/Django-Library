@@ -5,7 +5,7 @@
                     <!-- Page Heading -->
                     <div class="d-sm-flex align-items-center justify-content-between mb-4">
                         <h1 class="h3 mb-0 text-gray-800"><b>{{genre.genre_name}}</b>
-                                    <a href="{% url 'subGenreAdd' genre.id %}" class="btn btn-info btn-icon-split btn-sm">
+                                    <a href="{% url 'subGenreAdd' genre.id %}" class="btn btn-info btn-icon-split btn-sm" style="background: #4e73df;">
                                         <span class="icon text-white-50">
                                             <i class="fas fa-plus"></i>
                                         </span>
@@ -100,7 +100,7 @@
                     </div>
                    <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary">Sub-Genres of <b>{{genre.genre_name}}</b></h6>
+                            <h6 class="m-0 font-weight-bold text-primary" style="font-size: x-large;">Sub-Genres of <b>{{genre.genre_name}}</b></h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
