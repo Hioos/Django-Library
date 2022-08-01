@@ -1,10 +1,334 @@
 {% extends 'layouts/base.html' %}
+{% block stylesheet %}
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.2/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
+{% endblock %}
 {% block content %}
 
-    <div class = "container">
+    <div class = "container-fluid">
 
     <div class="row">
+    <div class="col-xl-8 col-lg-7">
+        <div class="card shadow mb-4">
+                <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Receipts</h6></div>
+                <div class="card-body">
+                    <table border="0" cellspacing="5" cellpadding="5">
+        <tbody><tr>
+            <td>Minimum date:</td>
+            <td><input type="text" id="min" name="min"></td>
+        </tr>
+        <tr>
+            <td>Maximum date:</td>
+            <td><input type="text" id="max" name="max"></td>
+        </tr>
+    </tbody></table>
+    <table id="example" class="display nowrap" style="width:100%">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Receipt ID</th>
+                <th>By</th>
+                <th>Date</th>
+                <th>At</th>
+            </tr>
+        </thead>
+        <tfoot>
+            <tr>
+                <th>No.</th>
+                <th>Receipt ID</th>
+                <th>By</th>
+                <th>Date</th>
+                <th>At</th>
+            </tr>
+        </tfoot>
+        <tbody>
+        {% for receipt in receipts %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td><a href="javascript:void(0)" style="text-decoration: none" data-toggle="modal" data-target="#reqModal-{{ receipt.receipt_id }}">HLrc00{{ receipt.receipt_id }}</a></td>
+                <td>{{ receipt.receipt_user.username }}</td>
+                <td>{{ receipt.receipt_timestamp|date:"F d, Y" }}</td>
+                <td>{{ receipt.receipt_timestamp|date:"H:i" }}</td>
 
+            </tr>
+                                                    <div class="modal fade bd-example-modal-lg" id="reqModal-{{ receipt.receipt_id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5><b><i>#{{ receipt.receipt_id }}</i></b> by <b><i>{{ receipt.receipt_user.name }}</i></b></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                      <div class="modal-body">
+                                          <!--Body -->
+                                          <div class="container-fluid">
+                                          <div class="row">
+                                              {% for book in receipt.loanedBook_receipt.all %}
+                                                  <div class="col-sm-6">
+                                                  <div class="container">
+                                                  <div class="row justify-content-center">
+                                                      <div class="col-sm-3 justify-content-center" style="align-content: center">
+                                                        <img src="{{ book.loanedBook_book.book_image.url }}" style="width: 66.6px;height:100px;"/>
+                                                      </div>
+                                                      <div class="col-sm-9">
+                                                          <b>{{ book.loanedBook_book.book_name }}</b>
+                                                          <hr>
+                                                                         <div class="row justify-content-center">
+                                                                  <div class="col-sm-3">
+                                                                      <p class="mb-0"><b><i class="fas fa-calendar-check" style="color: #1cc88a"></i></b></p>
+                                                                  </div>
+                                                                  <div class="col-sm-9">
+                                                                      <p class="text-muted mb-0"><i>{{ book.loanedBook_startDate }}</i><br></p>
+                                                                  </div>
+                                                                    </div>
+                                                                <hr>
+                                                                       <div class="row justify-content-center">
+                                                                  <div class="col-sm-3">
+                                                                      <p class="mb-0"><b><i class="fas fa-calendar-times" style="color: #ff2929"></i></b></p>
+                                                                  </div>
+                                                                  <div class="col-sm-9">
+                                                                      <p class="text-muted mb-0"><i>{{ book.loanedBook_dueDate }}</i><br></p>
+                                                                  </div>
+                                                                    </div>
+                                                                <hr>
+                                                                        <div class="row justify-content-center">
+                                                                  <div class="col-sm-3">
+                                                                      <p class="mb-0"><b><i class="fas fa-rotate-left"></i></b></p>
+                                                                  </div>
+                                                                  <div class="col-sm-9">
+                                                                      <p class="text-muted mb-0"><i>{% if book.loanedBook_returnedDate is None %} <i class="fas fa-times-circle" style="color: #ff2929"></i> {% else %}{{ book.loanedBook_returnedDate }} {% endif %} </i><br></p>
+                                                                  </div>
+                                                                    </div>
+                                                                                                                                                                       <hr>
+                                                      </div>
+
+                                                  </div>
+                                                  </div>
+                                                  </div>
+                                              {% endfor %}
+                                          </div>
+                                          </div>
+                                          <!--Body -->
+                                        </div>
+                                    </div>
+                                 </div>
+                                                    </div>
+        {% endfor %}
+        </tbody>
+    </table>
+                </div>
+        </div>
+            <div class="card shadow mb-4">
+                <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Last 7 Days</h6></div>
+                <div class="card-body">
+                    <canvas id="myChart4" style="width:100%;max-width:100%"></canvas>
+                </div>
+            </div>
+    </div>
+        <div class="col-xl-4 col-lg-5">
+            <div class="card shadow mb-4">
+                <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">In Library</h6></div>
+                <div class="card-body">
+                    <canvas id="myChart1" width="100%" height="100%"></canvas>
+                </div>
+            </div>
+            <div class="card shadow mb-4">
+                <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Languages</h6></div>
+                <div class="card-body">
+                    <canvas id="myChart2" style="width:100%;max-width:100%"></canvas>
+                </div>
+            </div>
+            <div class="card shadow mb-4">
+            <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Status</h6></div>
+            <div class="card-body">
+                <canvas id="myChart3"  width="100%" height="100%"></canvas>
+            </div>
+        </div>
+        </div>
     </div>
     </div>
+{% endblock %}
+{% block script %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.2/js/bootstrap-datetimepicker.min.js"></script>
+<script src="https://cdn.datatables.net/datetime/1.1.2/js/dataTables.dateTime.min.js"></script>
+<script src="https://cdn.datatables.net/plug-ins/1.12.1/dataRender/datetime.js"></script>
+    <script>
+    //Chart Pie
+    function rdCl() {
+        let randomColor = '"#'+Math.floor(Math.random()*16777215).toString(16)+'"';
+        return  randomColor
+}
+var xValues = [{% for chart in chart1 %} "{{ chart.loanStatus_name }}"{% if chart == chart1.last %} {% else %} , {% endif %} {% endfor %}];
+var yValues = [{% for chart in chart1 %}"{{ chart.count }}"{% if chart == chart1.last %} {% else %} , {% endif %} {% endfor %}];
+var barColors = [
+    "#cd3c3a",
+    "#8cbcf6",
+    "#4df2bf",
+    "#e68a03",
+    "#4e4ebf",
+    "#6b8566",
+    "#bf155f",
+    "#46f10b",
+];
+
+new Chart("myChart1", {
+  type: "doughnut",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: yValues
+    }]
+  },
+  options: {
+    title: {
+      display: true,
+      text: "In Library"
+    }
+  }
+});
+
+//End Chart
+
+var date = new Date();
+var day = date.getDate();
+var month = date.toLocaleString('default', { month: 'long' });
+var year = date.getFullYear();
+
+if (month < 10) month = "0" + month;
+if (day < 10) day = "0" + day;
+
+var today = month + " " + day + ", " + year;
+document.getElementById("min").value = today;
+document.getElementById("max").value = today;
+
+var minDate, maxDate;
+// Custom filtering function which will search data in column four between two values
+$.fn.dataTable.ext.search.push(
+    function( settings, data, dataIndex ) {
+        var min = minDate.val();
+        var max = maxDate.val();
+        var date = new Date( data[3] );
+
+        if (
+            ( min === null && max === null ) ||
+            ( min === null && date <= max ) ||
+            ( min <= date   && max === null ) ||
+            ( min <= date   && date <= max )
+        ) {
+            return true;
+        }
+        return false;
+    }
+);
+
+$(document).ready(function() {
+    // Create date inputs
+    minDate = new DateTime($('#min'), {
+        format: 'MMMM D, YYYY'
+    });
+    maxDate = new DateTime($('#max'), {
+        format: 'MMMM D, YYYY'
+    });
+
+    // DataTables initialisation
+    var table = $('#example').DataTable();
+
+    // Refilter the table
+    $('#min, #max').on('change', function () {
+        table.draw();
+    });
+});
+//ChartLanguage
+var xValues = [{% for chart in chart2 %} "{{ chart.language_name }}"{% if chart == chart2.last %} {% else %} , {% endif %} {% endfor %}];
+var yValues = [{% for chart in chart2 %} "{{ chart.count }}"{% if chart == chart2.last %} {% else %} , {% endif %} {% endfor %}];
+var barColors = [  "rgba(255,0,0,1.0)",
+  "rgba(255,0,0,0.8)",
+  "rgba(255,0,0,0.6)",
+  "rgba(255,0,0,0.4)",
+  "rgba(255,0,0,0.2)"];
+
+new Chart("myChart2", {
+  type: "horizontalBar",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: yValues
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+      text: "Languages In Library"
+    }
+  }
+});
+//EndChart
+    //Status Chart
+    var xValues = ["Available","Not Available"];
+var yValues = [{{ sum.set }}-{{ count }},{{ count }}];
+var barColors = [
+  "#b91d47",
+  "#00aba9",
+  "#2b5797",
+  "#e8c3b9",
+  "#1e7145"
+];
+
+new Chart("myChart3", {
+  type: "pie",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: yValues
+    }]
+  },
+  options: {
+    title: {
+      display: true,
+      text: "Book's Status in Library"
+    }
+  }
+});
+    //End Chart
+    //New Chart
+var xValues = [{% for item in items %}
+"{{ item.receipt_timestamp__date }}"
+    {% if item == items.last %} {% else %} , {% endif %}
+{% endfor %}];
+var yValues = [{% for item in items %}{{ item.count }}{% if item == items.last %} {% else %} , {% endif %}{% endfor %}];
+
+new Chart("myChart4", {
+  type: "line",
+  data: {
+    labels: xValues,
+    datasets: [{
+      fill: false,
+      lineTension: 0,
+      backgroundColor: "rgba(0,0,255,1.0)",
+      borderColor: "rgba(0,0,255,0.1)",
+      data: yValues
+    }]
+  },
+
+  options: {
+          title: {
+      display: true,
+      text: "Book Request Last 7 Days"
+    },
+    legend: {display: false},
+    scales: {
+      yAxes: [{ticks: {min: {{ min.count }}, max:{{ max.count }}+1}}],
+    }
+  }
+});
+    //End Chart
+</script>
+
 {% endblock %}
