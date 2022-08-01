@@ -14,5 +14,6 @@ urlpatterns = [
     path('info/<int:id>',views.info,name="adminInfo"),
     path('extend/',views.extendMembership,name="extendMembership"),
     path('ban',views.banUser,name="banUser"),
-    path('loginForUser',views.loginForUser,name="loginForUser")
+    path('loginForUser',views.loginForUser,name="loginForUser"),
+    path('logoutForUser',views.logoutForUser,name="logoutForUser")
     ]

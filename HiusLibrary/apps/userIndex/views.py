@@ -9,6 +9,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 # Create your views here.
 from django.template import loader
 
+from apps.accounts.models import Account
 from apps.authors.models import Authors
 from apps.book.models import Books, LoanedBook, Receipt
 from apps.genre.models import Genre, Themes, SubGenre
@@ -22,9 +23,10 @@ def index(request):
     lists = Genre.objects.all()
     authors = Authors.objects.all()
     newbooks = Books.objects.all().order_by('-book_id')[:6]
+    shortStories = Books.objects.filter(book_pages__lte=100).order_by('-book_id')[:6]
     themes = Themes.objects.all()
     template = loader.get_template('userIndex/index.html')
-    count= 0
+    count = 0
     if "cart" in request.session:
         cart = request.session['cart']
         for cartProduct in cart:
@@ -36,7 +38,8 @@ def index(request):
         'themes': themes,
         'newbooks': newbooks,
         'authors': authors,
-        'count':count
+        'count': count,
+        'shortStories' : shortStories,
     }
     return HttpResponse(template.render(context, request))
 
@@ -50,7 +53,7 @@ def bookInfo(request, id):
     lists = Genre.objects.all()
     themes = Themes.objects.all()
     usedBook = LoanedBook.objects.filter(
-        Q(loanedBook_book_id=16) & (Q(loanedBook_statusId_id=6) | Q(loanedBook_statusId_id=3))).count()
+        Q(loanedBook_book_id=id) & (Q(loanedBook_statusId_id=6) | Q(loanedBook_statusId_id=3))).count()
     left = book.book_amount - usedBook
     template = loader.get_template('userIndex/book_info.html')
     count = 0
@@ -63,15 +66,15 @@ def bookInfo(request, id):
     for product in cart:
         currentId = product.get('id')
         if book.book_id == currentId:
-            mtfk = mtfk+1
+            mtfk = mtfk + 1
     context = {
         'book': book,
         'lists': lists,
         'themes': themes,
         'allbooks': allbooks,
         'left': left,
-        'cart':cart,
-        'count':count,
+        'cart': cart,
+        'count': count,
         'mtfk': mtfk
     }
     return HttpResponse(template.render(context, request))
@@ -103,7 +106,7 @@ def bookList(request, id):
         'sub_Genre': sub_Genre,
         'books': books,
         'x': x,
-        'count':count,
+        'count': count,
 
     }
     return HttpResponse(template.render(context, request))
@@ -130,7 +133,7 @@ def themeInfo(request, id):
         'lists': lists,
         'bookThemes': bookThemes,
         'themedesc': themedesc,
-        'count':count,
+        'count': count,
         'x': x
 
     }
@@ -180,7 +183,7 @@ def cart(request):
         'x': x,
         'themes': themes,
         'lists': lists,
-        'count':count,
+        'count': count,
     }
     return HttpResponse(template.render(context, request))
 
@@ -203,14 +206,15 @@ def requestBook(request):
     error = 0
     failed = []
     for book in booksId:
-        usedBook = LoanedBook.objects.filter(Q(loanedBook_book_id=book) & (Q(loanedBook_statusId_id=6) | Q(loanedBook_statusId_id=3))).count()
-        bookAmount = Books.objects.get(book_id = book)
+        usedBook = LoanedBook.objects.filter(
+            Q(loanedBook_book_id=book) & (Q(loanedBook_statusId_id=6) | Q(loanedBook_statusId_id=3))).count()
+        bookAmount = Books.objects.get(book_id=book)
         if bookAmount.book_amount - usedBook <= 0:
             error = error + 1
             failed.append(bookAmount.book_name)
     if error == 0:
         book_receipt = Receipt(
-            receipt_user_id=2
+            receipt_user_id=request.session['id']
         )
         book_receipt.save()
         LastInsertId = Receipt.objects.latest()
@@ -232,3 +236,79 @@ def requestBook(request):
         for fail in failed:
             messages.success(request, fail + " Not Enough in Library")
         return redirect('cart')
+
+def allBook(request):
+    cart = []
+    books = Books.objects.all().prefetch_related('book_Authorship_bookId', 'book_Subgenre_bookId',
+                                                 'book_Themes_bookId').order_by('-book_id')
+    lists = Genre.objects.all()
+    authors = Authors.objects.all()
+    newbooks = Books.objects.all().order_by('-book_id')
+    themes = Themes.objects.all()
+    template = loader.get_template('userIndex/all_book.html')
+    sub_Genre = SubGenre.objects.all()
+    x = len(list(newbooks))
+    count = 0
+    if "cart" in request.session:
+        cart = request.session['cart']
+        for cartProduct in cart:
+            count = count + 1
+    context = {
+        'cart': cart,
+        'books': books,
+        'lists': lists,
+        'themes': themes,
+        'newbooks': newbooks,
+        'x':x,
+        'authors': authors,
+        'sub_Genre':sub_Genre,
+        'count': count
+    }
+    return HttpResponse(template.render(context, request))
+
+def information(request):
+    if "name" in request.session:
+        cart = []
+        id = request.session['id']
+        lists = Genre.objects.all()
+        themes = Themes.objects.all()
+        count = 0
+        information = Account.objects.get(id=id)
+        if "cart" in request.session:
+            cart = request.session['cart']
+            for cartProduct in cart:
+                count = count + 1
+        context={
+            'cart': cart,
+            'information' : information,
+            'lists': lists,
+            'themes': themes,
+            'count': count
+        }
+        template = loader.get_template('userIndex/information.html')
+        return HttpResponse(template.render(context, request))
+    else:
+        return redirect('indexOfUser')
+
+def history(request):
+    cart = []
+    id = request.session['id']
+    lists = Genre.objects.all()
+    themes = Themes.objects.all()
+    count = 0
+    loans = loanStatus.objects.all()
+    receipts = Receipt.objects.prefetch_related().filter(receipt_user=id).order_by('-receipt_id')
+    if "cart" in request.session:
+        cart = request.session['cart']
+        for cartProduct in cart:
+            count = count + 1
+    context = {
+        'cart': cart,
+        'lists': lists,
+        'loans': loans,
+        'receipts':receipts,
+        'themes': themes,
+        'count': count
+    }
+    template = loader.get_template('userIndex/history.html')
+    return HttpResponse(template.render(context, request))

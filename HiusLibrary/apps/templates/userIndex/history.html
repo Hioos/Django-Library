@@ -1,0 +1,127 @@
+{% extends 'userIndex/base.html' %}
+{% block content %}
+<section class="checkout spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="checkout__input">
+                            <input type="text" id="myInputTextField" placeholder="Enter Receipt Id...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="checkout__form">
+
+                <div class="card-body">
+                <div class="table-responsive">
+    <table id="exampleDataTable" class="display">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Receipt ID</th>
+                <th>Timestamp</th>
+                <th>Info</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for receipt in receipts %}
+            <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>HLrc00{{ receipt.receipt_id }}</td>
+            <td>{{ receipt.receipt_timestamp }}</td>
+            <td><button type="button" class="btn btn-outline-info " data-toggle="modal" data-target="#reqModal-{{ receipt.receipt_id }}"><i class="fa fa-info"></i></button></td>
+            </tr>
+                                          <div class="modal fade bd-example-modal-lg" id="reqModal-{{ receipt.receipt_id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5><b><i>#HLrc00{{ receipt.receipt_id }}</i></b> by <b><i>{{ receipt.receipt_user.name }}</i></b></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                      <div class="modal-body">
+                                          <!--Body -->
+                                                  <div class="container-fluid">
+                                                  <div class="row">
+                                              {% for book in receipt.loanedBook_receipt.all %}
+                                                  <div class="col-sm-6">
+                                                  <div class="row justify-content-center">
+                                                      <div class="col-sm-3 justify-content-center" style="align-content: center">
+                                                        <img src="{{ book.loanedBook_book.book_image.url }}" style="width: 66.6px;height:100px;"/>
+                                                      </div>
+                                                      <div class="col-sm-9 justify-content-center" style="align-content: center">
+                                                          <div class="row justify-content-center">
+                                                              <div class="col-sm-3">
+                                                                  Name:
+                                                              </div>
+                                                              <div class=" col-sm-9">
+                                                                  <i>{{ book.loanedBook_book.book_name }}</i>
+                                                              </div>
+                                                          </div>
+                                                          <hr>
+                                                          <div class="row justify-content-center">
+                                                              <div class="col-sm-3">
+                                                                  Start:
+                                                              </div>
+                                                              <div class=" col-sm-9">
+                                                                  <i>{{ book.loanedBook_startDate }}</i>
+                                                              </div>
+                                                          </div>
+                                                          <hr>
+                                                          <div class="row justify-content-center">
+                                                              <div class="col-sm-3">
+                                                                  End:
+                                                              </div>
+                                                              <div class=" col-sm-9">
+                                                                  <i>{{ book.loanedBook_dueDate }}</i>
+                                                              </div>
+                                                          </div>
+                                                          <hr>
+                                                          <div class="row justify-content-center">
+                                                              <div class="col-sm-3">
+                                                                  Returned:
+                                                              </div>
+                                                              <div class=" col-sm-9">
+                                                                  {% if book.loanedBook_returnedDate is not None %}
+                                                                  <i>{{ book.loanedBook_returnedDate }}</i>
+                                                                  {% else %}
+                                                                  <i class="fa fa-ban"></i>
+                                                                  {% endif %}
+                                                              </div>
+                                                          </div>
+                                                          <hr>
+                                                          <div class="row justify-content-center">
+                                                              <div class="col-sm-3">
+                                                                  Status:
+                                                              </div>
+                                                              <div class=" col-sm-9">
+                                                                  {% for loan in loans %}
+                                                                    {% if loan.loanStatus_id == book.loanedBook_statusId_id %}<i>{{ loan.loanStatus_name }}</i> {% endif %}
+                                                                    {% endfor %}
+                                                              </div>
+                                                          </div>
+                                                          <hr>
+                                                      </div>
+                                                  </div>
+                                                  </div>
+                                                  {% endfor %}
+                                                  </div>
+                                                  </div>
+                                          <!--Body -->
+                                        </div>
+                                  </div>
+                                </div>
+                                                                        </div>
+        {% endfor %}
+        </tbody>
+    </table>
+                    </div>
+    </div>
+        </div>
+        </div>
+</section>
+{% endblock %}

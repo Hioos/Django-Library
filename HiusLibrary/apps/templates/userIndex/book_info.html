@@ -40,7 +40,7 @@
                     <h4>Genres:</h4>
                     <br>
                         {% for subgenre in book.book_Subgenre_bookId.all %}
-                            {{ subgenre.booksubgenre_subgenreId.subgenre_ofGenre  }} <i class="fa fa-arrow-right"></i> {{ subgenre.booksubgenre_subgenreId.subgenre_name  }}<hr>
+                            <a style="text-decoration: none;color: inherit;" href="{% url 'bookList' subgenre.booksubgenre_subgenreId.subgenre_ofGenre.id %}">{{ subgenre.booksubgenre_subgenreId.subgenre_ofGenre  }} </a> <i class="fa fa-arrow-right"></i> {{ subgenre.booksubgenre_subgenreId.subgenre_name  }}<hr>
                         {% endfor %}
                         <a id="addCart{{ book.book_id }}" href="javascript:void(0)"  book-data ="{{ book.book_id }}"
                                 {% if left <= 0 %}
@@ -54,9 +54,8 @@
                                 {% endif %}>ADD TO CART</a>
                         <ul>
                             <li><b>Language</b> <span><img src="{{ book.book_language.language_image.url }}" style="width: 30px;height: 20px"></span></li>
-                            <li><b>Amount</b><span>{{ book.book_amount }}</span></li>
                             <li><b>In Library</b><span>{{ left }}</span></li>
-                            <li><b>Themes</b>  <span>{% for theme in book.book_Themes_bookId.all %} <u>{{ theme.bookthemes_themeId.theme_name  }}</u> {% endfor %}</span></li>
+                            <li><b>Themes</b>  <span>{% for theme in book.book_Themes_bookId.all %} <a style="text-decoration: none;color: inherit;" href="{% url 'userTheme' theme.bookthemes_themeId.theme_id %}"><u>{{ theme.bookthemes_themeId.theme_name  }}</u></a> {% endfor %}</span></li>
                             <li><b>Publisher</b> <span>{{ book.book_publisher }}</span></li>
                             <li><b>Released</b> <span>{{ book.book_released }}</span></li>
                         </ul>
@@ -90,16 +89,16 @@
                                     <h6>Author Infomation</h6>
                                     {% for author in book.book_Authorship_bookId.all %}
                                 <div class="row">
-                                <div class="col-3">
-                                    <img src="{{ author.bookauthorship_authorId.author_imgUrl.url }}">
+                                    <div class="col-3">
+                                        <img src="{{ author.bookauthorship_authorId.author_imgUrl.url }}">
+                                    </div>
+                                    <div class="col-9">
+                                            <h4><b><i>{{ author.bookauthorship_authorId.author_pseudonym }}</i></b></h4>
+                                        <p>{{ author.bookauthorship_authorId.author_biography }}</p>
                                 </div>
-                                <div class="col-9">
+                                </div>
 
-                                        <h4><b><i>{{ author.bookauthorship_authorId.author_pseudonym }}</i></b></h4>
-                                    <p>{{ author.bookauthorship_authorId.author_biography }}</p>
-                                    {% endfor %}
-                                </div>
-                                </div>
+                                        {% endfor %}
                                 </div>
                             </div>
                             <div class="tab-pane" id="tabs-3" role="tabpanel">
