@@ -155,11 +155,11 @@
       <div class="modal-body">
         <button data-dismiss="modal" class="close">&times;</button>
         <h4 style="text-align: center;">New Publisher Name</h4>
-        <form class="user" name="registration-form" id="registration-form" action="{% url 'publisherAdd' %}" method="post">
+        <form class="user" name="registration" id="registration" action="{% url 'publisherAdd' %}" method="post">
             {% csrf_token %}
             <div class="form-group row">
                 <div class="col-sm-10 mb-3 mb-sm-0">
-          <input type="text" name="publisherName" class="username form-control "/>
+          <input type="text" name="publisherName" id="publisherName" class="username form-control "/>
                     </div>
                 <div class="col-sm-2">
             <button class="btn btn-success btn-circle" type="submit"><i class="fas fa-check"></i></button>
@@ -170,4 +170,46 @@
     </div>
   </div>
 </div>
+{% endblock %}
+{% block script %}
+    <script>
+    $(function() {
+
+        $.validator.setDefaults({
+            errorClass: 'help-block',
+            highlight: function (element) {
+                $(element)
+                    .closest('.form-group')
+                    .addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element)
+                    .closest('.form-group')
+                    .removeClass('has-error');
+
+            },
+            errorPlacement: function (error, element) {
+                if (element.prop('type') === 'checkbox') {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+        $("#registration").validate({
+            rules: {
+                publisherName: "required",
+
+            },
+            errorPlacement: function (label, element) {
+                label.parents(".asd").addClass('arrow');
+                label.insertAfter(element);
+            },
+            wrapper: 'span',
+            messages: {
+                publisherName: "Please enter Publisher's Name",
+        }
+    });
+    })
+    </script>
 {% endblock %}

@@ -12,7 +12,7 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Add A New Books!</h1>
                             </div>
-                            <form class="user" name="registration-form" id="registration-form" enctype="multipart/form-data" action="{% url 'addBook' %}" method="post">
+                            <form class="user" name="registration" id="registration" enctype="multipart/form-data" action="{% url 'addBook' %}" method="post">
                                 {% csrf_token %}
                                 <div class="form-group row">
                                     <div class="col-sm-9 mb-3 mb-sm-0">
@@ -115,4 +115,65 @@
 
     </div>
     </div>
+{% endblock %}
+{% block script %}
+    <script>
+    $(function() {
+
+        $.validator.setDefaults({
+            errorClass: 'help-block',
+            highlight: function (element) {
+                $(element)
+                    .closest('.form-group')
+                    .addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element)
+                    .closest('.form-group')
+                    .removeClass('has-error');
+
+            },
+            errorPlacement: function (error, element) {
+                if (element.prop('type') === 'checkbox') {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+        $("#registration").validate({
+            rules: {
+                book_name: "required",
+                book_released : "required",
+                language: "required",
+                subgenre: "required",
+                theme: "required",
+                publisher: "required",
+                author: "required",
+                book_page: "required",
+                book_amount: "required",
+                description: "required",
+                image: "required"
+            },
+            errorPlacement: function (label, element) {
+                label.parents(".asd").addClass('arrow');
+                label.insertAfter(element);
+            },
+            wrapper: 'span',
+            messages: {
+                book_name: "Please enter Book's Name",
+                book_released: "Please enter Released Year",
+                language: "Please choose Book's Language",
+                subgenre: "Please choose Book's Genre(s)",
+                theme: "Please choose Book's Theme(s)",
+                publisher: "Please choose Publisher",
+                author: "Please choose Book's Author(s)",
+                book_page: "Please enter Book's Page(s)",
+                book_amount: "Please enter amount in Library",
+                description: "Enter Book's Description",
+                image: "Book needs Image"
+        }
+    });
+    })
+    </script>
 {% endblock %}

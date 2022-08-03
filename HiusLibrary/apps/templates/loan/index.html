@@ -52,8 +52,31 @@
                                             <td style="text-align: center">{{ forloop.counter }}</td>
                                             <td style="text-align: center"><i>{{loan.loanStatus_name}}</i></td>
                                             <td style="text-align: center"><a class="btn btn-success btn-circle btn-sm" href=""><i class="fas fa-flag"></i></a></td>
-                                            <td style="text-align: center"><a class="btn btn-warning btn-circle btn-sm" href=""><i class="fas fa-pen-fancy"></i></a></td>
+                                            <td style="text-align: center"><a class="btn btn-warning btn-circle btn-sm" href="javascript:void(0)" data-toggle="modal" data-target="#reqModal-{{ loan.loanStatus_id }}"><i class="fas fa-pen-fancy"></i></a></td>
                                         </tr>
+                                        <!--Modal-->
+                                        <div class="modal fade bd-example-modal-lg" id="reqModal-{{ loan.loanStatus_id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                           <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                                                    <div class="modal-content">
+                                                  <div class="modal-body">
+                                                    <button data-dismiss="modal" class="close">&times;</button>
+                                                    <h4>{{ loan.loanStatus_name }}</h4>
+                                                    <form class="user" name="registration-form" id="registration-form" action="{% url 'loanEdit' loan.loanStatus_id %}" method="post">
+                                                        {% csrf_token %}
+                                                        <div class="form-group row">
+                                                            <div class="col-sm-10 mb-3 mb-sm-0">
+                                                      <input type="text" name="statusName_update" class="username form-control" value="{{ loan.loanStatus_name }}"/>
+                                                                </div>
+                                                            <div class="col-sm-2">
+                                                        <button class="btn btn-success btn-circle" type="submit"><i class="fas fa-check"></i></button>
+                                                                </div>
+                                                        </div>
+                                                    </form>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                        <!--End Modal-->
                                     {% endfor %}
                                     </tbody>
                                 </table>
@@ -83,4 +106,5 @@
     </div>
   </div>
 </div>
+
 {% endblock %}

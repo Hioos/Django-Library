@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'django_countries',
     'django.contrib.contenttypes',
     # 'simple_history',
+    'django.contrib.humanize',
     'django_extensions',
     'django.contrib.sessions',
     'django.contrib.messages',
@@ -73,7 +74,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'apps.accounts.context_processors.nav_cats',
-                'apps.userIndex.context_processors.nav_cats'
+                'apps.userIndex.context_processors.nav_cats',
+                'apps.home.context_processors.nav_cats'
             ],
         },
     },

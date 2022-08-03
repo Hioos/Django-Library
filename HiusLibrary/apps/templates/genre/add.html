@@ -11,23 +11,23 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Add A New Genre!</h1>
                             </div>
-                            <form class="user" name="registration-form" id="registration-form" action="{% url 'addNewGenre' %}" method="post">
+                            <form class="user" name="registration" id="registration" action="{% url 'addNewGenre' %}" method="post">
                                 {% csrf_token %}
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <input type="text" class="form-control form-control-user" id="genreName"
-                                            placeholder="Name" name="genreName" required>
+                                            placeholder="Name" name="genreName" >
                                     </div>
                                     <div class="col-sm-6">
                                         <input type="text" class="form-control form-control-user" id="genreCode"
-                                            placeholder="Code" name="genreCode" required>
+                                            placeholder="Code" name="genreCode" >
                                     </div>
                                 </div>
                                 <div class ="form-group">
                                   <div class="form-group">
                                     <label for="genreDesc">Description:</label>
                                     <textarea class="form-control " id="genreDesc" name="genreDesc" rows="3"
-                                              style="resize: none;height: 300px;" required></textarea>
+                                              style="resize: none;height: 300px;" ></textarea>
                                   </div>
                                 </div>
                                 <div class="row">
@@ -47,4 +47,50 @@
         </div>
 
     </div>
+{% endblock %}
+{% block script %}
+    <script>
+    $(function() {
+
+        $.validator.setDefaults({
+            errorClass: 'help-block',
+            highlight: function (element) {
+                $(element)
+                    .closest('.form-group')
+                    .addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element)
+                    .closest('.form-group')
+                    .removeClass('has-error');
+
+            },
+            errorPlacement: function (error, element) {
+                if (element.prop('type') === 'checkbox') {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+        $("#registration").validate({
+            rules: {
+                genreName: "required",
+                genreCode: "required",
+                genreDesc: "required",
+
+            },
+            errorPlacement: function (label, element) {
+                label.parents(".asd").addClass('arrow');
+                label.insertAfter(element);
+            },
+            wrapper: 'span',
+            messages: {
+                genreName: "Please enter Genre's Name",
+                genreCode: "Please enter Genre's Code",
+                genreDesc: "Please enter Genre's Description",
+        }
+    });
+    })
+    </script>
 {% endblock %}

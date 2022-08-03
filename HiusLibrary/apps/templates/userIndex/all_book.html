@@ -47,19 +47,21 @@
                                         <li><a  href="javascript:void(0)" id="addCart{{ book.book_id }}" book-data ="{{ book.book_id }}"
                                         {% if cart|length > 0 %}
                                             {% for cartitem in cart %}
-                                                {% if book.book_id == cartitem.id %}
+                                                {% if book.book_id == cartitem.id or book.book_amount == book.asd %}
                                                     class="addCart" style="display: none;"
                                                 {% else %}
                                                     class="addCart"
                                                 {% endif %}
                                             {% endfor %}
+                                                {% elif book.book_amount == book.asd %}
+                                            class="addCart" style="display: none;"
                                         {% else %}
                                                     class="addCart"
                                         {% endif %}><i class="fa fa-shopping-cart"></i></a></li>
                                     </ul>
                                 </div>
                                 <div class="product__item__text">
-                                    <h6 ><a href="{% url 'userBookInfo' book.book_id %}">{{ book.book_name}}</a></h6>
+                                    <h6 ><a href="{% url 'userBookInfo' book.book_id %}">{{ book.book_name}}</a>{% if book.book_amount == book.asd %} <span class="badge badge-warning">Not In Library</span>{% endif %}</h6>
                                 </div>
                             </div>
                         </div>

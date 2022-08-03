@@ -15,29 +15,34 @@
                                 {% csrf_token %}
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <label for="userName">Name</label>
                                         <input type="text" class="form-control form-control-user" id="userName"
-                                            placeholder="User's Fullname" name="name">
+                                             name="name">
                                     </div>
                                     <div class="col-sm-6">
+                                        <label for="adminUserName">Email</label>
                                         <input type="email" class="form-control form-control-user" id="adminUserName"
-                                            placeholder="User's Email" name="email">
+                                            name="email">
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                 <div class="col-sm-12 mb-3 mb-sm-0">
-                                    <input type="text" class="form-control form-control-user" id="adminEmail"
-                                        placeholder="User's Address" name="address">
+                                    <label for="address">Address</label>
+                                    <input type="text" class="form-control form-control-user" id="address"
+                                         name="address">
                                 </div>
 
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-7 mb-3 mb-sm-0">
+                                        <label for="userNationalId">National ID</label>
                                         <input type="text" class="form-control form-control-user"
-                                            id="userNationalId" placeholder="National ID" name="national_id">
+                                            id="userNationalId"  name="national_id">
                                     </div>
                                     <div class="col-sm-5 mb-3 mb-sm-0">
+                                        <label for="userPhone">Phone Number</label>
                                         <input type="text" class="form-control form-control-user"
-                                            id="userPhone" placeholder="Phone Number" name="phone_number">
+                                            id="userPhone"  name="phone_number">
                                     </div>
 
                                 </div>
@@ -45,17 +50,17 @@
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <label for="userDoB">Date Of Birth</label>
                                     <input type="date" class="form-control form-control-user"
-                                        id="userDoB" placeholder="Date Of Birth" name="birth_date">
+                                        id="userDoB"  name="birth_date">
                                 </div>
                                     <div class="col-sm-6 mb-3 mb-sm-0">
                                         <label for="userEnd">Membership Expired Date</label>
                                     <input type="date" class="form-control form-control-user"
-                                        id="userEnd" placeholder="Date Of Birth" name="expired_date">
+                                        id="userEnd"  name="expired_date">
                                 </div>
                                 </div>
                                 <div class="form-group row">
                                     <input type = "file" class="form-control form-control-user"
-                                        id="image" placeholder="Date Of Birth" name="user_image">
+                                        id="image" name="user_image">
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-user btn-block">
                                     Register Account
@@ -68,4 +73,77 @@
         </div>
 
     </div>
+{% endblock %}
+{% block script %}
+    <script>
+    $(function() {
+
+        $.validator.setDefaults({
+            errorClass: 'help-block',
+            highlight: function (element) {
+                $(element)
+                    .closest('.form-group')
+                    .addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element)
+                    .closest('.form-group')
+                    .removeClass('has-error');
+
+            },
+            errorPlacement: function (error, element) {
+                if (element.prop('type') === 'checkbox') {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+        $("#registration-form").validate({
+            rules: {
+                name: "required",
+                email: "required email",
+                birth_date: "required",
+                national_id : {
+                    required:true,
+                    number: true,
+                    length:12
+                },
+                phone_number : {
+                    required:true,
+                    number: true,
+                    length:10
+                },
+                address : "required",
+                expired_date :"required"
+
+            },
+            errorPlacement: function (label, element) {
+                label.parents(".asd").addClass('arrow');
+                label.insertAfter(element);
+            },
+            wrapper: 'span',
+            messages: {
+                name: "User's Name is required",
+                email: {
+                        required: "User's Email is required",
+                        email: "Please enter a valid email address.",
+                        },
+                birth_date: "User's DoB is required",
+                expired_date: "User's DoB is required",
+                national_id: {
+                        required:"National Id is required",
+                        number: "Invalid National ID Number",
+                        length: "Invalid National ID Number",
+                },
+                phone_number: {
+                        required:"User's Phone Number is required",
+                        number: "Invalid Phone Number",
+                        length: "Invalid Phone Number",
+                },
+                address: "User's Address is required",
+        }
+    });
+    })
+    </script>
 {% endblock %}

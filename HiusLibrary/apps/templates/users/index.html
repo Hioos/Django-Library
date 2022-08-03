@@ -1,4 +1,5 @@
 {% extends 'layouts/base.html' %}
+{% load humanize %}
 {% block content %}
 <div class="container-fluid">
 
@@ -186,11 +187,24 @@
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
-                                                                                      {% comment %} <hr>
+{#                                                                                      {% comment %} <hr>#}
                                                                                       <a class="btn btn-circle btn-outline-primary btn-floating btn-sm"  {% if account.linkedin is None  %} href="#" style="pointer-events: none"{% else %}  href="https://www.linkedin.com/in/{{ account.linkedin }}/" {% endif %}><i class="fab fa-linkedin-in  fa-lg"></i></a>
                                                                                       <a class="btn btn-circle btn-outline-primary btn-floating btn-sm"  {% if account.twitter is None  %} href="#" style="pointer-events: none"{% else %} href="https://twitter.com/{{ account.twitter }}" {% endif %}><i class="fab fa-twitter  fa-lg"></i></a>
                                                                                       <a class="btn btn-circle btn-outline-primary btn-floating btn-sm" {% if account.instagram is None  %} href="#" style="pointer-events: none"{% else %}  href="https://www.instagram.com/{{ account.instagram }}/" {% endif %}><i class="fab fa-instagram  fa-lg"></i></a>
-                                                                                      <a class="btn btn-circle btn-outline-primary btn-floating btn-sm" {% if account.facebook is None  %} href="#" style="pointer-events: none"{% else %}  href="https://www.facebook.com/{{account.facebook}}/" {% endif %}><i class="fab fa-facebook-f fa-lg"></i></a> {% endcomment %}
+                                                                                      <a class="btn btn-circle btn-outline-primary btn-floating btn-sm" {% if account.facebook is None  %} href="#" style="pointer-events: none"{% else %}  href="https://www.facebook.com/{{account.facebook}}/" {% endif %}><i class="fab fa-facebook-f fa-lg"></i></a>
+{#                                                                                      {% endcomment %}#}
+                                                                                  <hr>
+
+
+                                                                                    <label for="dataPicker{{ account.id }}">Pricing:</label>
+                                                                                    <select id="dataPicker{{ account.id }}" name="subgenre" class="selectpicker form-control " data-size="5" data-live-search="true" title="Payment" {% if account.is_banned is True %} disabled="true" {% endif %}>
+                                                                                                          {% for price in pricing %}
+                                                                                                          <option data-content="<img src ='{{ price.pricing_image.url }}' style='width:20px;height:20px'/> {{ price.pricing_price|intcomma }}VND - {{ price.pricing_days }} day(s)" data-tokens="{{ price.pricing_name }}" value="{{ price.pricing_id }}"></option>
+                                                                                                          {% endfor %}
+                                                                                    </select>
+
+                                                                                  <button class="btn btn-outline-danger btn-circle btn-sm" type="submit">Go</button>
+
                                                                                   </div>
                                                                                 </div>
 

@@ -1,11 +1,10 @@
 {% extends 'layouts/base.html' %}
 {% block stylesheet %}
 
-<link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.2/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+
 
 {% endblock %}
 {% block content %}
-
     <div class = "container-fluid">
 
     <div class="row">
@@ -15,12 +14,10 @@
                 <div class="card-body">
                     <table border="0" cellspacing="5" cellpadding="5">
         <tbody><tr>
-            <td>Minimum date:</td>
-            <td><input type="text" id="min" name="min"></td>
-        </tr>
-        <tr>
-            <td>Maximum date:</td>
-            <td><input type="text" id="max" name="max"></td>
+            <td>From:</td>
+            <td><input type="text" id="min" name="min" style="border:none;"></td>
+            <td>To:</td>
+            <td><input type="text" id="max" name="max" style="border:none;"></td>
         </tr>
     </tbody></table>
     <table id="example" class="display nowrap" style="width:100%">
@@ -48,7 +45,7 @@
                 <td>{{ forloop.counter }}</td>
                 <td><a href="javascript:void(0)" style="text-decoration: none" data-toggle="modal" data-target="#reqModal-{{ receipt.receipt_id }}">HLrc00{{ receipt.receipt_id }}</a></td>
                 <td>{{ receipt.receipt_user.username }}</td>
-                <td>{{ receipt.receipt_timestamp|date:"F d, Y" }}</td>
+                <td>{{ receipt.receipt_timestamp|date:"F j, Y" }}</td>
                 <td>{{ receipt.receipt_timestamp|date:"H:i" }}</td>
 
             </tr>
@@ -120,16 +117,109 @@
     </table>
                 </div>
         </div>
+            <div class="row">
+
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Earnings (Monthly)</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">$40,000</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-calendar fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                Earnings (Annual)</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">$215,000</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-dollar-sign fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-info shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks
+                                            </div>
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col-auto">
+                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="progress progress-sm mr-2">
+                                                        <div class="progress-bar bg-info" role="progressbar"
+                                                            style="width: 50%" aria-valuenow="50" aria-valuemin="0"
+                                                            aria-valuemax="100"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pending Requests Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-warning shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                Pending Requests</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">18</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-comments fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
             <div class="card shadow mb-4">
                 <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Last 7 Days</h6></div>
                 <div class="card-body">
                     <canvas id="myChart4" style="width:100%;max-width:100%"></canvas>
                 </div>
             </div>
+            <div class="card shadow mb-4">
+                <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">New User Last 7 Days</h6></div>
+                <div class="card-body">
+                    <canvas id="myChart5" style="width:100%;max-width:100%"></canvas>
+                </div>
+            </div>
+
+
     </div>
         <div class="col-xl-4 col-lg-5">
             <div class="card shadow mb-4">
-                <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">In Library</h6></div>
+                <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">All Books</h6></div>
                 <div class="card-body">
                     <canvas id="myChart1" width="100%" height="100%"></canvas>
                 </div>
@@ -141,16 +231,54 @@
                 </div>
             </div>
             <div class="card shadow mb-4">
-            <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Status</h6></div>
+            <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Available Books</h6></div>
             <div class="card-body">
                 <canvas id="myChart3"  width="100%" height="100%"></canvas>
             </div>
         </div>
+
+            <div class="card shadow mb-4">
+                <div class="card-header"><h6 class="m-0 font-weight-bold text-primary">Progress</h6></div>
+                <div class="card-body">
+                                    <h4 class="small font-weight-bold">Server Migration <span
+                                            class="float-right">20%</span></h4>
+                                    <div class="progress mb-4">
+                                        <div class="progress-bar bg-danger" role="progressbar" style="width: 20%"
+                                            aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <h4 class="small font-weight-bold">Sales Tracking <span
+                                            class="float-right">40%</span></h4>
+                                    <div class="progress mb-4">
+                                        <div class="progress-bar bg-warning" role="progressbar" style="width: 40%"
+                                            aria-valuenow="40" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <h4 class="small font-weight-bold">Customer Database <span
+                                            class="float-right">60%</span></h4>
+                                    <div class="progress mb-4">
+                                        <div class="progress-bar" role="progressbar" style="width: 60%"
+                                            aria-valuenow="60" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <h4 class="small font-weight-bold">Payout Details <span
+                                            class="float-right">80%</span></h4>
+                                    <div class="progress mb-4">
+                                        <div class="progress-bar bg-info" role="progressbar" style="width: 80%"
+                                            aria-valuenow="80" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                                    <h4 class="small font-weight-bold">Account Setup <span
+                                            class="float-right">Complete!</span></h4>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-success" role="progressbar" style="width: 100%"
+                                            aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+                                    </div>
+                </div>
+            </div>
         </div>
     </div>
     </div>
 {% endblock %}
 {% block script %}
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.2/css/bootstrap-datetimepicker.min.css" rel="stylesheet" />
+    <link href="https://cdn.datatables.net/datetime/1.1.2/css/dataTables.dateTime.min.css" rel="stylesheet" />
 <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.2/moment.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/3.1.2/js/bootstrap-datetimepicker.min.js"></script>
 <script src="https://cdn.datatables.net/datetime/1.1.2/js/dataTables.dateTime.min.js"></script>
@@ -166,8 +294,8 @@ var yValues = [{% for chart in chart1 %}"{{ chart.count }}"{% if chart == chart1
 var barColors = [
     "#cd3c3a",
     "#8cbcf6",
-    "#4df2bf",
     "#e68a03",
+    "#4df2bf",
     "#4e4ebf",
     "#6b8566",
     "#bf155f",
@@ -186,7 +314,7 @@ new Chart("myChart1", {
   options: {
     title: {
       display: true,
-      text: "In Library"
+      text: "All Receipt "
     }
   }
 });
@@ -195,22 +323,38 @@ new Chart("myChart1", {
 
 var date = new Date();
 var day = date.getDate();
+var ytday = date.getDate(0)-1;
 var month = date.toLocaleString('default', { month: 'long' });
 var year = date.getFullYear();
 
 if (month < 10) month = "0" + month;
 if (day < 10) day = "0" + day;
-
-var today = month + " " + day + ", " + year;
-document.getElementById("min").value = today;
-document.getElementById("max").value = today;
-
+var options = { year: 'numeric', month: 'long', day: 'numeric' };
+    var today = month + " " + day + ", " + year;
+var yesterday = new Date((new Date()).valueOf() - 1000*60*60*24);
+document.getElementById("min").value = date.toLocaleDateString("en-US", options);
+document.getElementById("max").value = date.toLocaleDateString("en-US", options);
 var minDate, maxDate;
+
 // Custom filtering function which will search data in column four between two values
 $.fn.dataTable.ext.search.push(
     function( settings, data, dataIndex ) {
-        var min = minDate.val();
-        var max = maxDate.val();
+        var today = new Date()
+        let min = moment($('#min').val()).isValid() ?
+            new Date( $('#min').val() ).setUTCHours(0,0,0,0) :
+            null;
+        let max = moment($('#max').val()).isValid() ?
+             new Date( $('#max').val() ).setUTCHours(23,59,59,999):
+             null;
+        var min1 = minDate.val();
+        var max1 = maxDate.val();
+        if(max > today){
+            document.getElementById("max").value = today.toLocaleDateString("en-US", options);
+        }
+        if(min1 > max1){
+            document.getElementById("min").value = max1.toLocaleDateString("en-US", options);
+        }
+
         var date = new Date( data[3] );
 
         if (
@@ -273,8 +417,8 @@ new Chart("myChart2", {
     var xValues = ["Available","Not Available"];
 var yValues = [{{ sum.set }}-{{ count }},{{ count }}];
 var barColors = [
-  "#b91d47",
   "#00aba9",
+  "#b91d47",
   "#2b5797",
   "#e8c3b9",
   "#1e7145"
@@ -311,8 +455,8 @@ new Chart("myChart4", {
     datasets: [{
       fill: false,
       lineTension: 0,
-      backgroundColor: "rgba(0,0,255,1.0)",
-      borderColor: "rgba(0,0,255,0.1)",
+      backgroundColor: "rgb(255,0,0)",
+      borderColor: "rgba(255,0,0,0.51)",
       data: yValues
     }]
   },
@@ -329,6 +473,33 @@ new Chart("myChart4", {
   }
 });
     //End Chart
+
+    //Stat Chart5
+var xValues = [{% for user in users %}
+"{{ user.date_joined__date }}"
+    {% if user == users.last %} {% else %} , {% endif %}
+{% endfor %}];
+var yValues = [{% for user in users %}{{ user.count }}{% if user == users.last %} {% else %} , {% endif %}{% endfor %}]
+var barColors = ["red", "green","blue","orange","brown"];
+
+new Chart("myChart5", {
+  type: "bar",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: yValues
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+      text: "New Users"
+    }
+  }
+});
+    //EndChart
 </script>
 
 {% endblock %}

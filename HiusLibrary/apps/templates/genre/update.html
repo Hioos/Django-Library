@@ -11,7 +11,7 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Edit <u>{{ genre.genre_name }}</u> genre</h1>
                             </div>
-                            <form class="user" name="registration-form" id="registration-form" action="{% url 'updateGenreProcess' genre.id %}" method="post">
+                            <form class="user" name="registration" id="registration" action="{% url 'updateGenreProcess' genre.id %}" method="post">
                                 {% csrf_token %}
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
@@ -54,4 +54,52 @@
         </div>
 
     </div>
+{% endblock %}
+{% block script %}
+    <script>
+    $(function() {
+
+        $.validator.setDefaults({
+            errorClass: 'help-block',
+            highlight: function (element) {
+                $(element)
+                    .closest('.form-group')
+                    .addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element)
+                    .closest('.form-group')
+                    .removeClass('has-error');
+
+            },
+            errorPlacement: function (error, element) {
+                if (element.prop('type') === 'checkbox') {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+        $("#registration").validate({
+            rules: {
+                genreName: "required",
+                genreCode: "required",
+                genreDesc: "required",
+                reason: "required"
+
+            },
+            errorPlacement: function (label, element) {
+                label.parents(".asd").addClass('arrow');
+                label.insertAfter(element);
+            },
+            wrapper: 'span',
+            messages: {
+                genreName: "Please enter Genre's Name",
+                genreCode: "Please enter Genre's Code",
+                genreDesc: "Please enter Genre's Description",
+                reason: "Enter Update Reason"
+        }
+    });
+    })
+    </script>
 {% endblock %}

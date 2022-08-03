@@ -10,7 +10,7 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Create New Receipt</h1>
                             </div>
-                            <form class="user" name="registration-form" id="registration-form" enctype="multipart/form-data" action="{% url 'lendingAddProcess' %}" method="post">
+                            <form class="user" name="registration" id="registration" enctype="multipart/form-data" action="{% url 'lendingAddProcess' %}" method="post">
                                 {% csrf_token %}
                                 <div class=" form-group row ">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
@@ -49,11 +49,11 @@
                                     </div>
                                     <div class="col-sm-3 mb-3 mb-sm-0">
                                       <label for="dept">    Start:</label>
-                                      <input name="start{{ book.book_id }}" class="form-control form-control-user" type="date" value="{% now 'Y-m-d' %}">
+                                      <input name="start{{ book.book_id }}" class="form-control form-control-user" type="date" value="{% now 'Y-m-d' %}" min="{% now 'Y-m-d' %}">
                                     </div>
                                     <div class="col-sm-3 mb-3 mb-sm-0">
                                       <label for="dept">    Due:</label>
-                                      <input name="due{{ book.book_id }}" class="form-control form-control-user" type="date">
+                                      <input name="due{{ book.book_id }}" class="form-control form-control-user" type="date" value="{% now 'Y-m-d' %}" min="{% now 'Y-m-d' %}" >
                                     </div>
                                     </div>
                                         </div>
@@ -79,4 +79,47 @@
         </div>
 
     </div>
+{% endblock %}
+{% block script %}
+    <script>
+    $(function() {
+
+        $.validator.setDefaults({
+            errorClass: 'help-block',
+            highlight: function (element) {
+                $(element)
+                    .closest('.form-group')
+                    .addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element)
+                    .closest('.form-group')
+                    .removeClass('has-error');
+
+            },
+            errorPlacement: function (error, element) {
+                if (element.prop('type') === 'checkbox') {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+        $("#registration").validate({
+            rules: {
+                books: "required",
+                user : "required",
+            },
+            errorPlacement: function (label, element) {
+                label.parents(".asd").addClass('arrow');
+                label.insertAfter(element);
+            },
+            wrapper: 'span',
+            messages: {
+                book_name: "Choose Book(s)",
+                book_released: "Choose Member",
+        }
+    });
+    })
+    </script>
 {% endblock %}

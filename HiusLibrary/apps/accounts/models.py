@@ -145,3 +145,28 @@ class Account(AbstractBaseUser):
 
     def get_profile_image_filename(self):
         return str(self.profile_image)[str(self.profile_image).index(f'images/{self.pk}/'):]
+
+def get_pricing_image_filepath(self, filename):
+    return f'images/pricing/{self.pk}/{"pricing_image.png"}'
+
+
+def get_default_pricing_image():
+    return f'images/pricing/default.png'
+
+class Pricing(models.Model):
+    pricing_id = models.IntegerField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
+    pricing_name = models.TextField()
+    pricing_price = models.IntegerField()
+    pricing_days = models.IntegerField(default=7)
+    pricing_image = models.ImageField(max_length=255, upload_to=get_pricing_image_filepath, null=True, blank=True,
+                                      default=get_default_pricing_image)
+    def __str__(self):
+        return self.pricing_name
+    def get_default_pricing_image(self):
+        return str(self.pricing_image)[str(self.pricing_image).index(f'images/pricing/{self.pk}/'):]
+class PaymentHistory(models.Model):
+    history_Id = models.IntegerField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
+    user_id = models.ForeignKey('Account', on_delete=models.CASCADE, related_name='user_id')
+    pricing = models.ForeignKey('Pricing', on_delete=models.CASCADE, related_name='pricing')
+    history_timestamp = models.DateTimeField(verbose_name="history_timestamp", auto_now_add=True)
+    expired_date = models.DateField(default=datetime.date.today)

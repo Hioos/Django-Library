@@ -10,7 +10,7 @@
                             <div class="text-center">
                                 <h1 class="h4 text-gray-900 mb-4">Edit <u>{{ subGenre.subgenre_name }}</u> genre</h1>
                             </div>
-                            <form class="user" name="registration-form" id="registration-form" action="{% url 'updateSubGenreProcess' subGenre.id %}" method="post">
+                            <form class="user" name="registration" id="registration" action="{% url 'updateSubGenreProcess' subGenre.id %}" method="post">
                                 {% csrf_token %}
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
@@ -31,7 +31,7 @@
 </div>
                                           <div class="col-3">
                                               <label for="reason">Description:</label>
-                                    <textarea class="form-control " id="reason" name="reason" rows="3" style="resize: none;height: 300px;" placeholder="Change Reason..." required></textarea>
+                                    <textarea class="form-control " id="reason" name="reason" rows="3" style="resize: none;height: 300px;" placeholder="Change Reason..."></textarea>
                                   </div>
                                           </div>
                                   </div>
@@ -53,4 +53,52 @@
         </div>
 
     </div>
+{% endblock %}
+{% block script %}
+    <script>
+    $(function() {
+
+        $.validator.setDefaults({
+            errorClass: 'help-block',
+            highlight: function (element) {
+                $(element)
+                    .closest('.form-group')
+                    .addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element)
+                    .closest('.form-group')
+                    .removeClass('has-error');
+
+            },
+            errorPlacement: function (error, element) {
+                if (element.prop('type') === 'checkbox') {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+        $("#registration").validate({
+            rules: {
+                subGenreName: "required",
+                subGenreCode: "required",
+                subGenreDesc: "required",
+                reason: "required",
+
+            },
+            errorPlacement: function (label, element) {
+                label.parents(".asd").addClass('arrow');
+                label.insertAfter(element);
+            },
+            wrapper: 'span',
+            messages: {
+                subGenreName: "Please enter Sub-Genre's Name",
+                subGenreCode: "Please enter Sub-Genre's Code",
+                subGenreDesc: "Please enter Sub-Genre's Description",
+                reason: "Enter Update Reason",
+        }
+    });
+    })
+    </script>
 {% endblock %}

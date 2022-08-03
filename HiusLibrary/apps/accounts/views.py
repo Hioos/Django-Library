@@ -13,7 +13,7 @@ from django.contrib import messages
 from django.template import loader
 from django.urls import reverse
 
-from .models import Account
+from .models import Account, Pricing
 from django.conf import settings
 
 
@@ -54,7 +54,7 @@ def logout_user(request):
 def userIndex(request):
     accounts = Account.objects.filter(is_admin=False, is_staff=False, is_superuser=False)
     template = loader.get_template('users/index.html')
-
+    pricing = Pricing.objects.all().order_by('pricing_price')
     def accountCounter():
         count = Account.objects.filter(is_admin=False, is_staff=False, is_superuser=False).count()
         return count
@@ -66,6 +66,7 @@ def userIndex(request):
         'currentlyOnline': currentlyOnline,
         'media_url': settings.MEDIA_URL,
         'x': x,
+        'pricing':pricing
     }
     # str(authors.query)
     return HttpResponse(template.render(context, request))

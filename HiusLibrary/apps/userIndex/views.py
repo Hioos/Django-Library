@@ -18,8 +18,7 @@ from apps.loan.models import loanStatus
 
 def index(request):
     cart = []
-    books = Books.objects.all().prefetch_related('book_Authorship_bookId', 'book_Subgenre_bookId',
-                                                 'book_Themes_bookId').order_by('-book_id')
+    books = Books.objects.raw('SELECT * FROM book_books LEFT JOIN (SELECT loanedBook_book_id,count(*) as asd FROM book_loanedbook WHERE loanedBook_statusId_id = 2 OR loanedBook_statusId_id = 3 OR loanedBook_statusId_id = 6 GROUP BY loanedBook_book_id) ON loanedBook_book_id = book_id ORDER BY book_id DESC')
     lists = Genre.objects.all()
     authors = Authors.objects.all()
     newbooks = Books.objects.all().order_by('-book_id')[:6]
@@ -27,10 +26,12 @@ def index(request):
     themes = Themes.objects.all()
     template = loader.get_template('userIndex/index.html')
     count = 0
+    hot = Books.objects.raw('SELECT * FROM book_books LEFT JOIN (SELECT loanedBook_book_id,count(*) as asd FROM book_loanedbook GROUP BY loanedBook_book_id) ON loanedBook_book_id = book_id ORDER BY asd DESC')[:6]
     if "cart" in request.session:
         cart = request.session['cart']
         for cartProduct in cart:
             count = count + 1
+
     context = {
         'cart': cart,
         'books': books,
@@ -39,6 +40,7 @@ def index(request):
         'newbooks': newbooks,
         'authors': authors,
         'count': count,
+        'hot': hot,
         'shortStories' : shortStories,
     }
     return HttpResponse(template.render(context, request))
@@ -243,7 +245,7 @@ def allBook(request):
                                                  'book_Themes_bookId').order_by('-book_id')
     lists = Genre.objects.all()
     authors = Authors.objects.all()
-    newbooks = Books.objects.all().order_by('-book_id')
+    newbooks = Books.objects.raw('SELECT * FROM book_books LEFT JOIN (SELECT loanedBook_book_id,count(*) as asd FROM book_loanedbook WHERE loanedBook_statusId_id = 2 OR loanedBook_statusId_id = 3 OR loanedBook_statusId_id = 6 GROUP BY loanedBook_book_id) ON loanedBook_book_id = book_id ORDER BY book_id DESC')
     themes = Themes.objects.all()
     template = loader.get_template('userIndex/all_book.html')
     sub_Genre = SubGenre.objects.all()

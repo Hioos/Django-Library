@@ -15,60 +15,72 @@
                                 {% csrf_token %}
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <label for="adminName">Name</label>
                                         <input type="text" class="form-control form-control-user" id="adminName"
-                                            placeholder="Admin's Fullname" name="name" required>
+                                             name="name" >
                                     </div>
                                     <div class="col-sm-6">
+                                        <label for="adminUserName">Username:</label>
                                         <input type="text" class="form-control form-control-user" id="adminUserName"
-                                            placeholder="Admin's Username" name="username" required>
+                                             name="username" >
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                 <div class="col-sm-9 mb-3 mb-sm-0">
+                                    <label for="adminEmail">Email:</label>
                                     <input type="email" class="form-control form-control-user" id="adminEmail"
-                                        placeholder="Email Address" name="email" required>
+                                         name="email" >
                                 </div>
                                 <div class="col-sm-3 mb-3 mb-sm-0">
+                                    <label for="adminDoB">DoB:</label>
                                     <input type="date" class="form-control form-control-user"
-                                        id="adminDoB" placeholder="Date Of Birth" name="birth_date" required>
+                                        id="adminDoB"  name="birth_date" >
                                 </div>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <label for="adminPassword">Password:</label>
                                         <input type="password" class="form-control form-control-user"
-                                            id="adminPassword" placeholder="Password" name="password" required>
+                                            id="adminPassword"  name="password" >
                                     </div>
                                     <div class="col-sm-6">
+                                        <label for="adminConfirmPassword">Re-enter:</label>
                                         <input type="password" class="form-control form-control-user"
-                                            id="adminConfirmPassword" placeholder="Repeat Password" name="confirmpassword" required>
+                                            id="adminConfirmPassword"  name="confirmpassword" >
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-10 mb-3 mb-sm-0">
+                                        <label for="adminNationalId">ID number:</label>
                                         <input type="text" class="form-control form-control-user"
-                                            id="adminNationalId" placeholder="National ID" name="national_id" required>
+                                            id="adminNationalId"  name="national_id" >
                                     </div>
                                     <div class="col-sm-2">
+                                        <label for="role">Role:</label>
+                                        <div id="role">
                                         <div class="text-left custom-control custom-radio align-items-center">
                                                 <input type="radio" class="custom-control-input" id="a" name="adminRole"
-                                                       value = "False" checked required>
+                                                       value = "False" checked >
                                                 <label class="custom-control-label" for="a">Staff</label>
                                             </div>
                                         <div class="text-left custom-control custom-radio align-items-center">
                                                 <input type="radio" class="custom-control-input" id="s" name="adminRole"
-                                                       value="True" required>
+                                                       value="True" >
                                                 <label class="custom-control-label" for="s">Admin</label>
+                                            </div>
                                             </div>
                                     </div>
                                 </div>
                                 <div class="form-group row">
                                     <div class="col-sm-6 mb-3 mb-sm-0">
+                                        <label for="phone_number">Phone:</label>
                                         <input type="text" class="form-control form-control-user"
-                                            id="adminPassword" placeholder="Phone Number" name="phone_number" required>
+                                            id="phone_number"  name="phone_number" >
                                     </div>
                                     <div class="col-sm-6">
+                                        <label for="address">Address:</label>
                                         <input type="text" class="form-control form-control-user"
-                                            id="adminConfirmPassword" placeholder="Address" name="address" >
+                                            id="address"  name="address" >
                                     </div>
                                 </div>
                                 <button type="submit" class="btn btn-primary btn-user btn-block">
@@ -82,4 +94,101 @@
         </div>
 
     </div>
+{% endblock %}
+{% block script %}
+    <script>
+    $(function() {
+
+        $.validator.setDefaults({
+            errorClass: 'help-block',
+            highlight: function (element) {
+                $(element)
+                    .closest('.form-group')
+                    .addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element)
+                    .closest('.form-group')
+                    .removeClass('has-error');
+
+            },
+            errorPlacement: function (error, element) {
+                if (element.prop('type') === 'checkbox') {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+        $("#registration-form").validate({
+            rules: {
+                name: "required",
+                username : {
+                    required : true,
+                    minlength: 5,
+                },
+                email: "required email",
+                birth_date: "required",
+                password : {
+                    required : true,
+                    minlength: 8
+                },
+                confirmpassword : {
+                    required : true,
+                    minlength: 8,
+                    equalTo : "#password"
+                },
+                national_id : {
+                    required:true,
+                    number: true,
+                    length:12
+                },
+                adminRole : "required",
+                phone_number : {
+                    required:true,
+                    number: true,
+                    length:10
+                },
+                address : "required"
+
+            },
+            errorPlacement: function (label, element) {
+                label.parents(".asd").addClass('arrow');
+                label.insertAfter(element);
+            },
+            wrapper: 'span',
+            messages: {
+                name: "Admin's Name is required",
+                username: {
+                        required:"Admin's Username is required",
+                        minlength: "At least 5 characters long",},
+                email: {
+                        required: "Admin's Email is required",
+                        email: "Please enter a valid email address.",
+                        },
+                birth_date: "Admin's DoB is required",
+                password: {
+                        required: "Password is required",
+                        minlength: "Weak Password",
+                        },
+                confirmpassword: {
+                        required: "Re-Enter Password",
+                        minlength: "Weak Password",
+                        },
+                national_id: {
+                        required:"National Id is required",
+                        number: "Invalid National ID Number",
+                        length: "Invalid National ID Number",
+                },
+                adminRole: "Choose Permission",
+                phone_number: {
+                        required:"Admin's Phone Number is required",
+                        number: "Invalid Phone Number",
+                        length: "Invalid Phone Number",
+                },
+                address: "Admin's Address is required",
+        }
+    });
+    })
+    </script>
 {% endblock %}

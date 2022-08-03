@@ -29,12 +29,14 @@
                                 <li><a  href="javascript:void(0)" id="addCart{{ book.book_id }}" book-data ="{{ book.book_id }}"
                                         {% if cart|length > 0 %}
                                             {% for cartitem in cart %}
-                                                {% if book.book_id == cartitem.id %}
+                                                {% if book.book_id == cartitem.id or book.book_amount == book.asd %}
                                                     class="addCart" style="display: none;"
                                                 {% else %}
                                                     class="addCart"
                                                 {% endif %}
                                             {% endfor %}
+                                        {% elif book.book_amount == book.asd %}
+                                            class="addCart" style="display: none;"
                                         {% else %}
                                                     class="addCart"
                                         {% endif %}><i class="fa fa-shopping-cart"></i></a></li>
@@ -42,6 +44,7 @@
                         </div>
                         <div class="featured__item__text">
                             <h6><a href="{% url 'userBookInfo' book.book_id %}">{{ book.book_name }}</a></h6>
+                            {% if book.book_amount == book.asd %}<h5><span class="badge badge-pill badge-warning">Not In Library</span></h5>{% endif %}
                         </div>
                     </div>
                 </div>
@@ -99,7 +102,7 @@
                         <div class="latest-product__slider owl-carousel">
                             <div class="latest-prdouct__slider__item">
                                 {% for newbook in newbooks|slice:":3"%}
-                                <a href="#" class="latest-product__item">
+                                <a href="{% url 'userBookInfo' newbook.book_id %}" class="latest-product__item">
                                     <div class="latest-product__item__pic">
                                         <img src="{{ newbook.book_image.url }}" alt="">
                                     </div>
@@ -111,7 +114,7 @@
                             </div>
                             <div class="latest-prdouct__slider__item">
                                 {% for newbook in newbooks|slice:"3:"%}
-                                <a href="#" class="latest-product__item">
+                                <a href="{% url 'userBookInfo' newbook.book_id %}" class="latest-product__item">
                                     <div class="latest-product__item__pic">
                                         <img src="{{ newbook.book_image.url }}" alt="">
                                     </div>
@@ -130,7 +133,7 @@
                         <div class="latest-product__slider owl-carousel">
                             <div class="latest-prdouct__slider__item">
                                 {% for shortStorie in shortStories|slice:":3" %}
-                                <a href="#" class="latest-product__item">
+                                <a href="{% url 'userBookInfo' shortStorie.book_id %}" class="latest-product__item">
                                     <div class="latest-product__item__pic">
                                         <img src="{{ shortStorie.book_image.url }}" alt="">
                                     </div>
@@ -142,7 +145,7 @@
                             </div>
                             <div class="latest-prdouct__slider__item">
                                 {% for shortStorie in shortStories|slice:"3:" %}
-                                <a href="#" class="latest-product__item">
+                                <a href="{% url 'userBookInfo' shortStorie.book_id %}" class="latest-product__item">
                                     <div class="latest-product__item__pic">
                                         <img src="{{ shortStorie.book_image.url }}" alt="">
                                     </div>
@@ -157,47 +160,33 @@
                 </div>
                 <div class="col-lg-4 col-md-6">
                     <div class="latest-product__text">
-                        <h4>Short Stories</h4>
+                        <h4><i class="fa fa-fire"></i> Hot</h4>
                         <div class="latest-product__slider owl-carousel">
                             <div class="latest-prdouct__slider__item">
-                                <a href="#" class="latest-product__item">
+                                {% for book in hot|slice:':3' %}
+                                <a href="{% url 'userBookInfo' book.book_id %}" class="latest-product__item">
                                     <div class="latest-product__item__pic">
-                                        <img src="" alt="">
+                                        <img src="{{ book.book_image.url }}" alt="">
                                     </div>
                                     <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
+                                        <h6>{{ book.book_name }}</h6>
+                                        <span> #{{ forloop.counter }}</span>
                                     </div>
                                 </a>
+                                {% endfor %}
                             </div>
                             <div class="latest-prdouct__slider__item">
-                                <a href="#" class="latest-product__item">
+                                {% for book in hot|slice:'3:' %}
+                                <a href="{% url 'userBookInfo' book.book_id %}" class="latest-product__item">
                                     <div class="latest-product__item__pic">
-                                        <img src="" alt="">
+                                        <img src="{{ book.book_image.url }}" alt="">
                                     </div>
                                     <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
+                                        <h6>{{ book.book_name }}</h6>
+                                        <span> #{{ forloop.counter|add:3 }}</span>
                                     </div>
                                 </a>
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
-                                <a href="#" class="latest-product__item">
-                                    <div class="latest-product__item__pic">
-                                        <img src="" alt="">
-                                    </div>
-                                    <div class="latest-product__item__text">
-                                        <h6>Crab Pool Security</h6>
-                                        <span>$30.00</span>
-                                    </div>
-                                </a>
+                                {% endfor %}
                             </div>
                         </div>
                     </div>
