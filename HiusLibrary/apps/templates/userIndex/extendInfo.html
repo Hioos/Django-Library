@@ -1,0 +1,105 @@
+{% extends 'userIndex/base.html' %}
+{% block content %}
+    <div class="row">
+    <div class="col-4"></div>
+        <div class="col-4">
+    <div class="card mb-3">
+  <img src="{{ pricings.pricing_image.url }}" class="card-img-top" alt="Wild Landscape"/>
+  <div class="card-body">
+      <h2 class="card-title"><b><i>{{ pricings.pricing_name }}</i></b></h2>
+    <p class="card-text">
+        <b><u>{{ pricings.pricing_price }}</u></b>$  for <i>{{ pricings.pricing_days }}</i> days
+    </p>
+      <div class="row">
+          <div class="col-6"><p class="card-text">Expired At:</p></div>
+          <div class="col-6">
+    <p class="card-text">
+        {{ user.expired_date }}
+    </p>
+          </div>
+      </div>
+      <div class="row">
+          <div class="col-6"><p class="card-text">After Purchased:</p></div>
+          <div class="col-6">
+    <p class="card-text">
+        {{ after }}
+    </p>
+          </div>
+      </div>
+      <hr>
+       <div id="paypal-button-container"></div>
+  </div>
+</div>
+        </div>
+    <div class="col-4"></div>
+    </div>
+{% endblock %}
+{% block script %}
+     <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD&intent=capture&enable-funding=venmo" data_source="integrationbuilder"></script>
+
+        <script>
+          const fundingSources = [
+            paypal.FUNDING.PAYPAL,
+              paypal.FUNDING.VENMO,
+              paypal.FUNDING.PAYLATER,
+              paypal.FUNDING.CARD
+            ]
+
+          for (const fundingSource of fundingSources) {
+            const paypalButtonsComponent = paypal.Buttons({
+              fundingSource: fundingSource,
+
+              // optional styling for buttons
+              // https://developer.paypal.com/docs/checkout/standard/customize/buttons-style-guide/
+              style: {
+                shape: 'pill',
+                height: 40,
+              },
+
+              // set up the transaction
+              createOrder: (data, actions) => {
+                // pass in any options from the v2 orders create call:
+                // https://developer.paypal.com/api/orders/v2/#orders-create-request-body
+                const createOrderPayload = {
+                  purchase_units: [
+                    {
+                      amount: {
+                        value: '{{ pricings.pricing_price }}',
+                      },
+                    },
+                  ],
+                }
+
+                return actions.order.create(createOrderPayload)
+              },
+
+              // finalize the transaction
+              onApprove: (data, actions) => {
+                const captureOrderHandler = (details) => {
+                  const payerName = details.payer.name.given_name
+                  console.log('Transaction completed!')
+                }
+
+                return actions.order.capture().then(captureOrderHandler)
+              },
+
+              // handle unrecoverable errors
+              onError: (err) => {
+                console.error(
+                  'An error prevented the buyer from checking out with PayPal',
+                )
+              },
+            })
+
+            if (paypalButtonsComponent.isEligible()) {
+              paypalButtonsComponent
+                .render('#paypal-button-container')
+                .catch((err) => {
+                  console.error('PayPal Buttons failed to render')
+                })
+            } else {
+              console.log('The funding source is ineligible')
+            }
+          }
+        </script>
+{% endblock %}

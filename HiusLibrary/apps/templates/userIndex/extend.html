@@ -1,0 +1,100 @@
+{% extends 'userIndex/base.html' %}
+{% block content %}
+    <div class="container-fluid">
+    <section class="categories">
+        <div class="container">
+            <div class="row">
+                <div class="categories__slider owl-carousel">
+                    {% for pricing in pricings %}
+                        <a href="{% url 'extendInfo' pricing.pricing_id %}">
+                    <div class="card" style="width: 18rem;">
+                      <img src="{{ pricing.pricing_image.url }}" class="card-img-top" alt="Sunset Over the Sea"/>
+                      <div class="card-body">
+                          <h5>{{ pricing.pricing_name }}</h5>
+                        <p class="card-text">{{ pricing.pricing_price }}$</p>
+                          <p class="card-text">{{ pricing.pricing_days }} days</p>
+                      </div>
+                    </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+    </div>
+        <!-- Sample PayPal credentials (client-id) are included -->
+        <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD&intent=capture&enable-funding=venmo" data_source="integrationbuilder"></script>
+        <script>
+            const fundingSources = [
+            paypal.FUNDING.PAYPAL,
+              paypal.FUNDING.VENMO,
+              paypal.FUNDING.PAYLATER,
+              paypal.FUNDING.CARD
+            ]
+
+          for (const fundingSource of fundingSources) {
+            const paypalButtonsComponent = paypal.Buttons({
+              fundingSource: fundingSource,
+
+              // optional styling for buttons
+              // https://developer.paypal.com/docs/checkout/standard/customize/buttons-style-guide/
+              style: {
+                shape: 'pill',
+                height: 40,
+              },
+
+              // set up the transaction
+              createOrder: (data, actions) => {
+                // pass in any options from the v2 orders create call:
+                // https://developer.paypal.com/api/orders/v2/#orders-create-request-body
+                const createOrderPayload = {
+                  purchase_units: [
+                    {
+                      amount: {
+                        value: '88.44',
+                      },
+                    },
+                  ],
+                }
+
+                return actions.order.create(createOrderPayload)
+              },
+
+              // finalize the transaction
+              onApprove: (data, actions) => {
+                const captureOrderHandler = (details) => {
+                  const payerName = details.payer.name.given_name
+                  console.log('Transaction completed!')
+                }
+
+                return actions.order.capture().then(captureOrderHandler)
+              },
+
+              // handle unrecoverable errors
+              onError: (err) => {
+                console.error(
+                  'An error prevented the buyer from checking out with PayPal',
+                )
+              },
+            })
+
+            if (paypalButtonsComponent.isEligible()) {
+              paypalButtonsComponent
+                .render('#paypal-button-container')
+                .catch((err) => {
+                  console.error('PayPal Buttons failed to render')
+                })
+            } else {
+              console.log('The funding source is ineligible')
+            }
+          }
+        </script>
+{% endblock %}
+{% block imagemtfk %}
+    <div class="hero__item set-bg" data-setbg="https://i.pinimg.com/originals/80/50/ee/8050eeeec9311721a748450b1509b3a8.png">
+                        <div class="hero__text">
+
+                            <h2 style="color: white;font-family: cursive">Extend Membership</h2>
+                        </div>
+                    </div>
+{% endblock %}
