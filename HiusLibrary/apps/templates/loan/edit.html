@@ -1,0 +1,95 @@
+{% extends 'layouts/base.html' %}
+{% load humanize %}
+{% block content %}
+    <div class="container-fluid">
+     <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary" style="font-size: x-large;">Update</h6>
+                        </div>
+                        <div class="card-body">
+                                                    <h4>{{ price.pricing_name }}</h4>
+                                                    <form class="user" name="registration-form" id="registration-form" action="{% url 'pricingEdit' price.pricing_id %}" enctype="multipart/form-data" method="post">
+                                                        {% csrf_token %}
+                                                        <div class="form-group row justify-content-center">
+                                                            <div class="col-sm-10 mb-3 mb-sm-0">
+                                                                <div class="form-group rows">
+                                                      <input type="text" name="pricingName_update" class="username form-control" value="{{ price.pricing_name }}" placeholder="Title"/>
+                                                                </div>
+                                                                <div class="form-group rows">
+                                                      <input type="text" name="pricingPrice_update" class="username form-control" value="{{ price.pricing_price }}" placeholder="Price"/>
+                                                                </div>
+                                                                <div class="form-group rows">
+                                                      <input type="number" name="pricingDay_update" class="username form-control" value="{{ price.pricing_days }}" placeholder="Days"/>
+                                                                </div>
+                                                                <div class="form-group rows">
+                                                      <div class="col-sm-6">
+                                                          <label for="file-upload" class="btn btn-circle" style="border: 1px solid #ccc;
+                                                                                                                                            display: inline-block;
+                                                                                                                                            padding: 6px 12px;
+                                                                                                                                            cursor: pointer;
+                                                                                                                                            word-wrap: break-word">
+                            <i class="fas fa-upload"></i>
+                        </label>
+                                                           <input id="file-upload" type="file" name="price_image_update" onchange="loadFile(event)" accept="image/*" class="form-control form-control-user" style="display: none;"/>
+                                                      </div>
+                                                        <div class="col-sm-6">
+                                                          <img id="output"  src="{{ price.pricing_image.url }}" class="d-flex align-items-center"  style="width: 75px;margin: auto;height: 50px;border-radius: 10px;border:1px;border-color: #ff2929" />
+                                                      </div>
+                                                                </div>
+                                                                </div>
+                                                            <div class="col-sm-2 justify-content-center">
+                                                        <button class="btn btn-success btn-circle" type="submit"><i class="fas fa-check"></i></button>
+                                                                </div>
+                                                        </div>
+                                                    </form>
+                        </div>
+    </div>
+    </div>
+{% endblock %}
+{% block script %}
+    <script>
+    $(function() {
+
+        $.validator.setDefaults({
+            errorClass: 'help-block',
+            highlight: function (element) {
+                $(element)
+                    .closest('.form-group')
+                    .addClass('has-error');
+            },
+            unhighlight: function (element) {
+                $(element)
+                    .closest('.form-group')
+                    .removeClass('has-error');
+
+            },
+            errorPlacement: function (error, element) {
+                if (element.prop('type') === 'checkbox') {
+                    error.insertAfter(element.parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });
+        $("#registration-form").validate({
+            rules: {
+                pricingName_update: "required",
+                pricingPrice_update : "required",
+                pricingDay_update :"required",
+                price_image_update: "required"
+            },
+            errorPlacement: function (label, element) {
+                label.parents(".asd").addClass('arrow');
+                label.insertAfter(element);
+            },
+            wrapper: 'span',
+            messages: {
+                pricingName_update: "Please Enter Method's Name",
+                pricingPrice_update: "Enter Price",
+                pricingDay_update: "Enter Days can be extended",
+                price_image_update: "Image is required"
+        }
+    });
+    })
+    </script>
+{% endblock %}
