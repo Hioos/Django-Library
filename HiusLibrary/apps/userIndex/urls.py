@@ -13,5 +13,7 @@ urlpatterns = [
     path('requestBook',views.requestBook,name='requestBook'),
     path('allBook',views.allBook,name='allBook'),
     path('information',views.information,name='information'),
-    path('history',views.history,name='history')
+    path('history',views.history,name='history'),
+    path('extend',views.extend,name='extend'),
+    path('extend/<int:id>',views.extendInfo,name='extendInfo')
 ]

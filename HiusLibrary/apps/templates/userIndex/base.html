@@ -117,6 +117,7 @@
                                         <ul class="header__menu__dropdown">
                                             <li><a href="{% url 'information' %}">Information</a></li>
                                             <li><a href="{% url 'history' %}" >History</a></li>
+                                            <li><a href="{% url 'extend' %}">Extend</a></li>
                                             <li><a href="{% url 'logoutForUser' %}" >Logout</a></li>
                                         </ul>
                                     </li>
@@ -299,7 +300,8 @@
     <script src="{% static 'js1/mixitup.min.js'%}"></script>
     <script src="{% static 'js1/owl.carousel.min.js'%}"></script>
     <script src="{% static 'js1/main.js'%}"></script>
-
+    {% block script %}
+    {% endblock %}
 
 </body>
 <script>

@@ -9,7 +9,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 # Create your views here.
 from django.template import loader
 
-from apps.accounts.models import Account
+from apps.accounts.models import Account, Pricing
 from apps.authors.models import Authors
 from apps.book.models import Books, LoanedBook, Receipt
 from apps.genre.models import Genre, Themes, SubGenre
@@ -313,4 +313,23 @@ def history(request):
         'count': count
     }
     template = loader.get_template('userIndex/history.html')
+    return HttpResponse(template.render(context, request))
+def extend(request):
+    pricings = Pricing.objects.filter(pricing_price__gte = 0.4).order_by('pricing_price')
+    template = loader.get_template('userIndex/extend.html')
+    context = {
+        'pricings' : pricings
+    }
+    return HttpResponse(template.render(context, request))
+def extendInfo(request,id):
+    pricings = Pricing.objects.get(pricing_id=id)
+    user = Account.objects.get(id = request.session['id'])
+    template = loader.get_template('userIndex/extendInfo.html')
+    current = user.expired_date
+    after = current + datetime.timedelta(days=pricings.pricing_days)
+    context = {
+        'pricings': pricings,
+        'user' : user,
+        'after':after
+    }
     return HttpResponse(template.render(context, request))

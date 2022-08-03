@@ -156,7 +156,7 @@ def get_default_pricing_image():
 class Pricing(models.Model):
     pricing_id = models.IntegerField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
     pricing_name = models.TextField()
-    pricing_price = models.IntegerField()
+    pricing_price = models.FloatField()
     pricing_days = models.IntegerField(default=7)
     pricing_image = models.ImageField(max_length=255, upload_to=get_pricing_image_filepath, null=True, blank=True,
                                       default=get_default_pricing_image)
