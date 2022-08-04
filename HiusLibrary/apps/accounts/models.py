@@ -169,4 +169,5 @@ class PaymentHistory(models.Model):
     user_id = models.ForeignKey('Account', on_delete=models.CASCADE, related_name='user_id')
     pricing = models.ForeignKey('Pricing', on_delete=models.CASCADE, related_name='pricing')
     history_timestamp = models.DateTimeField(verbose_name="history_timestamp", auto_now_add=True)
-    expired_date = models.DateField(default=datetime.date.today)
+    old_expired_date = models.DateField(default=datetime.date.today)
+    new_expired_date = models.DateField(default=datetime.date.today)

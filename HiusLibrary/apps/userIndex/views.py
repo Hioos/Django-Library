@@ -2,6 +2,7 @@ import datetime
 import logging
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
 from django.db.models import Count, Q
 from django.http import HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
@@ -9,7 +10,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 # Create your views here.
 from django.template import loader
 
-from apps.accounts.models import Account, Pricing
+from apps.accounts.models import Account, Pricing, PaymentHistory
 from apps.authors.models import Authors
 from apps.book.models import Books, LoanedBook, Receipt
 from apps.genre.models import Genre, Themes, SubGenre
@@ -18,7 +19,8 @@ from apps.loan.models import loanStatus
 
 def index(request):
     cart = []
-    books = Books.objects.raw('SELECT * FROM book_books LEFT JOIN (SELECT loanedBook_book_id,count(*) as asd FROM book_loanedbook WHERE loanedBook_statusId_id = 2 OR loanedBook_statusId_id = 3 OR loanedBook_statusId_id = 6 GROUP BY loanedBook_book_id) ON loanedBook_book_id = book_id ORDER BY book_id DESC')
+    books = Books.objects.raw(
+        'SELECT * FROM book_books LEFT JOIN (SELECT loanedBook_book_id,count(*) as asd FROM book_loanedbook WHERE loanedBook_statusId_id = 2 OR loanedBook_statusId_id = 3 OR loanedBook_statusId_id = 6 GROUP BY loanedBook_book_id) ON loanedBook_book_id = book_id ORDER BY book_id DESC')
     lists = Genre.objects.all()
     authors = Authors.objects.all()
     newbooks = Books.objects.all().order_by('-book_id')[:6]
@@ -26,7 +28,9 @@ def index(request):
     themes = Themes.objects.all()
     template = loader.get_template('userIndex/index.html')
     count = 0
-    hot = Books.objects.raw('SELECT * FROM book_books LEFT JOIN (SELECT loanedBook_book_id,count(*) as asd FROM book_loanedbook GROUP BY loanedBook_book_id) ON loanedBook_book_id = book_id ORDER BY asd DESC')[:6]
+    hot = Books.objects.raw(
+        'SELECT * FROM book_books LEFT JOIN (SELECT loanedBook_book_id,count(*) as asd FROM book_loanedbook GROUP BY loanedBook_book_id) ON loanedBook_book_id = book_id ORDER BY asd DESC')[
+          :6]
     if "cart" in request.session:
         cart = request.session['cart']
         for cartProduct in cart:
@@ -41,7 +45,7 @@ def index(request):
         'authors': authors,
         'count': count,
         'hot': hot,
-        'shortStories' : shortStories,
+        'shortStories': shortStories,
     }
     return HttpResponse(template.render(context, request))
 
@@ -89,16 +93,24 @@ def bookList(request, id):
     lists = Genre.objects.all()
     themes = Themes.objects.all()
     strid = str(id)
-    books = Books.objects.raw(
+    book = Books.objects.raw(
         'SELECT * FROM book_books INNER JOIN book_booksubgenre ON book_id = book_booksubgenre.booksubgenre_bookId_id INNER JOIN genre_subgenre ON book_booksubgenre.booksubgenre_subgenreId_id = genre_subgenre.id INNER JOIN genre_genre ON subgenre_ofGenre_id = genre_genre.id WHERE genre_genre.id = %s GROUP BY book_name ORDER BY book_id DESC',
         [strid])
-    x = len(list(books))
+    x = len(list(book))
     template = loader.get_template('userIndex/list.html')
     count = 0
     if "cart" in request.session:
         cart = request.session['cart']
         for cartProduct in cart:
             count = count + 1
+    page = request.GET.get('page', 1)
+    paginator = Paginator(book, 10)
+    try:
+        books = paginator.page(page)
+    except PageNotAnInteger:
+        books = paginator.page(1)
+    except EmptyPage:
+        books = paginator.page(paginator.num_pages)
 
     context = {
         'cart': cart,
@@ -117,13 +129,22 @@ def bookList(request, id):
 def themeInfo(request, id):
     strid = str(id)
     cart = []
-    bookThemes = Books.objects.raw(
+    bookTheme = Books.objects.raw(
         'SELECT * FROM book_books INNER JOIN book_bookthemes ON book_books.book_id = book_bookthemes.bookthemes_bookId_id WHERE bookthemes_themeId_id = %s',
         [strid])
+    x = len(list(bookTheme))
     themedesc = Themes.objects.get(theme_id=id)
+    page = request.GET.get('page', 1)
+    paginator = Paginator(bookTheme, 10)
+    try:
+        bookThemes = paginator.page(page)
+    except PageNotAnInteger:
+        bookThemes = paginator.page(1)
+    except EmptyPage:
+        bookThemes = paginator.page(paginator.num_pages)
     themes = Themes.objects.all()
     lists = Genre.objects.all()
-    x = len(list(bookThemes))
+
     template = loader.get_template('userIndex/themes.html')
     count = 0
     if "cart" in request.session:
@@ -239,34 +260,46 @@ def requestBook(request):
             messages.success(request, fail + " Not Enough in Library")
         return redirect('cart')
 
+
 def allBook(request):
     cart = []
     books = Books.objects.all().prefetch_related('book_Authorship_bookId', 'book_Subgenre_bookId',
                                                  'book_Themes_bookId').order_by('-book_id')
     lists = Genre.objects.all()
     authors = Authors.objects.all()
-    newbooks = Books.objects.raw('SELECT * FROM book_books LEFT JOIN (SELECT loanedBook_book_id,count(*) as asd FROM book_loanedbook WHERE loanedBook_statusId_id = 2 OR loanedBook_statusId_id = 3 OR loanedBook_statusId_id = 6 GROUP BY loanedBook_book_id) ON loanedBook_book_id = book_id ORDER BY book_id DESC')
+    newbook = Books.objects.raw(
+        'SELECT * FROM book_books LEFT JOIN (SELECT loanedBook_book_id,count(*) as asd FROM book_loanedbook WHERE loanedBook_statusId_id = 2 OR loanedBook_statusId_id = 3 OR loanedBook_statusId_id = 6 GROUP BY loanedBook_book_id) ON loanedBook_book_id = book_id ORDER BY book_id DESC')
     themes = Themes.objects.all()
     template = loader.get_template('userIndex/all_book.html')
     sub_Genre = SubGenre.objects.all()
-    x = len(list(newbooks))
+    x = len(list(newbook))
     count = 0
     if "cart" in request.session:
         cart = request.session['cart']
         for cartProduct in cart:
             count = count + 1
+    page = request.GET.get('page', 1)
+    paginator = Paginator(newbook, 10)
+    try:
+        newbooks = paginator.page(page)
+    except PageNotAnInteger:
+        newbooks = paginator.page(1)
+    except EmptyPage:
+        newbooks = paginator.page(paginator.num_pages)
+
     context = {
         'cart': cart,
         'books': books,
         'lists': lists,
         'themes': themes,
         'newbooks': newbooks,
-        'x':x,
+        'x': x,
         'authors': authors,
-        'sub_Genre':sub_Genre,
+        'sub_Genre': sub_Genre,
         'count': count
     }
     return HttpResponse(template.render(context, request))
+
 
 def information(request):
     if "name" in request.session:
@@ -280,9 +313,9 @@ def information(request):
             cart = request.session['cart']
             for cartProduct in cart:
                 count = count + 1
-        context={
+        context = {
             'cart': cart,
-            'information' : information,
+            'information': information,
             'lists': lists,
             'themes': themes,
             'count': count
@@ -292,6 +325,7 @@ def information(request):
     else:
         return redirect('indexOfUser')
 
+
 def history(request):
     cart = []
     id = request.session['id']
@@ -299,6 +333,7 @@ def history(request):
     themes = Themes.objects.all()
     count = 0
     loans = loanStatus.objects.all()
+    payments = PaymentHistory.objects.prefetch_related().filter(user_id=id).order_by('-history_Id')
     receipts = Receipt.objects.prefetch_related().filter(receipt_user=id).order_by('-receipt_id')
     if "cart" in request.session:
         cart = request.session['cart']
@@ -308,28 +343,67 @@ def history(request):
         'cart': cart,
         'lists': lists,
         'loans': loans,
-        'receipts':receipts,
+        'receipts': receipts,
         'themes': themes,
-        'count': count
+        'count': count,
+        'payments': payments
     }
     template = loader.get_template('userIndex/history.html')
     return HttpResponse(template.render(context, request))
+
+
 def extend(request):
-    pricings = Pricing.objects.filter(pricing_price__gte = 0.4).order_by('pricing_price')
+    cart = []
+    lists = Genre.objects.all()
+    themes = Themes.objects.all()
+    count = 0
+    pricings = Pricing.objects.filter(pricing_price__gte=0.4).order_by('pricing_price')
     template = loader.get_template('userIndex/extend.html')
     context = {
-        'pricings' : pricings
+        'lists': lists,
+        'cart': cart,
+        'count': count,
+        'themes': themes,
+        'pricings': pricings
     }
     return HttpResponse(template.render(context, request))
-def extendInfo(request,id):
+
+
+def extendInfo(request, id):
+    cart = []
+    lists = Genre.objects.all()
+    themes = Themes.objects.all()
+    count = 0
     pricings = Pricing.objects.get(pricing_id=id)
-    user = Account.objects.get(id = request.session['id'])
+    user = Account.objects.get(id=request.session['id'])
     template = loader.get_template('userIndex/extendInfo.html')
     current = user.expired_date
     after = current + datetime.timedelta(days=pricings.pricing_days)
     context = {
+        'lists': lists,
+        'cart': cart,
+        'count': count,
+        'themes': themes,
         'pricings': pricings,
-        'user' : user,
-        'after':after
+        'user': user,
+        'after': after
     }
     return HttpResponse(template.render(context, request))
+
+
+def extendMember(request, id):
+    # data = request.GET['catid']
+    pricing = Pricing.objects.get(pricing_id=id)
+    user = Account.objects.get(id=request.session['id'])
+    days = pricing.pricing_days
+    history = PaymentHistory(
+        user_id=user,
+        pricing=pricing,
+        old_expired_date = user.expired_date,
+        new_expired_date = user.expired_date + datetime.timedelta(days=days)
+    )
+    history.save()
+    user.expired_date = user.expired_date + datetime.timedelta(days=days)
+    user.save()
+    messages.success(request, "Done")
+    return redirect('history')

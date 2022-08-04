@@ -15,5 +15,6 @@ urlpatterns = [
     path('information',views.information,name='information'),
     path('history',views.history,name='history'),
     path('extend',views.extend,name='extend'),
-    path('extend/<int:id>',views.extendInfo,name='extendInfo')
+    path('extend/<int:id>',views.extendInfo,name='extendInfo'),
+    path('extendMember/<int:id>',views.extendMember,name='extendMember')
 ]

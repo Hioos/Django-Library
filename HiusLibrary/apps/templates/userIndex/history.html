@@ -123,5 +123,50 @@
     </div>
         </div>
         </div>
+<div class="container">
+            <div class="row">
+                <div class="col-lg-6">
+                    <div class="row">
+                        <div class="col-lg-6">
+                            <div class="checkout__input">
+                            <input type="text" id="myInputTextField" placeholder="Enter Receipt Id...">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="checkout__form">
+
+                <div class="card-body">
+                <div class="table-responsive">
+    <table id="exampleDataTable2" class="display">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Receipt ID</th>
+                <th>At</th>
+                <th>Old Expired Date</th>
+                <th>New Expired Date</th>
+                <th>Info</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for payment in payments %}
+            <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>HLextmbs{{ payment.history_Id }}</td>
+            <td>{{ payment.history_timestamp }}</td>
+                <td>{{ payment.old_expired_date }}</td>
+                <td>{{ payment.new_expired_date }}</td>
+
+            <td><img src="{{ payment.pricing.pricing_image.url }}" width="50px" height="50px"></td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+                    </div>
+    </div>
+        </div>
+        </div>
 </section>
 {% endblock %}

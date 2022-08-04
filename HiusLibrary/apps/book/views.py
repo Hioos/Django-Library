@@ -1,10 +1,12 @@
 import datetime
 from venv import create
 
+from django.conf import settings
 from django.contrib import messages
 from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
+from django.core.mail import send_mail
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
@@ -219,7 +221,7 @@ def update(request, id):
 
 @login_required
 def lendingPage(request):
-    receipts = Receipt.objects.raw('SELECT * FROM book_receipt INNER JOIN book_loanedbook ON receipt_id = loanedBook_receipt_id WHERE loanedBook_statusId_id =1 OR loanedBook_statusId_id =2 OR loanedBook_statusId_id = 6 GROUP BY receipt_id ORDER BY receipt_timestamp DESC')
+    receipts = Receipt.objects.raw('SELECT * FROM book_receipt INNER JOIN book_loanedbook ON receipt_id = loanedBook_receipt_id WHERE loanedBook_statusId_id =1 OR loanedBook_statusId_id =2 OR loanedBook_statusId_id = 6 OR loanedBook_statusId_id = 8 GROUP BY receipt_id ORDER BY receipt_timestamp DESC')
     loanedBooks = LoanedBook.objects.all()
     pending = Receipt.objects.raw('SELECT * FROM book_receipt INNER JOIN book_loanedbook ON receipt_id = loanedBook_receipt_id WHERE loanedBook_statusId_id =4  GROUP BY receipt_id ORDER BY receipt_timestamp DESC')
     done = Receipt.objects.raw(
@@ -287,10 +289,23 @@ def lendingAddProcess(request):
         return HttpResponseRedirect(reverse('lendingAdd'))
 @login_required
 def acceptAll(request,id):
+    admin = Account.objects.get(id = request.session['id'])
     loanedBook = LoanedBook.objects.filter(loanedBook_receipt_id=id).only('loanedBook_statusId_id')
+    user = LoanedBook.objects.raw('SELECT * FROM book_loanedbook INNER JOIN book_receipt ON loanedBook_receipt_id = book_receipt.receipt_id INNER JOIN accounts_account ON receipt_user_id = accounts_account.id WHERE loanedBook_receipt_id = 45 LIMIT 1')
     for book in loanedBook:
-        book.loanedBook_statusId_id = 6
+        book.loanedBook_statusId_id = 8
         book.save()
+    for x in user:
+        subject = 'Thank you for using HiusLibrary'
+        message = f'Dear {x.name}, \n' \
+                  f'Thank you for using HiusLibrary. \n' \
+                  f'Our books are waiting for you to bring them home \n' \
+                  f'Please bring your ID card to our librarians at ... \n' \
+                  f'\t\t\t Sincerely, \n' \
+                  f'\t\t\t {admin.name}'
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [x.email, ]
+        send_mail(subject, message, email_from, recipient_list)
     return HttpResponseRedirect(reverse('lendingPage'))
 @login_required
 def denyAll(request,id):

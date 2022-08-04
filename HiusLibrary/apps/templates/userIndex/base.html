@@ -25,7 +25,8 @@
     <link rel="stylesheet" href="{% static 'css1/custom.css' %}" type="text/css">
     <link rel="stylesheet" href="https://cdn.datatables.net/1.12.1/css/jquery.dataTables.min.css" type="text/css">
 </head>
-
+{% block stylesheet %}
+{% endblock %}
 <body>
     <!-- Page Preloder -->
     <div id="preloder">
@@ -349,6 +350,12 @@
         });
     $(document).ready(function () {
     oTable = $('#exampleDataTable').DataTable({sDom: 'lrtip',"lengthChange": false});
+    $('#myInputTextField').keyup(function(){
+      oTable.search($(this).val()).draw() ;
+})
+});
+    $(document).ready(function () {
+    oTable = $('#exampleDataTable2').DataTable({sDom: 'lrtip',"lengthChange": false});
     $('#myInputTextField').keyup(function(){
       oTable.search($(this).val()).draw() ;
 })

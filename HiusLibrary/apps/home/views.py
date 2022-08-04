@@ -12,7 +12,7 @@ from django.template import loader
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
 
-from apps.accounts.models import Account
+from apps.accounts.models import Account, PaymentHistory
 from apps.book.models import Receipt, LoanedBook, Language, Books
 
 
@@ -28,6 +28,8 @@ def index(request):
     chart1 = LoanedBook.objects.raw(
         'SELECT loanedBook_id,book_loanedbook.loanedBook_statusId_id,loanStatus_name,COUNT(*) as count FROM book_loanedbook INNER JOIN loan_loanstatus ON loanedBook_statusId_id = loanStatus_id GROUP BY book_loanedbook.loanedBook_statusId_id ')
     sum = Books.objects.all().aggregate(set = Sum('book_amount'))
+    pending = Receipt.objects.raw(
+        'SElECT receipt_id,COUNT(*) as countx FROM (SELECT * FROM book_receipt INNER JOIN book_loanedbook ON receipt_id = loanedBook_receipt_id WHERE loanedBook_statusId_id =4  GROUP BY receipt_id ORDER BY receipt_timestamp DESC)')
     count = LoanedBook.objects.filter(Q(loanedBook_statusId_id = 2)|Q(loanedBook_statusId_id = 3)|Q(loanedBook_statusId_id = 6)).count()
     items = Receipt.objects.filter(receipt_timestamp__lte=datetime.datetime.today(),
                                receipt_timestamp__gt=datetime.datetime.today() - datetime.timedelta(days=7)). \
@@ -37,6 +39,8 @@ def index(request):
         values('date_joined__date').annotate(count=Count('id'))
     max = items.order_by('-count').first()
     min = items.order_by('count').first()
+    last7days = PaymentHistory.objects.raw("SELECT history_Id,SUM(pricing_price) as price FROM (select * from accounts_paymenthistory LEFT JOIN accounts_pricing ON accounts_paymenthistory.pricing_id = accounts_pricing.pricing_id WHERE history_timestamp > (SELECT DATETIME('now', '-7 day')))")
+    sumMoney = PaymentHistory.objects.raw('SELECT history_id,SUM(pricing_price) as moneys FROM accounts_paymenthistory INNER JOIN accounts_pricing ON accounts_paymenthistory.pricing_id = accounts_pricing.pricing_id')
     context = {
         'receipts': receipts,
         'chart1': chart1,
@@ -44,9 +48,12 @@ def index(request):
         'chart2': chart2,
         'count' : count,
         'items' : items,
+        'last7days': last7days,
         'sum' : sum,
         'max' : max,
+        'sumMoney': sumMoney,
         'min' : min,
+        'pending':pending,
         'users':users
     }
     return HttpResponse(template.render(context, request))

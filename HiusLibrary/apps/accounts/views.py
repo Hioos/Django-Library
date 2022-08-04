@@ -280,5 +280,5 @@ def loginForUser(request):
 def logoutForUser(request):
     logout(request)
     messages.success(request, "See You Soon !!")
-    return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    return HttpResponseRedirect(reverse('indexOfUser'))
 

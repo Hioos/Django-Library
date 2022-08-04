@@ -35,7 +35,7 @@
     </div>
 {% endblock %}
 {% block script %}
-     <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD&intent=capture&enable-funding=venmo" data_source="integrationbuilder"></script>
+     <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD&intent=capture&enable-funding=venmo&disable-funding=credit,card" data_source="integrationbuilder"></script>
 
         <script>
           const fundingSources = [
@@ -77,9 +77,10 @@
               onApprove: (data, actions) => {
                 const captureOrderHandler = (details) => {
                   const payerName = details.payer.name.given_name
+
                   console.log('Transaction completed!')
                 }
-
+                window.location.href ="{% url 'extendMember' pricings.pricing_id %}"
                 return actions.order.capture().then(captureOrderHandler)
               },
 

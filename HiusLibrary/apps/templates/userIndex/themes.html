@@ -50,12 +50,37 @@
                         </div>
                         {% endfor %}
                     </div>
-                    <div class="product__pagination">
-                        <a href="#">1</a>
-                        <a href="#">2</a>
-                        <a href="#">3</a>
-                        <a href="#"><i class="fa fa-long-arrow-right"></i></a>
-                    </div>
+                                        {% if bookThemes.has_other_pages %}
+                        <ul class="pagination pagination-lg justify-content-center">
+                                    {% if bookThemes.has_previous %}
+                                        <li class="page-item"><a class="page-link"  href="?page={{ bookThemes.previous_page_number }}"><i class="fa fa-chevron-left" aria-hidden="true"></i></a></li>
+                                    {% else %}
+                                        <li class="page-item disabled"><a class="page-link" ><i class="fa fa-chevron-left" aria-hidden="true"></i></a></li>
+                                    {% endif %}
+
+                                    {% if bookThemes.number|add:'-4' > 1 %}
+                                        <li class="page-item"><a class="page-link"  href="?page={{ bookThemes.number|add:'-5' }}">&hellip;</a></li>
+                                    {% endif %}
+
+                                    {% for i in bookThemes.paginator.page_range %}
+                                        {% if bookThemes.number == i %}
+                                            <li class="page-item active"><a class="page-link" >{{ i }}</a></li>
+                                        {% elif i > bookThemes.number|add:'-5' and i < bookThemes.number|add:'5' %}
+                                            <li class="page-item"><a class="page-link"  href="?page={{ i }}">{{ i }}</a></li>
+                                        {% endif %}
+                                    {% endfor %}
+
+                                    {% if bookThemes.paginator.num_pages > bookThemes.number|add:'4' %}
+                                        <li class="page-item"><a class="page-link"  href="?page={{ bookThemes.number|add:'5' }}">&hellip;</a></li>
+                                    {% endif %}
+
+                                    {% if bookThemes.has_next %}
+                                        <li class="page-item"><a class="page-link"  href="?page={{ bookThemes.next_page_number }}"><i class="fa fa-chevron-right" aria-hidden="true"></i></a></li>
+                                    {% else %}
+                                        <li class="page-item disabled"><a class="page-link" ><i class="fa fa-chevron-right" aria-hidden="true"></i></a></li>
+                                    {% endif %}
+                        </ul>
+                {% endif %}
                 </div>
             </div>
         </div>
