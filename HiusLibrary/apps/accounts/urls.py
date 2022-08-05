@@ -15,5 +15,6 @@ urlpatterns = [
     path('extend/',views.extendMembership,name="extendMembership"),
     path('ban',views.banUser,name="banUser"),
     path('loginForUser',views.loginForUser,name="loginForUser"),
-    path('logoutForUser',views.logoutForUser,name="logoutForUser")
+    path('logoutForUser',views.logoutForUser,name="logoutForUser"),
+    path('history',views.historyAdmin,name='historyAdmin')
     ]

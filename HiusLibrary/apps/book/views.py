@@ -358,4 +358,24 @@ def lendingAction(request):
 @login_required
 def languageEdit(request,id):
     language = Language.objects.get(language_id = id)
-    template = loader
+    template = loader.get_template('language/edit.html')
+    context = {
+        'language': language
+    }
+    return HttpResponse(template.render(context, request))
+@login_required
+def languageUpdate(request,id):
+    language = Language.objects.get(language_id=id)
+    languageName = request.POST['language']
+    code = request.POST['code']
+    image = request.FILES.get('image')
+    if image is None:
+        language.language_name = languageName
+        language.language_code = code
+    else:
+        language.language_name = languageName
+        language.language_code = code
+        language.language_image = image
+    language.save()
+    messages.success(request, (languageName + ' Updated Successfully !!!'))
+    return HttpResponseRedirect(reverse('languageIndex'))

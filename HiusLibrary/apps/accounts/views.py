@@ -13,7 +13,7 @@ from django.contrib import messages
 from django.template import loader
 from django.urls import reverse
 
-from .models import Account, Pricing
+from .models import Account, Pricing, PaymentHistory
 from django.conf import settings
 
 
@@ -282,3 +282,11 @@ def logoutForUser(request):
     messages.success(request, "See You Soon !!")
     return HttpResponseRedirect(reverse('indexOfUser'))
 
+@login_required
+def historyAdmin(request):
+    all = PaymentHistory.objects.all().prefetch_related()
+    context = {
+        'all' :all
+    }
+    template = loader.get_template('history/index.html')
+    return HttpResponse(template.render(context, request))

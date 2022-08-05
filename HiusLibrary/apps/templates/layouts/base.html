@@ -124,6 +124,12 @@
                     </div>
                 </div>
             </li>
+            <li class="nav-item{% if request.resolver_match.view_name == 'historyAdmin' %} active{% endif %}">
+                <a class="nav-link" href="{% url 'historyAdmin' %}">
+                    <i class="fas fa-fw fa-receipt"></i>
+                    <span>Payment History</span>
+                </a>
+            </li>
             <hr class="sidebar-divider">
             <div class="sidebar-heading">
                 Users
