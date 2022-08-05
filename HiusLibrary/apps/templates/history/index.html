@@ -80,7 +80,7 @@
                     </div>
                    <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary" style="font-size: x-large;">Languages</h6>
+                            <h6 class="m-0 font-weight-bold text-primary" style="font-size: x-large;">Receipts</h6>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
@@ -88,29 +88,38 @@
                                     <thead>
                                     <tr>
                                             <th style="text-align:center;vertical-align: middle;">No.</th>
-                                            <th style="text-align:center;vertical-align: middle;">Image</th>
-                                            <th style="text-align:center;vertical-align: middle;">Language</th>
-                                            <th style="text-align:center;vertical-align: middle;">Code</th>
-                                            <th  style="text-align: center">Edit</th>
+                                            <th style="text-align:center;vertical-align: middle;">Receipt ID</th>
+                                            <th style="text-align:center;vertical-align: middle;">By</th>
+                                            <th style="text-align:center;vertical-align: middle;">Method</th>
+                                            <th style="text-align:center;vertical-align: middle;">Price</th>
+                                            <th  style="text-align: center">At</th>
+                                            <th  style="text-align: center">Old Expired</th>
+                                            <th  style="text-align: center">New Expired</th>
                                     </tr>
                                   </thead>
-<!--                                    <tfoot>-->
-<!--                                    <tr>-->
-<!--                                            <th style="text-align:center;vertical-align: middle;">No.</th>-->
-<!--                                            <th style="text-align:center;vertical-align: middle;">Image</th>-->
-<!--                                            <th style="text-align:center;vertical-align: middle;">Language</th>-->
-<!--                                            <th style="text-align:center;vertical-align: middle;">Code</th>-->
-<!--                                            <th  style="text-align: center">Edit</th>-->
-<!--                                    </tr>-->
-<!--                                    </tfoot>-->
+<tfoot>
+                                    <tr>
+                                            <th style="text-align:center;vertical-align: middle;">No.</th>
+                                            <th style="text-align:center;vertical-align: middle;">Receipt ID</th>
+                                            <th style="text-align:center;vertical-align: middle;">By</th>
+                                            <th style="text-align:center;vertical-align: middle;">Method</th>
+                                            <th style="text-align:center;vertical-align: middle;">Price</th>
+                                            <th  style="text-align: center">At</th>
+                                            <th  style="text-align: center">Old Expired</th>
+                                            <th  style="text-align: center">New Expired</th>
+                                    </tr>
+                                  </tfoot>
                                     <tbody>
-                                    {% for language in languages %}
+                                    {% for a in all %}
                                         <tr>
                                         <td style="text-align:center;vertical-align: middle;">{{ forloop.counter }}</td>
-                                        <td style="text-align:center;vertical-align: middle;"><img src="{{ language.language_image.url }}" style="width: 75px;height: 50px"></td>
-                                        <td style="text-align:center;vertical-align: middle;">{{ language.language_name }}</td>
-                                        <td style="text-align:center;vertical-align: middle;">{{ language.language_code }}</td>
-                                        <td style="text-align:center;vertical-align: middle;"><a href="{% url 'languageEdit' language.language_id %}"><i class="fas fa-edit"></i></a></td>
+                                        <td style="text-align:center;vertical-align: middle;">HLextmbs{{ a.history_Id }}</td>
+                                        <td style="text-align:center;vertical-align: middle;">{{ a.user_id }}</td>
+                                        <td style="text-align:center;vertical-align: middle;">{{ a.pricing }}</td>
+                                            <td style="text-align:center;vertical-align: middle;">${{ a.pricing.pricing_price }}</td>
+                                            <td style="text-align:center;vertical-align: middle;">{{ a.history_timestamp }}</td>
+                                        <td style="text-align:center;vertical-align: middle;">{{ a.old_expired_date }}</td>
+                                            <td style="text-align:center;vertical-align: middle;">{{ a.new_expired_date }}</td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>

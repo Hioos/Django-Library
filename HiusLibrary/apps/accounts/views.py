@@ -16,6 +16,9 @@ from django.urls import reverse
 from .models import Account, Pricing, PaymentHistory
 from django.conf import settings
 
+from ..book.models import Receipt
+from ..loan.models import loanStatus
+
 
 def login_user(request):
     if request.method == "POST":
@@ -52,6 +55,9 @@ def logout_user(request):
 
 @login_required
 def userIndex(request):
+    today = datetime.date.today()
+    end = today + datetime.timedelta(7)
+    nearends = Account.objects.filter(is_admin=False, is_staff=False, is_superuser=False,expired_date__lte=end,is_banned=False)
     accounts = Account.objects.filter(is_admin=False, is_staff=False, is_superuser=False)
     template = loader.get_template('users/index.html')
     pricing = Pricing.objects.all().order_by('pricing_price')
@@ -61,11 +67,14 @@ def userIndex(request):
 
     currentlyOnline = Account.objects.filter(is_active=True).count()
     x = accountCounter()
+    y = nearends.count()
     context = {
+        'nearends' : nearends,
         'accounts': accounts,
         'currentlyOnline': currentlyOnline,
         'media_url': settings.MEDIA_URL,
         'x': x,
+        'y':y,
         'pricing':pricing
     }
     # str(authors.query)
@@ -284,9 +293,25 @@ def logoutForUser(request):
 
 @login_required
 def historyAdmin(request):
-    all = PaymentHistory.objects.all().prefetch_related()
+    all = PaymentHistory.objects.all().prefetch_related().order_by('-history_Id')
+    x = all.count()
     context = {
-        'all' :all
+        'all' :all,
+        'x': x
     }
     template = loader.get_template('history/index.html')
+    return HttpResponse(template.render(context, request))
+@login_required
+def bookUser(request,id):
+    loans = loanStatus.objects.all()
+    user = Account.objects.get(id = id)
+    payments = PaymentHistory.objects.prefetch_related().filter(user_id=id).order_by('-history_Id')
+    receipts = Receipt.objects.prefetch_related().filter(receipt_user=id).order_by('-receipt_id')
+    context = {
+        'user': user,
+        'loans': loans,
+        'receipts': receipts,
+        'payments': payments
+    }
+    template = loader.get_template('books/bookUser.html')
     return HttpResponse(template.render(context, request))

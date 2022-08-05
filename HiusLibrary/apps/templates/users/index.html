@@ -41,11 +41,11 @@
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Online</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ currentlyOnline }}</div>
+                                                Near-Expired</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ y }}</div>
                                         </div>
                                         <div class="col-auto">
-                                            <i class="fas fa-lightbulb fa-2x text-gray-300"></i>
+                                            <i class="fas fa-dizzy fa-2x text-gray-300"></i>
                                         </div>
                                     </div>
                                 </div>
@@ -99,6 +99,39 @@
                             </div>
                         </div>
                     </div>
+                    <div class="card shadow mb-4">
+                        <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-danger" style="font-size: x-large;">Near-Expired Users</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table  class="table table-bordered" id="dataTable2"  style="  width: 100%; word-wrap:break-word; ">
+                                    <thead >
+                                        <tr >
+                                            <th style="text-align:center;vertical-align: middle;">Name</th>
+                                            <th style="text-align:center;vertical-align: middle;">Account <i class="fas fa-key" style="color: #FF0000"></i></th>
+                                            <th style="text-align:center;vertical-align: middle;">Membership End</th>
+                                            <th style="text-align:center;vertical-align: middle;">Remain</th>
+                                            <th style="text-align:center;vertical-align: middle;">Created By</th>
+                                            <th style="text-align:center;vertical-align: middle;">Send Reminder</th>
+                                            <th style="text-align:center;vertical-align: middle;">Lib.Card</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for nearend in nearends %}
+                                    <tr>
+                                            <td class="align-middle">{{ nearend.name }}</td>
+                                    <td class="align-middle" style="text-align: center">{{ nearend.username }}</td>
+                                    <td class="align-middle" style="text-align: center">{{ nearend.expired_date }}</td>
+                                    <td class="align-middle" style="text-align: center">{{ nearend.expired_date|timeuntil }}</td>
+                                    <td class="align-middle" style="text-align: center">{{ nearend.created_by }}</td>
+                                    <td class="align-middle" style="text-align: center"><a href="#"><i class="fas fa-envelope-open-text"></i></a></td>
+                                    <td class="align-middle" style="text-align: center"><button type="button" class="btn btn-outline-primary btn-circle btn-sm" data-toggle="modal" data-target="#reqModal-{{ nearend.id }}"><i class="fas fa-eye"></i></button></td>
+                                    </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                        </div>
+                    </div>
                    <div class="card shadow mb-4">
                         <div class="card-header py-3">
                             <h6 class="m-0 font-weight-bold text-primary" style="font-size: x-large;">Users</h6>
@@ -143,7 +176,7 @@
                                             <td class="align-middle" >{{account.date_joined}}</td>
                                             <td class="align-middle"><b><i id="expiredDate{{ account.id }}" style="color: 	#ff3131;">{{ account.expired_date }}</i></b></td>
                                             <td class="align-middle">{{ account.created_by }}</td>
-                                            <td  class="align-middle" style="text-align: center"><a class="btn btn-success btn-circle btn-sm" href=""><i class="fas fa-flag"></i></a></td>
+                                            <td  class="align-middle" style="text-align: center"><a class="btn btn-success btn-circle btn-sm" href="{% url 'bookUser' account.id %}"><i class="fas fa-book-open"></i></a></td>
                                             <td  class="align-middle" style="text-align: center">{% if account.is_banned %}
                                                <a class="banbutton btn btn-danger btn-circle btn-sm"  id="ban{{ account.id }}" ban-data="{{ account.id }}" is-banned="TRUE"><i class="fas fa-lock"></i></a>
                                            {% else %}

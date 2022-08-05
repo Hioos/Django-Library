@@ -16,5 +16,6 @@ urlpatterns = [
     path('ban',views.banUser,name="banUser"),
     path('loginForUser',views.loginForUser,name="loginForUser"),
     path('logoutForUser',views.logoutForUser,name="logoutForUser"),
-    path('history',views.historyAdmin,name='historyAdmin')
+    path('history',views.historyAdmin,name='historyAdmin'),
+    path('books/<int:id>',views.bookUser,name='bookUser')
     ]

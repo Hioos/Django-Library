@@ -307,7 +307,7 @@
                                                                     </div>
                                                         <hr>
                                                                                        <label for="dataPicker{{ book.loanedBook_id }}">Status:</label>
-                                                            <select name="selectStatus{{ book.loanedBook_id }}" class="form-control" id="dataPicker{{ book.loanedBook_id }}" {% if book.loanedBook_statusId_id == 7 or book.loanedBook_statusId_id == 3 or book.loanedBook_statusId_id == 5%} disabled {% endif %}>
+                                                            <select name="selectStatus{{ book.loanedBook_id }}" class="form-control" id="dataPicker{{ book.loanedBook_id }}" {% if book.loanedBook_statusId_id == 7 or book.loanedBook_statusId_id == 3 or book.loanedBook_statusId_id == 5%}  readonly="readonly" tabindex="-1" aria-disabled="true" style="background: #eee;pointer-events: none;touch-action: none;"  {% endif %}>
                                                                 {% for loan in loans %}
                                                                     <option value="{{ loan.loanStatus_id }}" {% if loan.loanStatus_id == book.loanedBook_statusId_id %} selected {% endif %}>{{ loan.loanStatus_name }}</option>
                                                                     {% endfor %}
@@ -435,7 +435,7 @@
                                                                     </div>
                                                         <hr>
                                                                                        <label for="dataPicker{{ book.loanedBook_id }}">Status:</label>
-                                                            <select name="selectStatus{{ book.loanedBook_id }}" class="form-control" id="dataPicker{{ book.loanedBook_id }}" {% if book.loanedBook_statusId_id == 7 or book.loanedBook_statusId_id == 3 or book.loanedBook_statusId_id == 5%} disabled {% endif %}>
+                                                            <select name="selectStatus{{ book.loanedBook_id }}" class="form-control" id="dataPicker{{ book.loanedBook_id }}" {% if book.loanedBook_statusId_id == 7 or book.loanedBook_statusId_id == 3 or book.loanedBook_statusId_id == 5%} readonly="readonly" tabindex="-1" aria-disabled="true" style="background: #eee;pointer-events: none;touch-action: none;" {% endif %}>
                                                                 {% for loan in loans %}
                                                                     <option value="{{ loan.loanStatus_id }}" {% if loan.loanStatus_id == book.loanedBook_statusId_id %} selected {% endif %}>{{ loan.loanStatus_name }}</option>
                                                                     {% endfor %}
@@ -555,7 +555,7 @@
                                                                     </div>
                                                         <hr>
                                                                                        <label for="dataPicker{{ book.loanedBook_id }}">Status:</label>
-                                                            <select name="select" class="form-control" id="dataPicker{{ book.loanedBook_id }}" {% if book.loanedBook_statusId_id == 7 or book.loanedBook_statusId_id == 3 or book.loanedBook_statusId_id == 5%} disabled {% endif %}>
+                                                            <select name="select" class="form-control" id="dataPicker{{ book.loanedBook_id }}" {% if book.loanedBook_statusId_id == 7 or book.loanedBook_statusId_id == 3 or book.loanedBook_statusId_id == 5%}  readonly="readonly" tabindex="-1" aria-disabled="true" style="background: #eee;pointer-events: none;touch-action: none;"  {% endif %}>
                                                                 {% for loan in loans %}
                                                                     <option value="{{ loan.loanStatus_id }}" {% if loan.loanStatus_id == book.loanedBook_statusId_id %} selected {% endif %}>{{ loan.loanStatus_name }}</option>
                                                                     {% endfor %}
