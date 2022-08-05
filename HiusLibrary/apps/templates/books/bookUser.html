@@ -1,0 +1,238 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+    <div class="container-fluid">
+                        <div class="d-sm-flex align-items-center justify-content-between mb-4">
+                        <h1 class="h3 mb-0 text-gray-800">{{ user.name }}</h1>
+                        </div>
+                    <div class="row">
+
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Number of Member</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{x}}</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-users fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Earnings (Annual) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-success shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
+                                                Near-Expired</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ y }}</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-dizzy fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Tasks Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-info shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks
+                                            </div>
+                                            <div class="row no-gutters align-items-center">
+                                                <div class="col-auto">
+                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>
+                                                </div>
+                                                <div class="col">
+                                                    <div class="progress progress-sm mr-2">
+                                                        <div class="progress-bar bg-info" role="progressbar"
+                                                            style="width: 50%" aria-valuenow="50" aria-valuemin="0"
+                                                            aria-valuemax="100"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pending Requests Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-warning shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                Most Popular Book Genre</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Horror</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-trophy fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            Payment
+        </div>
+        <div class="card-body">
+                            <div class="table-responsive">
+                                <table  class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Receipt ID</th>
+                <th>Timestamp</th>
+                <th>Info</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for receipt in receipts %}
+            <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>HLrc00{{ receipt.receipt_id }}</td>
+            <td>{{ receipt.receipt_timestamp }}</td>
+            <td><button type="button" class="btn btn-outline-info " data-toggle="modal" data-target="#reqModal-{{ receipt.receipt_id }}"><i class="fa fa-info"></i></button></td>
+            </tr>
+                                          <div class="modal fade bd-example-modal-lg" id="reqModal-{{ receipt.receipt_id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5><b><i>#HLrc00{{ receipt.receipt_id }}</i></b> by <b><i>{{ receipt.receipt_user.name }}</i></b></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                      <div class="modal-body">
+                                          <!--Body -->
+                                                  <div class="container-fluid">
+                                                  <div class="row">
+                                              {% for book in receipt.loanedBook_receipt.all %}
+                                                  <div class="col-sm-6">
+                                                  <div class="row justify-content-center">
+                                                      <div class="col-sm-3 justify-content-center" style="align-content: center">
+                                                        <img src="{{ book.loanedBook_book.book_image.url }}" style="width: 66.6px;height:100px;"/>
+                                                      </div>
+                                                      <div class="col-sm-9 justify-content-center" style="align-content: center">
+                                                          <div class="row justify-content-center">
+                                                              <div class="col-sm-3">
+                                                                  Name:
+                                                              </div>
+                                                              <div class=" col-sm-9">
+                                                                  <i>{{ book.loanedBook_book.book_name }}</i>
+                                                              </div>
+                                                          </div>
+                                                          <hr>
+                                                          <div class="row justify-content-center">
+                                                              <div class="col-sm-3">
+                                                                  Start:
+                                                              </div>
+                                                              <div class=" col-sm-9">
+                                                                  <i>{{ book.loanedBook_startDate }}</i>
+                                                              </div>
+                                                          </div>
+                                                          <hr>
+                                                          <div class="row justify-content-center">
+                                                              <div class="col-sm-3">
+                                                                  Due:
+                                                              </div>
+                                                              <div class=" col-sm-9">
+                                                                  <i>{{ book.loanedBook_dueDate }}</i>
+                                                              </div>
+                                                          </div>
+                                                          <hr>
+                                                          <div class="row justify-content-center">
+                                                              <div class="col-sm-3">
+                                                                  Returned:
+                                                              </div>
+                                                              <div class=" col-sm-9">
+                                                                  {% if book.loanedBook_returnedDate is not None %}
+                                                                  <i>{{ book.loanedBook_returnedDate }}</i>
+                                                                  {% else %}
+                                                                  <i class="fa fa-ban"></i>
+                                                                  {% endif %}
+                                                              </div>
+                                                          </div>
+                                                          <hr>
+                                                          <div class="row justify-content-center">
+                                                              <div class="col-sm-3">
+                                                                  Status:
+                                                              </div>
+                                                              <div class=" col-sm-9">
+                                                                  {% for loan in loans %}
+                                                                    {% if loan.loanStatus_id == book.loanedBook_statusId_id %}<i>{{ loan.loanStatus_name }}</i> {% endif %}
+                                                                    {% endfor %}
+                                                              </div>
+                                                          </div>
+                                                          <hr>
+                                                      </div>
+                                                  </div>
+                                                  </div>
+                                                  {% endfor %}
+                                                  </div>
+                                                  </div>
+                                          <!--Body -->
+                                        </div>
+                                  </div>
+                                </div>
+                                                                        </div>
+        {% endfor %}
+        </tbody>
+    </table>
+                            </div>
+                        </div>
+    </div>
+    <div class="card shadow mb-4">
+        <div class="card-header py-3">
+            Payment
+        </div>
+        <div class="card-body">
+                            <div class="table-responsive">
+                                <table  class="table table-bordered" id="dataTable2" width="100%" cellspacing="0">
+        <thead>
+            <tr>
+                <th>No.</th>
+                <th>Receipt ID</th>
+                <th>At</th>
+                <th>Old Expired Date</th>
+                <th>New Expired Date</th>
+                <th>Info</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for payment in payments %}
+            <tr>
+            <td>{{ forloop.counter }}</td>
+            <td>HLextmbs{{ payment.history_Id }}</td>
+            <td>{{ payment.history_timestamp }}</td>
+                <td>{{ payment.old_expired_date }}</td>
+                <td>{{ payment.new_expired_date }}</td>
+
+            <td>${{ payment.pricing.pricing_price }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+                            </div>
+                        </div>
+    </div>
+    </div>
+{% endblock %}
