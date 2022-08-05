@@ -139,8 +139,30 @@
                                            <td  style="text-align:center;vertical-align: middle;">{{publisher.publisher_name}}</td>
                                             <td style="text-align:center;vertical-align: middle;">{{ publisher.num_assets }}</td>
                                            <td  style="text-align: center"><a class="btn btn-success btn-circle btn-sm" href=""><i class="fas fa-flag"></i></a></td>
-                                           <td  style="text-align: center"><a class="btn btn-warning btn-circle btn-sm" href=""><i class="fas fa-pen-fancy"></i></a></td>
+                                           <td  style="text-align: center"><button class="btn btn-warning btn-circle btn-sm" href="javascript:void(0)" data-toggle="modal" data-target="#reqModal-{{ publisher.publisher_id }}"><i class="fas fa-pen-fancy"></i></button></td>
                                         </tr>
+                                        <div class="modal fade bd-example-modal-lg" id="reqModal-{{ publisher.publisher_id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                              <div class="modal-dialog">
+
+                                                <div class="modal-content">
+                                                  <div class="modal-body">
+                                                    <button data-dismiss="modal" class="close">&times;</button>
+                                                    <h4 style="text-align: center;">{{ publisher.publisher_name }}</h4>
+                                                    <form class="user" name="pubEdit" id="pubEdit" action="{% url 'publisherEdit' publisher.publisher_id %}" method="post">
+                                                        {% csrf_token %}
+                                                        <div class="form-group row">
+                                                            <div class="col-sm-10 mb-3 mb-sm-0">
+                                                      <input type="text" name="pubName" id="pubName" class="username form-control" value="{{ publisher.publisher_name }}"/>
+                                                                </div>
+                                                            <div class="col-sm-2">
+                                                        <button class="btn btn-success btn-circle" type="submit"><i class="fas fa-check"></i></button>
+                                                                </div>
+                                                        </div>
+                                                    </form>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
                                     {% endfor %}
                                     </tbody>
                                 </table>
@@ -208,6 +230,20 @@
             wrapper: 'span',
             messages: {
                 publisherName: "Please enter Publisher's Name",
+        }
+    });
+        $("#pubEdit").validate({
+            rules: {
+                pubName: "required",
+
+            },
+            errorPlacement: function (label, element) {
+                label.parents(".asd").addClass('arrow');
+                label.insertAfter(element);
+            },
+            wrapper: 'span',
+            messages: {
+                pubName: "Please enter Publisher's Name",
         }
     });
     })

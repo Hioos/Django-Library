@@ -20,7 +20,7 @@ from apps.loan.models import loanStatus
 def index(request):
     cart = []
     books = Books.objects.raw(
-        'SELECT * FROM book_books LEFT JOIN (SELECT loanedBook_book_id,count(*) as asd FROM book_loanedbook WHERE loanedBook_statusId_id = 2 OR loanedBook_statusId_id = 3 OR loanedBook_statusId_id = 6 GROUP BY loanedBook_book_id) ON loanedBook_book_id = book_id ORDER BY book_id DESC')
+        'SELECT * FROM book_books LEFT JOIN (SELECT loanedBook_book_id,count(*) as asd FROM book_loanedbook WHERE loanedBook_statusId_id = 2 OR loanedBook_statusId_id = 6 GROUP BY loanedBook_book_id) ON loanedBook_book_id = book_id ORDER BY book_id DESC')
     lists = Genre.objects.all()
     authors = Authors.objects.all()
     newbooks = Books.objects.all().order_by('-book_id')[:6]
@@ -59,7 +59,7 @@ def bookInfo(request, id):
     lists = Genre.objects.all()
     themes = Themes.objects.all()
     usedBook = LoanedBook.objects.filter(
-        Q(loanedBook_book_id=id) & (Q(loanedBook_statusId_id=6) | Q(loanedBook_statusId_id=3))).count()
+        Q(loanedBook_book_id=id) & (Q(loanedBook_statusId_id=6))).count()
     left = book.book_amount - usedBook
     template = loader.get_template('userIndex/book_info.html')
     count = 0
@@ -230,7 +230,7 @@ def requestBook(request):
     failed = []
     for book in booksId:
         usedBook = LoanedBook.objects.filter(
-            Q(loanedBook_book_id=book) & (Q(loanedBook_statusId_id=6) | Q(loanedBook_statusId_id=3))).count()
+            Q(loanedBook_book_id=book) & (Q(loanedBook_statusId_id=6))).count()
         bookAmount = Books.objects.get(book_id=book)
         if bookAmount.book_amount - usedBook <= 0:
             error = error + 1
@@ -268,7 +268,7 @@ def allBook(request):
     lists = Genre.objects.all()
     authors = Authors.objects.all()
     newbook = Books.objects.raw(
-        'SELECT * FROM book_books LEFT JOIN (SELECT loanedBook_book_id,count(*) as asd FROM book_loanedbook WHERE loanedBook_statusId_id = 2 OR loanedBook_statusId_id = 3 OR loanedBook_statusId_id = 6 GROUP BY loanedBook_book_id) ON loanedBook_book_id = book_id ORDER BY book_id DESC')
+        'SELECT * FROM book_books LEFT JOIN (SELECT loanedBook_book_id,count(*) as asd FROM book_loanedbook WHERE loanedBook_statusId_id = 2 OR loanedBook_statusId_id = 6 GROUP BY loanedBook_book_id) ON loanedBook_book_id = book_id ORDER BY book_id DESC')
     themes = Themes.objects.all()
     template = loader.get_template('userIndex/all_book.html')
     sub_Genre = SubGenre.objects.all()

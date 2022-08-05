@@ -46,3 +46,11 @@ def add(request):
     LogEntryAdd(request.session['id'], publisher,'', 'Add',publisherName)
     messages.success(request, ' Added successfully !!!')
     return HttpResponseRedirect(reverse('publisherIndex'))
+@login_required
+def edit(request,id):
+    publisher = Publisher.objects.get(publisher_id=id)
+    name = request.POST['pubName']
+    publisher.publisher_name = name
+    publisher.save()
+    messages.success(request, name + ' Updated successfully !!!')
+    return HttpResponseRedirect(reverse('publisherIndex'))
