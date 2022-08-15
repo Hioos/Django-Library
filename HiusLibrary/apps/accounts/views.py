@@ -173,9 +173,12 @@ def adminIndex(request):
 @login_required
 def updateProfile(request):
     user = Account.objects.get(id=request.session['id'])
+    createdBy = Account.objects.filter(created_by=request.session['id']).prefetch_related(
+        Prefetch('user_created_by', Account.objects.filter(created_by=request.session['id']))).order_by('date_joined')[:5][::-1]
     template = loader.get_template('administrator/update_profile.html')
     context = {
         'user': user,
+        'createdBy': createdBy,
         'media_url': settings.MEDIA_URL,
     }
     # str(authors.query)
