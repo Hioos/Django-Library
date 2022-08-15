@@ -1,0 +1,145 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+    <div class="card shadow mb-4">
+                        <div class="card-header py-3">
+                            <h6 class="m-0 font-weight-bold text-primary" style="font-size: x-large;">List Book</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table  class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                    <tr>
+                                            <th style="text-align:center;vertical-align: middle;">No.</th>
+                                            <th style="text-align:center;vertical-align: middle;">Image</th>
+                                            <th style="text-align:center;vertical-align: middle;">Name</th>
+                                            <th style="text-align:center;vertical-align: middle;">Language</th>
+                                            <th style="text-align:center;vertical-align: middle;">Publisher</th>
+                                            <th style="text-align:center;vertical-align: middle;">Released</th>
+                                            <th style="text-align:center;vertical-align: middle;">Authors</th>
+                                            <th style="text-align:center;vertical-align: middle;">Pages</th>
+                                            <th style="text-align:center;vertical-align: middle;">Owned</th>
+                                            <th style="text-align:center;vertical-align: middle;">Information</th>
+                                    </tr>
+                                  </thead>
+<!--                                    <tfoot>-->
+<!--                                    <tr>-->
+<!--                                            <th  style="text-align:center;vertical-align: middle;">No.</th>-->
+<!--                                            <th  style="text-align:center;vertical-align: middle;">Image</th>-->
+<!--                                            <th  style="text-align:center;vertical-align: middle;">Name</th>-->
+<!--                                            <th  style="text-align:center;vertical-align: middle;">Language</th>-->
+<!--                                            <th  style="text-align:center;vertical-align: middle;">Publisher</th>-->
+<!--                                            <th  style="text-align:center;vertical-align: middle;">Released</th>-->
+<!--                                            <th  style="text-align:center;vertical-align: middle;">Authors</th>-->
+<!--                                            <th    style="text-align:center;vertical-align: middle;">Pages</th>-->
+<!--                                            <th    style="text-align:center;vertical-align: middle;">Owned</th>-->
+<!--                                            <th style="text-align:center;vertical-align: middle;">Information</th>-->
+<!--                                            <th style="text-align:center;vertical-align: middle;">Edit</th>-->
+<!--                                    </tr>-->
+<!--                                    </tfoot>-->
+                                    <tbody>
+                                    {% for book in books %}
+                                        <tr>
+                                            <td  style="text-align:center;vertical-align: middle;">{{ forloop.counter }}</td>
+                                            <td  style="text-align:center;vertical-align: middle;"><img src="{{ book.bookthemes_bookId.book_image.url }}" style="width: 50px;height:75px;"/></td>
+                                            <td  style="text-align:center;vertical-align: middle;"><b>{{ book.bookthemes_bookId.book_name }}</b></td>
+                                            <td  style="text-align:center;vertical-align: middle;"><img src="{{ book.bookthemes_bookId.book_language.language_image.url }}" style="width: 50px;height:33px;border-radius: 7px" data-toggle="tooltip" data-placement="bottom" title="{{ book.book_language.language_name }}"/></td>
+                                            <td  style="text-align:center;vertical-align: middle;">{{ book.bookthemes_bookId.book_publisher }}</td>
+                                            <td  style="text-align:center;vertical-align: middle;">{{ book.bookthemes_bookId.book_released }}</td>
+                                            <td  style="text-align:center;vertical-align: middle;font-family: 'Dancing Script', cursive; ">{% for author in book.bookthemes_bookId.book_Authorship_bookId.all %}{{ author.bookauthorship_authorId.author_pseudonym }} {% endfor %}</td>
+                                            <td  style="text-align:center;vertical-align: middle;">{{ book.bookthemes_bookId.book_pages }}</td>
+                                            <td  style="text-align:center;vertical-align: middle;">{{ book.bookthemes_bookId.book_amount }}</td>
+                                            <td  style="text-align:center;vertical-align: middle;"><button type="button" class="btn btn-outline-primary btn-circle btn-sm" data-toggle="modal" data-target="#reqModal-{{ book.bookthemes_bookId.book_id }}"><i class="fas fa-info"></i></button></td>
+                                        </tr>
+                                                                        <div class="modal fade bd-example-modal-lg" id="reqModal-{{ book.bookthemes_bookId.book_id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                 <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                                    <div class="modal-content">
+                                      <div class="modal-header">
+                                          <h5><b><u><i>{{ book.bookthemes_bookId.book_name }}</i></u></b>({{ book.bookthemes_bookId.book_released }})<img src="{{ book.bookthemes_bookId.book_language.language_image.url }}" style="width: 21px;height: 14px" /></h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                          <span aria-hidden="true">&times;</span>
+                                        </button>
+                                      </div>
+                                      <div class="modal-body">
+                                          <!--Body -->
+                                          <div class="container-fluid">
+                                          <div class="row">
+                                              <div class="col-lg-8">
+                                               <div class="row">
+                                                  <div class="col-sm-3">
+                                                      <p class="mb-0"><b>Author</b></p>
+                                                  </div>
+                                                  <div class="col-sm-9">
+                                                      <p class="text-muted mb-0">{% for author in book.bookthemes_bookId.book_Authorship_bookId.all %}<i>{{ author.bookauthorship_authorId.author_pseudonym }}</i><br> {% endfor %}</p>
+                                                  </div>
+                                               </div>
+                                                <hr>
+                                                    <div class="row">
+                                                  <div class="col-sm-3">
+                                                      <p class="mb-0"><b>Sub-Genre</b></p>
+                                                  </div>
+                                                  <div class="col-sm-9">
+                                                      <p class="text-muted mb-0">{% for subgenre in book.bookthemes_bookId.book_Subgenre_bookId.all %}<i>{{ subgenre.booksubgenre_subgenreId.subgenre_name }}</i> <sub><span class="badge badge-pill badge-dark"> <i>{{ subgenre.booksubgenre_subgenreId.subgenre_ofGenre }} </i></span></sub><br>{% endfor %}</p>
+                                                  </div>
+                                                    </div>
+                                                <hr>
+                                                  <div class="row">
+                                                  <div class="col-sm-3">
+                                                      <p class="mb-0"><b>Publisher</b></p>
+                                                  </div>
+                                                  <div class="col-sm-9">
+                                                    <p class="text-muted mb-0">{{ book.bookthemes_bookId.book_publisher.publisher_name }}</p>
+                                                  </div>
+                                                    </div>
+                                                <hr>
+                                                <div class="row">
+                                                  <div class="col-sm-3">
+                                                      <p class="mb-0"><b>In Library</b></p>
+                                                  </div>
+                                                  <div class="col-sm-9">
+                                                    <p class="text-muted mb-0">{{ book.bookthemes_bookId.book_amount }}</p>
+                                                  </div>
+                                                    </div>
+                                                <hr>
+                                                  <div class="row">
+                                                  <div class="col-sm-3">
+                                                      <p class="mb-0"><b>Page(s)</b></p>
+                                                  </div>
+                                                  <div class="col-sm-9">
+                                                    <p class="text-muted mb-0">{{ book.bookthemes_bookId.book_pages }}</p>
+                                                  </div>
+                                                    </div>
+                                                <hr>
+                                                  <div class="row">
+                                                      <div class="col-sm-3">
+                                                          <p class="mb-0"><b>Themes</b></p>
+                                                      </div>
+                                                      <div class="col-sm-9">
+                                                          <p class="text-muted mb-0">{% for theme in book.bookthemes_bookId.book_Themes_bookId.all %}<i>{{ theme.bookthemes_themeId.theme_name }}</i><br>{% endfor %}</p>
+                                                      </div>
+                                                        </div>
+                                                    <hr>
+                                              </div>
+                                              <div class="col-lg-4">
+                                                  <img src="{{ book.bookthemes_bookId.book_image.url }}" style="width: 100%;height: 80%;border-radius: 10px" />
+                                              </div>
+                                                <div class="row">
+                                                    <div class="container-fluid">
+                                                    <p class="text-muted mb-0">{{ book.bookthemes_bookId.book_description }}</p>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                          </div>
+                                          </div>
+                                          <!--Body -->
+                                        </div>
+                                  </div>
+                                </div>
+                                                                        </div>
+
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+    </div>
+{% endblock %}
