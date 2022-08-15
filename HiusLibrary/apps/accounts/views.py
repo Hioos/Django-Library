@@ -386,3 +386,20 @@ def promoteAdmin(request,id):
         user.is_admin = True
     user.save()
     return redirect('adminIndex')
+@login_required
+def extendManual(request,id):
+    strid = str(id)
+    price = request.POST['price' + strid]
+    user = Account.objects.get(id = id)
+    pricing = Pricing.objects.get(pricing_id = price)
+    days = pricing.pricing_days
+    paymentHistory = PaymentHistory(
+        pricing_id = price,
+        user_id = user,
+        old_expired_date = user.expired_date,
+        new_expired_date  = user.expired_date + datetime.timedelta(days=days)
+    )
+    paymentHistory.save()
+    user.expired_date = user.expired_date + datetime.timedelta(days=days)
+    user.save()
+    return redirect('userIndex')

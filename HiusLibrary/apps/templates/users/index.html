@@ -228,16 +228,17 @@
 {#                                                                                      {% endcomment %}#}
                                                                                   <hr>
 
-
+                                                                                    <form method="post" action="{% url 'extendManual' account.id %}">
+                                                                                    {% csrf_token %}
                                                                                     <label for="dataPicker{{ account.id }}">Pricing:</label>
-                                                                                    <select id="dataPicker{{ account.id }}" name="subgenre" class="selectpicker form-control " data-size="5" data-live-search="true" title="Payment" {% if account.is_banned is True %} disabled="true" {% endif %}>
+                                                                                    <select id="dataPicker{{ account.id }}" name="price{{ account.id }}" class="form-control " data-size="5" data-live-search="true" title="Payment" {% if account.is_banned is True %} disabled="true" {% endif %}>
                                                                                                           {% for price in pricing %}
-                                                                                                          <option data-content="<img src ='{{ price.pricing_image.url }}' style='width:20px;height:20px'/> {{ price.pricing_price|intcomma }}VND - {{ price.pricing_days }} day(s)" data-tokens="{{ price.pricing_name }}" value="{{ price.pricing_id }}"></option>
+                                                                                                          <option value="{{ price.pricing_id }}">${{ price.pricing_price }} - {{ price.pricing_days }} days</option>
                                                                                                           {% endfor %}
                                                                                     </select>
 
                                                                                   <button class="btn btn-outline-danger btn-circle btn-sm" type="submit">Go</button>
-
+                                                                                    </form>
                                                                                   </div>
                                                                                 </div>
 

@@ -20,5 +20,6 @@ urlpatterns = [
     path('books/<int:id>',views.bookUser,name='bookUser'),
     path('profile_update/update',views.profileUpdate,name='AdminprofileUpdate'),
     path('lock/<int:id>',views.lockAdmin,name='lockAdmin'),
-    path('promoteAdmin/<int:id>',views.promoteAdmin,name='promoteAdmin')
+    path('promoteAdmin/<int:id>',views.promoteAdmin,name='promoteAdmin'),
+    path('manual/extend/<int:id>',views.extendManual,name='extendManual')
     ]
