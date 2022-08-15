@@ -17,5 +17,8 @@ urlpatterns = [
     path('loginForUser',views.loginForUser,name="loginForUser"),
     path('logoutForUser',views.logoutForUser,name="logoutForUser"),
     path('history',views.historyAdmin,name='historyAdmin'),
-    path('books/<int:id>',views.bookUser,name='bookUser')
+    path('books/<int:id>',views.bookUser,name='bookUser'),
+    path('profile_update/update',views.profileUpdate,name='AdminprofileUpdate'),
+    path('lock/<int:id>',views.lockAdmin,name='lockAdmin'),
+    path('promoteAdmin/<int:id>',views.promoteAdmin,name='promoteAdmin')
     ]

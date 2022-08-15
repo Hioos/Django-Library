@@ -154,7 +154,7 @@ def addUser(request):
 
 @login_required
 def adminIndex(request):
-    accounts = Account.objects.filter(is_staff=True)
+    accounts = Account.objects.filter(is_staff=True,is_superuser=False)
     template = loader.get_template('administrator/index.html')
 
     def accountCounter():
@@ -207,6 +207,13 @@ def extendMembership(request):
     user = Account.objects.get(id=data)
     user.expired_date = user.expired_date + datetime.timedelta(seconds=1 * 31 * 24 * 60 * 60)
     user.save()
+    payment = PaymentHistory(
+        user_id = user,
+        pricing = Pricing.objects.get(pricing_id=2),
+        old_expired_date = user.expired_date,
+        new_expired_date = user.expired_date + datetime.timedelta(days=31)
+    )
+    payment.save()
     return HttpResponseRedirect(reverse('userIndex'))
 
 
@@ -306,8 +313,12 @@ def bookUser(request,id):
     loans = loanStatus.objects.all()
     user = Account.objects.get(id = id)
     payments = PaymentHistory.objects.prefetch_related().filter(user_id=id).order_by('-history_Id')
+    y = payments.count()
     receipts = Receipt.objects.prefetch_related().filter(receipt_user=id).order_by('-receipt_id')
+    x = receipts.count()
     context = {
+        'x': x,
+        'y':y,
         'user': user,
         'loans': loans,
         'receipts': receipts,
@@ -315,3 +326,60 @@ def bookUser(request,id):
     }
     template = loader.get_template('books/bookUser.html')
     return HttpResponse(template.render(context, request))
+@login_required
+def profileUpdate(request):
+    name = request.POST['adminName']
+    email = request.POST['adminEmail']
+    phone = request.POST['adminPhone']
+    birthDate = request.POST['adminDoB']
+    address = request.POST['adminAddress']
+    linkedIn = request.POST['adminLinkedIn']
+    twitter = request.POST['adminTwitter']
+    instagram = request.POST['adminInstagram']
+    facebook = request.POST['adminFacebook']
+    image = request.FILES.get('image')
+    user = Account.objects.get(id=request.session['id'])
+    if image is None:
+        user.name = name
+        user.email = email
+        user.phone = phone
+        user.birth_date = birthDate
+        user.address = address
+        user.linkedIn = linkedIn
+        user.twitter = twitter
+        user.instagram = instagram
+        user.facebook = facebook
+    else:
+        user.name = name
+        user.email = email
+        user.phone = phone
+        user.birth_date = birthDate
+        user.address = address
+        user.linkedIn = linkedIn
+        user.twitter = twitter
+        user.instagram = instagram
+        user.facebook = facebook
+        user.profile_image = image
+    user.save()
+    return redirect('updateProfile')
+@login_required
+def lockAdmin(request,id):
+    user = Account.objects.get(id = id)
+    if user.is_banned is True :
+        user.is_banned = False
+        user.banned_by = None
+    else:
+        user.is_banned = True
+        user.banned_by = Account.objects.get(id=request.session['id'])
+        user.expired_date = datetime.date.today()
+    user.save()
+    return redirect('adminIndex')
+@login_required
+def promoteAdmin(request,id):
+    user = Account.objects.get(id=id)
+    if user.is_admin is True:
+        user.is_admin = False
+    else:
+        user.is_admin = True
+    user.save()
+    return redirect('adminIndex')

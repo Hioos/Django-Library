@@ -41,6 +41,9 @@ def index(request):
     min = items.order_by('count').first()
     last7days = PaymentHistory.objects.raw("SELECT history_Id,SUM(pricing_price) as price FROM (select * from accounts_paymenthistory LEFT JOIN accounts_pricing ON accounts_paymenthistory.pricing_id = accounts_pricing.pricing_id WHERE history_timestamp > (SELECT DATETIME('now', '-7 day')))")
     sumMoney = PaymentHistory.objects.raw('SELECT history_id,SUM(pricing_price) as moneys FROM accounts_paymenthistory INNER JOIN accounts_pricing ON accounts_paymenthistory.pricing_id = accounts_pricing.pricing_id')
+    chart10 = PaymentHistory.objects.prefetch_related().filter(history_timestamp__lte = datetime.datetime.today(),history_timestamp__gt = datetime.datetime.today()-datetime.timedelta(days=7)).values('history_timestamp__date').order_by('history_timestamp__date').annotate(sum=Sum('pricing__pricing_price'))
+    chart10min = chart10.order_by('sum').first()
+    chart10max = chart10.order_by('-sum').first()
     context = {
         'receipts': receipts,
         'chart1': chart1,
@@ -54,6 +57,9 @@ def index(request):
         'sumMoney': sumMoney,
         'min' : min,
         'pending':pending,
-        'users':users
+        'users':users,
+        'chart10':chart10,
+        'chart10min':chart10min,
+        'chart10max':chart10max
     }
     return HttpResponse(template.render(context, request))

@@ -33,13 +33,13 @@
                 </th>
                 <td class="align-middle">
                   <div class="d-flex flex-row">
-                    <input id="form1" min="0" name="dateStart{{ book.id }}" value="{{ x|date:'Y-m-d' }}" type="date"
+                    <input id="form1" type="date" name="dateStart{{ book.id }}" value="{{ x|date:'Y-m-d' }}" min="{{ x|date:'Y-m-d' }}"
                       class="form-control form-control-sm" style="width: 100%;" />
                   </div>
                 </td>
                 <td class="align-middle">
                   <div class="d-flex flex-row">
-                    <input id="form2" min="0" name="dateDue{{ book.id }}" value="{{ x|date:'Y-m-d' }}" type="date"
+                    <input id="form2" type="date" name="dateDue{{ book.id }}" max="{{ mindate|date:'Y-m-d' }}"
                       class="form-control form-control-sm" style="width: 100%;" />
                   </div>
                 </td>

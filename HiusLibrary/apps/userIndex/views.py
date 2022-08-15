@@ -29,7 +29,7 @@ def index(request):
     template = loader.get_template('userIndex/index.html')
     count = 0
     hot = Books.objects.raw(
-        'SELECT * FROM book_books LEFT JOIN (SELECT loanedBook_book_id,count(*) as asd FROM book_loanedbook GROUP BY loanedBook_book_id) ON loanedBook_book_id = book_id ORDER BY asd DESC')[
+        'SELECT * FROM book_books LEFT JOIN (SELECT loanedBook_book_id,count(*) as asd FROM book_loanedbook GROUP BY loanedBook_book_id ORDER BY loanedBook_startDate DESC) ON loanedBook_book_id = book_id ORDER BY asd DESC')[
           :6]
     if "cart" in request.session:
         cart = request.session['cart']
@@ -189,26 +189,36 @@ def clearCart(request):
 
 
 def cart(request):
-    cart = None
-    if "cart" in request.session:
-        cart = request.session['cart']
-    template = loader.get_template('userIndex/cart.html')
-    x = datetime.datetime.today()
-    themes = Themes.objects.all()
-    lists = Genre.objects.all()
-    count = 0
-    if "cart" in request.session:
-        cart = request.session['cart']
-        for cartProduct in cart:
-            count = count + 1
-    context = {
-        'cart': cart,
-        'x': x,
-        'themes': themes,
-        'lists': lists,
-        'count': count,
-    }
-    return HttpResponse(template.render(context, request))
+    user_id = request.session['id']
+    user = Account.objects.get(id = user_id)
+    mindate = user.expired_date - datetime.timedelta(days=3)
+    today = datetime.date.today()
+    if mindate > today:
+        cart = None
+        if "cart" in request.session:
+            cart = request.session['cart']
+        template = loader.get_template('userIndex/cart.html')
+        x = datetime.datetime.today()
+        themes = Themes.objects.all()
+        lists = Genre.objects.all()
+        count = 0
+        if "cart" in request.session:
+            cart = request.session['cart']
+            for cartProduct in cart:
+                count = count + 1
+        context = {
+            'cart': cart,
+            'x': x,
+            'user':user,
+            'mindate':mindate,
+            'themes': themes,
+            'lists': lists,
+            'count': count,
+        }
+        return HttpResponse(template.render(context, request))
+    else:
+        messages.success(request, "Done")
+        return redirect('extend')
 
 
 def deleteCart(request, id):
