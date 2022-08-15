@@ -100,7 +100,19 @@
                     </div>
                    <div class="card shadow mb-4">
                         <div class="card-header py-3">
-                            <h6 class="m-0 font-weight-bold text-primary" style="font-size: x-large;">Sub-Genres of <b>{{genre.genre_name}}</b></h6>
+
+                            <div class="row">
+                                <div class="col-6">
+                                                        <h6 class="m-0 font-weight-bold text-primary" style="font-size: x-large;">Sub-Genres of <b>{{genre.genre_name}}</b></h6>
+                                </div>
+                                <div class="col-6">
+                                    <div class="d-flex flex-row-reverse">
+                                        <div class="p-2">
+                                        <a class="btn btn-dark btn-sm rounded-pill" href="{% url 'adminLog' 18 %}"><i class="fas fa-clock"></i> History</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">

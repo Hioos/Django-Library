@@ -1,6 +1,8 @@
 import datetime
 import random
 import string
+
+from django.contrib.admin.models import LogEntry
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
@@ -403,3 +405,12 @@ def extendManual(request,id):
     user.expired_date = user.expired_date + datetime.timedelta(days=days)
     user.save()
     return redirect('userIndex')
+@login_required
+def adminLog(request,id):
+    strid = str(id)
+    logs = LogEntry.objects.raw('SELECT * FROM django_admin_log INNER JOIN accounts_account ON django_admin_log.user_id = accounts_account.id WHERE content_type_id = '+ strid + ' ORDER BY action_time DESC')
+    context={
+        'logs':logs
+    }
+    template = loader.get_template('misc/admin_log.html')
+    return HttpResponse(template.render(context, request))

@@ -21,5 +21,6 @@ urlpatterns = [
     path('profile_update/update',views.profileUpdate,name='AdminprofileUpdate'),
     path('lock/<int:id>',views.lockAdmin,name='lockAdmin'),
     path('promoteAdmin/<int:id>',views.promoteAdmin,name='promoteAdmin'),
-    path('manual/extend/<int:id>',views.extendManual,name='extendManual')
+    path('manual/extend/<int:id>',views.extendManual,name='extendManual'),
+    path('history/log/<int:id>',views.adminLog,name='adminLog')
     ]
