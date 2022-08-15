@@ -104,7 +104,7 @@ def bookList(request, id):
         for cartProduct in cart:
             count = count + 1
     page = request.GET.get('page', 1)
-    paginator = Paginator(book, 10)
+    paginator = Paginator(book, 12)
     try:
         books = paginator.page(page)
     except PageNotAnInteger:
@@ -135,7 +135,7 @@ def themeInfo(request, id):
     x = len(list(bookTheme))
     themedesc = Themes.objects.get(theme_id=id)
     page = request.GET.get('page', 1)
-    paginator = Paginator(bookTheme, 10)
+    paginator = Paginator(bookTheme, 12)
     try:
         bookThemes = paginator.page(page)
     except PageNotAnInteger:
@@ -289,7 +289,7 @@ def allBook(request):
         for cartProduct in cart:
             count = count + 1
     page = request.GET.get('page', 1)
-    paginator = Paginator(newbook, 10)
+    paginator = Paginator(newbook, 12)
     try:
         newbooks = paginator.page(page)
     except PageNotAnInteger:
