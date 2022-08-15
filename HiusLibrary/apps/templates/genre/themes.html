@@ -127,7 +127,7 @@
                                         <td style="text-align:center;vertical-align: middle;">{{ forloop.counter }}</td>
                                         <td style="text-align:center;vertical-align: middle;"><b><i>{{theme.theme_name}}</i></b></td>
                                         <td style="text-align: justify;vertical-align: middle;">{{theme.theme_description}}</td>
-                                        <td style="text-align: center;"><a class="btn btn-info btn-circle btn-sm"><i class="fas fa-book"></i></a>
+                                        <td style="text-align: center;"><a class="btn btn-info btn-circle btn-sm" href="{% url 'byTheme' theme.theme_id %}"><i class="fas fa-book"></i></a>
                                         <a class="btn btn-warning btn-circle btn-sm" href="{% url 'editTheme' theme.theme_id %}"><i class="fas fa-marker"></i></a></td>
                                     </tr>
                                     {% endfor %}

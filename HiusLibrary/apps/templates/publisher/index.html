@@ -138,7 +138,7 @@
                                             <td style="text-align:center;vertical-align: middle;">{{ forloop.counter }}</td>
                                            <td  style="text-align:center;vertical-align: middle;">{{publisher.publisher_name}}</td>
                                             <td style="text-align:center;vertical-align: middle;">{{ publisher.num_assets }}</td>
-                                           <td  style="text-align: center"><a class="btn btn-success btn-circle btn-sm" href=""><i class="fas fa-flag"></i></a></td>
+                                           <td  style="text-align: center"><a class="btn btn-success btn-circle btn-sm" href="{% url 'byPublisher' publisher.publisher_id %}"><i class="fas fa-flag"></i></a></td>
                                            <td  style="text-align: center"><button class="btn btn-warning btn-circle btn-sm" href="javascript:void(0)" data-toggle="modal" data-target="#reqModal-{{ publisher.publisher_id }}"><i class="fas fa-pen-fancy"></i></button></td>
                                         </tr>
                                         <div class="modal fade bd-example-modal-lg" id="reqModal-{{ publisher.publisher_id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">

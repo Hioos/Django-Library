@@ -132,7 +132,7 @@
                                             <td style="text-align:center;vertical-align: middle;"><i><u>{{sub.subgenre_name}}</u></i></td>
                                            <td style="text-align:center;vertical-align: middle;">{{sub.subgenre_code}}</td>
                                            <td>{{sub.subgenre_description}}</td>
-                                            <td style="text-align: center"><a class="btn btn-outline-info btn-circle btn-sm" href=""><i class="fas fa-book-open"></i></a></td>
+                                            <td style="text-align: center"><a class="btn btn-outline-info btn-circle btn-sm" href="{% url 'byGenre' sub.id %}"><i class="fas fa-book-open"></i></a></td>
                                            <td  style="text-align: center"><a class="btn btn-warning btn-circle btn-sm" href="{% url 'subGenreUpdate' sub.id %}"><i class="fas fa-edit"></i></a></td>
                                         </tr>
                                     {% endfor %}

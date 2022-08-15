@@ -14,6 +14,8 @@ from .models import Genre, SubGenre, Themes
 from django.contrib.auth.decorators import login_required
 
 from ..accounts.models import Account
+from ..book.models import BookSubGenre, BookThemes
+
 
 def LogEntryAdd(idUser,modelName,objectId,reason,after):
     LogEntry.objects.log_action(
@@ -176,3 +178,19 @@ def updateTheme(request,id):
     theme.save()
     LogEntryAdd(request.session['id'], theme, '', reason, themeName)
     return HttpResponseRedirect(reverse('themes'))
+@login_required
+def byGenre(request,id):
+    books = BookSubGenre.objects.filter(booksubgenre_subgenreId=id).prefetch_related()
+    template = loader.get_template('genre/books.html')
+    context = {
+        'books' : books
+    }
+    return HttpResponse(template.render(context,request))
+@login_required
+def byTheme(request,id):
+    books = BookThemes.objects.filter(bookthemes_themeId=id).prefetch_related()
+    template = loader.get_template('genre/bookstheme.html')
+    context = {
+        'books' : books
+    }
+    return HttpResponse(template.render(context,request))

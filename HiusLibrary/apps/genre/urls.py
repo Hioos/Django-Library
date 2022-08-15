@@ -16,5 +16,7 @@ urlpatterns = [
     path('themes/add',views.themeAdd,name='themeAdd'),
     path('themes/addNewTheme',views.addNewTheme,name='addNewTheme'),
     path('themes/editTheme/<int:id>',views.editTheme,name='editTheme'),
-    path('themes/updateTheme/<int:id>',views.updateTheme,name='updateTheme')
+    path('themes/updateTheme/<int:id>',views.updateTheme,name='updateTheme'),
+    path('byGenre/<int:id>',views.byGenre,name='byGenre'),
+    path('byTheme/<int:id>',views.byTheme,name='byTheme')
 ]

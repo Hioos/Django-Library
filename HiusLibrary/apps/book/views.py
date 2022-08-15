@@ -379,3 +379,11 @@ def languageUpdate(request,id):
     language.save()
     messages.success(request, (languageName + ' Updated Successfully !!!'))
     return HttpResponseRedirect(reverse('languageIndex'))
+@login_required
+def byLanguage(request,id):
+    books = Books.objects.filter(book_language=id).prefetch_related()
+    template = loader.get_template('language/books.html')
+    context = {
+        'books' : books
+    }
+    return HttpResponse(template.render(context,request))

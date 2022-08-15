@@ -54,3 +54,11 @@ def edit(request,id):
     publisher.save()
     messages.success(request, name + ' Updated successfully !!!')
     return HttpResponseRedirect(reverse('publisherIndex'))
+@login_required
+def byPublisher(request,id):
+    books = Books.objects.filter(book_publisher=id).prefetch_related()
+    template = loader.get_template('publisher/books.html')
+    context = {
+        'books' : books
+    }
+    return HttpResponse(template.render(context,request))

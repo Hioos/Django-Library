@@ -7,4 +7,5 @@ urlpatterns = [
     path('add/addNewAuthor',views.addNewAuthor,name='authorsAddNew'),
     path('update/<int:id>',views.update,name='updateAuthor'),
     path('update/updateProcess/<int:id>',views.updateProcess,name='updateProcess'),
+    path('byAuthor/<int:id>',views.byAuthor,name='byAuthor')
 ]

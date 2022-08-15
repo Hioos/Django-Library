@@ -97,6 +97,7 @@
                                             <th style="text-align:center;vertical-align: middle;">Image</th>
                                             <th style="text-align:center;vertical-align: middle;">Language</th>
                                             <th style="text-align:center;vertical-align: middle;">Code</th>
+                                            <th style="text-align:center;vertical-align: middle;">Books</th>
                                             <th  style="text-align: center">Edit</th>
                                     </tr>
                                   </thead>
@@ -116,7 +117,8 @@
                                         <td style="text-align:center;vertical-align: middle;"><img src="{{ language.language_image.url }}" style="width: 75px;height: 50px"></td>
                                         <td style="text-align:center;vertical-align: middle;">{{ language.language_name }}</td>
                                         <td style="text-align:center;vertical-align: middle;">{{ language.language_code }}</td>
-                                        <td style="text-align:center;vertical-align: middle;"><a href="{% url 'languageEdit' language.language_id %}"><i class="fas fa-edit"></i></a></td>
+                                        <td style="text-align:center;vertical-align: middle;"><a class="btn btn-success btn-circle btn-sm" href="{% url 'byLanguage' language.language_id %}"><i class="fas fa-flag"></i></a></td>
+                                        <td style="text-align:center;vertical-align: middle;"><a class="btn btn-primary btn-circle btn-sm" href="{% url 'languageEdit' language.language_id %}"><i class="fas fa-edit"></i></a></td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>

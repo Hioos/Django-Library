@@ -15,6 +15,8 @@ from django.contrib.auth.decorators import login_required
 
 from .models import Authors
 from ..accounts.models import Account
+from ..book.models import BookAuthorship
+
 
 def LogEntryAdd(idUser,modelName,objectId,reason,after):
     LogEntry.objects.log_action(
@@ -95,3 +97,11 @@ def updateProcess(request,id):
     LogEntryAdd(request.session['id'], author,'',reason, authorName)
     messages.success(request, (authorName + ' Updated Successfully !!!'))
     return HttpResponseRedirect(reverse('authorsIndex'))
+@login_required
+def byAuthor(request,id):
+    books = BookAuthorship.objects.filter(bookauthorship_authorId=id).prefetch_related()
+    template = loader.get_template('authors/books.html')
+    context = {
+        'books' : books
+    }
+    return HttpResponse(template.render(context,request))
