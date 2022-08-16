@@ -177,9 +177,14 @@ def updateProfile(request):
     user = Account.objects.get(id=request.session['id'])
     createdBy = Account.objects.filter(created_by=request.session['id']).prefetch_related(
         Prefetch('user_created_by', Account.objects.filter(created_by=request.session['id']))).order_by('date_joined')[:5][::-1]
+    counter = Account.objects.filter(created_by=request.session['id']).prefetch_related(
+        Prefetch('user_created_by', Account.objects.filter(created_by=request.session['id']))).count()
+    activities = LogEntry.objects.filter(user_id = request.session['id']).order_by('-action_time')[:10]
     template = loader.get_template('administrator/update_profile.html')
     context = {
         'user': user,
+        'activities':activities,
+        'counter': counter,
         'createdBy': createdBy,
         'media_url': settings.MEDIA_URL,
     }
@@ -195,11 +200,13 @@ def info(request, id):
         Prefetch('user_created_by', Account.objects.filter(created_by=id))).order_by('date_joined')[:5][::-1]
     counter = Account.objects.filter(created_by=id).prefetch_related(
         Prefetch('user_created_by', Account.objects.filter(created_by=id))).count()
+    activities = LogEntry.objects.filter(user_id = id).order_by('-action_time')[:10]
     a = request.session['id']
     context = {
         'user': user,
         'a': a,
         'counter': counter,
+        'activities':activities,
         'media_url': settings.MEDIA_URL,
         'createdBy': createdBy
     }

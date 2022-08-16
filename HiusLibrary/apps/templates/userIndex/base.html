@@ -112,7 +112,6 @@
                                     {% for theme in themes %}<li><a href="{% url 'userTheme' theme.theme_id %}">{{ theme.theme_name }}</a></li>{% endfor %}
                                 </ul>
                             </li>
-                            <li><a href="./blog.html">Blog</a></li>
                             {% if name %}
                                     <li><a href="#"><i class="fa fa-user"></i>{{ name }}</a>
                                         <ul class="header__menu__dropdown">

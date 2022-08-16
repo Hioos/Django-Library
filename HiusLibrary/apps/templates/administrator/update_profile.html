@@ -134,6 +134,24 @@
               </div>
             </div>
           </div>
+        <div class="col-md-6">
+            <div class="card mb-4 mb-md-0">
+              <div class="card-body">
+                  <p class="mb-4">Activities</p>
+                  {% for activity in activities %}
+                      <div class="row">
+                      <div class="col-md-6">
+                                            <p class="mb-1" style="font-size: .77rem;">{% if activity.action_flag == 1 %}<span class="badge badge-pill badge-primary">Add</span>{% else %}<span class="badge badge-pill badge-danger">Change</span>{% endif %}{{ activity.object_repr }}</p>
+                      </div>
+                      <div class="col-md-6">
+                          <p class="mb-1" style="font-size: .77rem;">{{ activity.change_message }}</p>
+                      </div>
+                      </div>
+                      <hr>
+                  {% endfor %}
+              </div>
+            </div>
+          </div>
         </div>
 <br>
         <button type="submit" class="btn btn-primary btn-user btn-block" style=" text-align: center; width: 65px;height: 50px;">Save</button>
