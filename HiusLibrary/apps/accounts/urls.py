@@ -26,5 +26,7 @@ urlpatterns = [
     path('log/',views.activities,name='activities'),
     path('changePassword/admin',views.changePasswordAdmin,name='changePasswordAdmin'),
     path('changePasswordProc/admin',views.changePasswordAdminProc,name='changePasswordAdminProc'),
-    path('updateUserInfoProc',views.updateUserInfoProc,name='updateUserInfoProc')
+    path('updateUserInfoProc',views.updateUserInfoProc,name='updateUserInfoProc'),
+    path('changePassword/user',views.changePasswordUser,name='changePasswordUser'),
+    path('changePasswordProc/user',views.changePasswordUserProc,name='changePasswordUserProc')
     ]
