@@ -7,7 +7,7 @@
                 </div>
             </div>
             <div class="checkout__form">
-                <h4>Personal Information</h4>
+                <h2><b>Personal Information</b></h2><br>
                 <form method="post" action="{% url 'updateUserInfoProc' %}" enctype="multipart/form-data">
                     {% csrf_token %}
                     <div class="row">
@@ -87,19 +87,21 @@
                             </div>
                                                     <div class="row justify-content-center">
                             <div class="col-5">
+                            <br><br>
                                 <button type="submit" class="site-btn">Update</button>
-                                <a href="{% url 'changePasswordUser' %}" class="site-btn" style="background-color: gray"><i class="fa fa-key"></i> CHANGE</a>
+                                
                             </div>
                         </div>
                             </div>
                         <div class="col-lg-4 col-md-6">
+                        
                             <div class="checkout__order">
-                                <h4>Image</h4>
+                                Image
                                 <div class="container-fluid">
                                     <img id="output" src="{{ information.profile_image.url }}" alt="avatar" style="width: 100%;height: 100%">
                                 </div>
 
-                                <input type="file" id="myFile" onchange="loadFile(event)" accept="image/*" name="image">
+                                <input type="file" id="myFile" onchange="loadFile(event)" accept="image/*" name="image" style="font-size: revert;"> <br> <br>
                             </div>
                             <div class="checkout__input">
                                 <p>Username</p>
