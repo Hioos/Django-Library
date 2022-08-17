@@ -101,10 +101,10 @@
             <div class="row">
                 <div class="col-lg-3">
                     <div class="header__logo">
-                        <a href="./index.html"><img src="{%  static 'img/logo.png' %}" alt=""></a>
+                        <a href="./index.html"><img src="https://scontent.fhan14-2.fna.fbcdn.net/v/t1.15752-9/293475056_739693457326569_909382292583354364_n.png?_nc_cat=111&ccb=1-7&_nc_sid=ae9488&_nc_ohc=rBnCFt-0ZS0AX9YTEaX&_nc_ht=scontent.fhan14-2.fna&oh=03_AVID0dSgJSh8EOujtWb72zjNXDDiGsfSlXCcNGB-6oko1A&oe=632355A7" style="height: 100px;width: 100px;"></a>
                     </div>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-6" style="    font-size: xxx-large;">
                     <nav class="header__menu">
                         <ul>
                             <li class="active"><a href="{%  url 'indexOfUser' %}">Home</a></li>
@@ -133,7 +133,7 @@
                     <div class="header__cart">
                         {% if name %}
                         <ul>
-                            <li><a href="{% url 'cart' %}"><i class="fa fa-shopping-cart"></i> <span id="amount2">{{ count }}</span></a></li>
+                            <li><a href="{% url 'cart' %}"><i class="fa fa-shopping-cart" style="font-size: xx-large;"></i> <span id="amount2">{{ count }}</span></a></li>
                         </ul>
                         {% endif %}
                     </div>
@@ -234,13 +234,13 @@
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <div class="footer__about">
                         <div class="footer__about__logo">
-                            <a href="./index.html"><img src="img/logo.png" alt=""></a>
+                            <a href="./index.html"><img src="https://scontent.fhan14-2.fna.fbcdn.net/v/t1.15752-9/293475056_739693457326569_909382292583354364_n.png?_nc_cat=111&ccb=1-7&_nc_sid=ae9488&_nc_ohc=rBnCFt-0ZS0AX9YTEaX&_nc_ht=scontent.fhan14-2.fna&oh=03_AVID0dSgJSh8EOujtWb72zjNXDDiGsfSlXCcNGB-6oko1A&oe=632355A7" alt="" style="width: 500px; height: 300px;" ></a>
                         </div>
-                        <ul>
+                        {% comment %} <ul>
                             <li>Address: 132A Giang Vo - Ba Dinh </li>
                             <li>Phone: 0337851718</li>
                             <li>Email: thuynguyen@media-one.vn</li>
-                        </ul>
+                        </ul> {% endcomment %}
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-6 col-sm-6 offset-lg-1">
@@ -262,6 +262,11 @@
                             <li><a href="#">Innovation</a></li>
                             <li><a href="#">Testimonials</a></li>
                         </ul> {% endcomment %}
+                        <ul>
+                            <li>Address: 132A Giang Vo - Ba Dinh </li>
+                            <li>Phone: 0337851718</li>
+                            <li>Email: thuynguyen@media-one.vn</li>
+                        </ul>
                     </div>
                 </div>
                 <div class="col-lg-4 col-md-12">
