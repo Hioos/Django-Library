@@ -51,7 +51,8 @@
                             {% else %}
                                 class="addCart btn btn-success"
                                {% endif %}
-                                {% endif %}>ADD TO CART</a>
+                                {% endif %}
+                        {% if name is None %}data-toggle="modal" data-target="#modalLoginForm"{% endif %}>ADD TO CART</a>
                         <ul>
                             <li><b>Language</b> <span><img src="{{ book.book_language.language_image.url }}" style="width: 30px;height: 20px"></span></li>
                             <li><b>In Library</b><span>{{ left }}</span></li>
