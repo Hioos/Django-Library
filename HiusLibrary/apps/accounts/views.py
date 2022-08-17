@@ -448,3 +448,37 @@ def changePasswordAdminProc(request):
     else:
         messages.success(request, "Password Incorrect !!!")
         return redirect('changePasswordAdmin')
+@login_required
+def updateUserInfoProc(request):
+    name = request.POST['name']
+    phone_number = request.POST['phone_number']
+    address = request.POST['address']
+    birth_date = request.POST['birth_date']
+    facebook = request.POST['facebook']
+    twitter = request.POST['twitter']
+    linkedin = request.POST['linkedin']
+    instagram = request.POST['instagram']
+    image = request.FILES.get('image')
+    user = Account.objects.get(id = request.session['id'])
+    if image is None:
+        user.name = name
+        user.phone_number = phone_number
+        user.address = address
+        user.birth_date = birth_date
+        user.facebook = facebook
+        user.twitter = twitter
+        user.linkedIn = linkedin
+        user.instagram = instagram
+    else:
+        user.name = name
+        user.phone_number = phone_number
+        user.address = address
+        user.birth_date = birth_date
+        user.facebook = facebook
+        user.twitter = twitter
+        user.linkedIn = linkedin
+        user.instagram = instagram
+        user.profile_image = image
+    user.save()
+    messages.success(request, "The information is successfully updated !!!")
+    return HttpResponseRedirect(reverse('information'))

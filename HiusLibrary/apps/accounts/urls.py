@@ -25,5 +25,6 @@ urlpatterns = [
     path('history/log/<int:id>',views.adminLog,name='adminLog'),
     path('log/',views.activities,name='activities'),
     path('changePassword/admin',views.changePasswordAdmin,name='changePasswordAdmin'),
-    path('changePasswordProc/admin',views.changePasswordAdminProc,name='changePasswordAdminProc')
+    path('changePasswordProc/admin',views.changePasswordAdminProc,name='changePasswordAdminProc'),
+    path('updateUserInfoProc',views.updateUserInfoProc,name='updateUserInfoProc')
     ]
