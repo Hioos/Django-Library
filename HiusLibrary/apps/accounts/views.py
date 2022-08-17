@@ -3,6 +3,7 @@ import random
 import string
 
 from django.contrib.admin.models import LogEntry
+from django.db import IntegrityError
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.core.mail import send_mail
@@ -19,6 +20,7 @@ from .models import Account, Pricing, PaymentHistory
 from django.conf import settings
 
 from ..book.models import Receipt
+from ..genre.models import Themes, Genre
 from ..loan.models import loanStatus
 
 
@@ -113,45 +115,49 @@ def addUser(request):
     image = request.FILES.get('user_image')
     date_joined = datetime.datetime.now
     created_by = Account.objects.get(id=request.session['id'])
-    if image is None:
-        Account.objects.create_user(email=email,
-                                    username=username,
-                                    password=password,
-                                    name=name,
-                                    date_joined=date_joined,
-                                    phone_number=phone_number,
-                                    address=address,
-                                    birth_date=birth_date,
-                                    expired_date=expired_date,
-                                    national_id=national_id,
-                                    profile_image='NULL',
-                                    created_by=created_by.id)
-    else:
-        Account.objects.create_user(email=email,
-                                    username=username,
-                                    password=password,
-                                    name=name,
-                                    date_joined=date_joined,
-                                    phone_number=phone_number,
-                                    address=address,
-                                    birth_date=birth_date,
-                                    expired_date=expired_date,
-                                    national_id=national_id,
-                                    profile_image=image,
-                                    created_by=created_by.id)
-    subject = 'Welcome to HiusLibrary'
-    message = f'Hi {name}, thank you for registering in HiusLibrary. \n' \
-              f'This is your Access Key and Password for www.hiuslibrary.vn \n' \
-              f'Please do not share this information with anyone. \n' \
-              f'Access Key: {username} \n' \
-              f'Password: {password} \n' \
-              f'\t\t\t Sincerely, \n' \
-              f'\t\t\t {created_by.name}'
-    email_from = settings.EMAIL_HOST_USER
-    recipient_list = [email, ]
-    send_mail(subject, message, email_from, recipient_list)
-    messages.success(request, "The user is successfully registered !!!")
-    return HttpResponseRedirect(reverse('userIndex'))
+    try:
+        if image is None:
+            Account.objects.create_user(email=email,
+                                        username=username,
+                                        password=password,
+                                        name=name,
+                                        date_joined=date_joined,
+                                        phone_number=phone_number,
+                                        address=address,
+                                        birth_date=birth_date,
+                                        expired_date=expired_date,
+                                        national_id=national_id,
+                                        profile_image='NULL',
+                                        created_by=created_by.id)
+        else:
+            Account.objects.create_user(email=email,
+                                        username=username,
+                                        password=password,
+                                        name=name,
+                                        date_joined=date_joined,
+                                        phone_number=phone_number,
+                                        address=address,
+                                        birth_date=birth_date,
+                                        expired_date=expired_date,
+                                        national_id=national_id,
+                                        profile_image=image,
+                                        created_by=created_by.id)
+        subject = 'Welcome to HiusLibrary'
+        message = f'Hi {name}, thank you for registering in HiusLibrary. \n' \
+                  f'This is your Access Key and Password for www.hiuslibrary.vn \n' \
+                  f'Please do not share this information with anyone. \n' \
+                  f'Access Key: {username} \n' \
+                  f'Password: {password} \n' \
+                  f'\t\t\t Sincerely, \n' \
+                  f'\t\t\t {created_by.name}'
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [email, ]
+        send_mail(subject, message, email_from, recipient_list)
+        messages.success(request, "The user is successfully registered !!!")
+        return HttpResponseRedirect(reverse('userIndex'))
+    except IntegrityError as e:
+        messages.success(request, "Duplicated !!!")
+        return HttpResponseRedirect(reverse('userAdd'))
 
 
 @login_required
@@ -263,22 +269,27 @@ def addAdminProccess(request):
     address = request.POST['address']
     created_by = Account.objects.get(id=request.session['id'])
     date_joined = datetime.datetime.now
-    Account.objects.create_staff(email=email,
-                                 username=username,
-                                 password=password,
-                                 name=name,
-                                 date_joined=date_joined,
-                                 phone_number=phone_number,
-                                 address=address,
-                                 birth_date=birth_date,
-                                 national_id=national_id,
-                                 is_admin=adminRole,
-                                 is_staff=True,
-                                 profile_image='NULL',
-                                 created_by=created_by.id
-                                 )
-    messages.success(request, "The user is successfully registered !!!")
-    return HttpResponseRedirect(reverse('adminIndex'))
+    try:
+        Account.objects.create_staff(email=email,
+                                     username=username,
+                                     password=password,
+                                     name=name,
+                                     date_joined=date_joined,
+                                     phone_number=phone_number,
+                                     address=address,
+                                     birth_date=birth_date,
+                                     national_id=national_id,
+                                     is_admin=adminRole,
+                                     is_staff=True,
+                                     profile_image='NULL',
+                                     created_by=created_by.id
+                                     )
+        messages.success(request, "The user is successfully registered !!!")
+        return HttpResponseRedirect(reverse('adminIndex'))
+    except IntegrityError as e:
+        messages.success(request, "DUPLICATED !!!")
+        return HttpResponseRedirect(reverse('addAdmin'))
+
 def loginForUser(request):
     if request.method == "POST":
         username = request.POST['userkey']
@@ -479,6 +490,47 @@ def updateUserInfoProc(request):
         user.linkedIn = linkedin
         user.instagram = instagram
         user.profile_image = image
-    user.save()
-    messages.success(request, "The information is successfully updated !!!")
-    return HttpResponseRedirect(reverse('information'))
+    try:
+        user.save()
+        messages.success(request, "The information is successfully updated !!!")
+        return HttpResponseRedirect(reverse('information'))
+    except IntegrityError as e:
+        messages.success(request, "DUPLICATED !!!")
+        return HttpResponseRedirect(reverse('information'))
+@login_required
+def changePasswordUser(request):
+    template = loader.get_template('userIndex/change_password.html')
+    cart = None
+    if "cart" in request.session:
+        cart = request.session['cart']
+    x = datetime.datetime.today()
+    themes = Themes.objects.all()
+    lists = Genre.objects.all()
+    count = 0
+    if "cart" in request.session:
+        cart = request.session['cart']
+        for cartProduct in cart:
+            count = count + 1
+    context = {
+        'cart': cart,
+        'x': x,
+        'themes': themes,
+        'lists': lists,
+        'count': count,
+    }
+    return HttpResponse(template.render(context, request))
+@login_required
+def changePasswordUserProc(request):
+    oldPassword = request.POST['oldPassword']
+    newPassword = request.POST['newPassword']
+    current_user = Account.objects.get(id=request.session['id'])
+    current_user_name = current_user.username
+    user = authenticate(username=current_user_name, password=oldPassword)
+    if user is not None:
+        current_user.set_password(newPassword)
+        current_user.save()
+        messages.success(request, "Success, Please Log-In to your account again !!!")
+        return redirect('indexOfUser')
+    else:
+        messages.success(request, "Password Incorrect !!!")
+        return redirect('changePasswordUser')

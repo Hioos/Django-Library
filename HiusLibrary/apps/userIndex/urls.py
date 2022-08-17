@@ -16,5 +16,6 @@ urlpatterns = [
     path('history',views.history,name='history'),
     path('extend',views.extend,name='extend'),
     path('extend/<int:id>',views.extendInfo,name='extendInfo'),
-    path('extendMember/<int:id>',views.extendMember,name='extendMember')
+    path('extendMember/<int:id>',views.extendMember,name='extendMember'),
+    path('search/',views.search,name='search')
 ]

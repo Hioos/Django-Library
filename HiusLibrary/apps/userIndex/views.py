@@ -233,7 +233,7 @@ def deleteCart(request, id):
     request.session['cart'] = updatedCart
     return redirect('cart')
 
-
+@login_required
 def requestBook(request):
     booksId = request.POST.getlist('bookId')
     error = 0
@@ -310,7 +310,7 @@ def allBook(request):
     }
     return HttpResponse(template.render(context, request))
 
-
+@login_required
 def information(request):
     if "name" in request.session:
         cart = []
@@ -335,7 +335,7 @@ def information(request):
     else:
         return redirect('indexOfUser')
 
-
+@login_required
 def history(request):
     cart = []
     id = request.session['id']
@@ -361,7 +361,7 @@ def history(request):
     template = loader.get_template('userIndex/history.html')
     return HttpResponse(template.render(context, request))
 
-
+@login_required
 def extend(request):
     cart = []
     lists = Genre.objects.all()
@@ -378,7 +378,7 @@ def extend(request):
     }
     return HttpResponse(template.render(context, request))
 
-
+@login_required
 def extendInfo(request, id):
     cart = []
     lists = Genre.objects.all()
@@ -400,7 +400,7 @@ def extendInfo(request, id):
     }
     return HttpResponse(template.render(context, request))
 
-
+@login_required
 def extendMember(request, id):
     # data = request.GET['catid']
     pricing = Pricing.objects.get(pricing_id=id)
@@ -417,3 +417,37 @@ def extendMember(request, id):
     user.save()
     messages.success(request, "Done")
     return redirect('history')
+@login_required
+def search(request):
+    cart = []
+    lists = Genre.objects.all()
+    searchText = request.GET['search']
+    newbook = Books.objects.filter(book_name__contains = searchText)
+    template = loader.get_template('userIndex/search.html')
+    themes = Themes.objects.all()
+    sub_Genre = SubGenre.objects.all()
+    x = len(list(newbook))
+    count = 0
+    if "cart" in request.session:
+        cart = request.session['cart']
+        for cartProduct in cart:
+            count = count + 1
+    page = request.GET.get('page', 1)
+    paginator = Paginator(newbook, 12)
+    try:
+        newbooks = paginator.page(page)
+    except PageNotAnInteger:
+        newbooks = paginator.page(1)
+    except EmptyPage:
+        newbooks = paginator.page(paginator.num_pages)
+
+    context = {
+        'lists':lists,
+        'cart': cart,
+        'themes': themes,
+        'newbooks': newbooks,
+        'x': x,
+        'sub_Genre': sub_Genre,
+        'count': count
+    }
+    return HttpResponse(template.render(context, request))
