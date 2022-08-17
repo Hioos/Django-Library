@@ -421,3 +421,30 @@ def adminLog(request,id):
     }
     template = loader.get_template('misc/admin_log.html')
     return HttpResponse(template.render(context, request))
+@login_required
+def activities(request):
+    logs=LogEntry.objects.filter(user_id=request.session['id'])
+    context={
+        'logs':logs
+    }
+    template = loader.get_template('misc/activity_log.html')
+    return HttpResponse(template.render(context, request))
+@login_required
+def changePasswordAdmin(request):
+    template = loader.get_template('misc/change_password.html')
+    return HttpResponse(template.render({}, request))
+@login_required
+def changePasswordAdminProc(request):
+    oldPassword= request.POST['oldPassword']
+    newPassword = request.POST['newPassword']
+    current_user = Account.objects.get(id = request.session['id'])
+    current_user_name = current_user.username
+    user = authenticate(username=current_user_name, password=oldPassword)
+    if user is not None:
+        current_user.set_password(newPassword)
+        current_user.save()
+        messages.success(request, "Success, Please Log-In to your account again !!!")
+        return redirect('indexOfAdmin')
+    else:
+        messages.success(request, "Password Incorrect !!!")
+        return redirect('changePasswordAdmin')

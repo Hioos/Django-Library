@@ -290,6 +290,7 @@
                     <div class="table-responsive">
                                 <table class="table" width="100%" cellspacing="0">
                         <thead>
+                        <th>No.</th>
                         <th>User</th>
                         <th>Expired At</th>
                         <th>Remind</th>
@@ -297,9 +298,10 @@
                         <tbody>
                         {% for nearend in nearends %}
                         <tr>
+                        <td>{{ forloop.counter }}</td>
                         <td>{{ nearend.username }}</td>
                         <td>{{ nearend.expired_date }}({{ nearend.expired_date|timeuntil }})</td>
-                        <td>Remind</td>
+                            <td><a class="btn btn-outline-info btn-circle btn-sm"><i class="fas fa-envelope"></i></a></td>
                         </tr>
                         {% endfor %}
                         </tbody>
@@ -540,7 +542,8 @@ var xValues = [{% for chart in chart10 %}
     {% if chart == chart10.last %} {% else %} , {% endif %}
 {% endfor %}];
 var yValues = [{% for chart in chart10 %}{{ chart.sum|floatformat:2 }}{% if chart == chart10.last %} {% else %} , {% endif %}{% endfor %}];
-
+var chart10max = Math.ceil({{chart10max.sum}}+1)
+var chart10min = Math.ceil({{ chart10min.sum }}-1)
 new Chart("myChart10", {
   type: "line",
   data: {
@@ -548,15 +551,15 @@ new Chart("myChart10", {
     datasets: [{
       fill: false,
       lineTension: 0,
-      backgroundColor: "rgba(0,0,255,1.0)",
-      borderColor: "rgba(0,0,255,0.1)",
+      backgroundColor: "rgb(0,255,157)",
+      borderColor: "rgba(0,255,157,0.56)",
       data: yValues
     }]
   },
   options: {
     legend: {display: false},
     scales: {
-      yAxes: [{ticks: {min: {{ chart10min.sum }}, max:{{chart10max.sum}}+1}}],
+      yAxes: [{ticks: {min: chart10min , max: chart10max}}],
     }
   }
 });

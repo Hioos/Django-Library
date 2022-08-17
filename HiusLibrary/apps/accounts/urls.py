@@ -22,5 +22,8 @@ urlpatterns = [
     path('lock/<int:id>',views.lockAdmin,name='lockAdmin'),
     path('promoteAdmin/<int:id>',views.promoteAdmin,name='promoteAdmin'),
     path('manual/extend/<int:id>',views.extendManual,name='extendManual'),
-    path('history/log/<int:id>',views.adminLog,name='adminLog')
+    path('history/log/<int:id>',views.adminLog,name='adminLog'),
+    path('log/',views.activities,name='activities'),
+    path('changePassword/admin',views.changePasswordAdmin,name='changePasswordAdmin'),
+    path('changePasswordProc/admin',views.changePasswordAdminProc,name='changePasswordAdminProc')
     ]
