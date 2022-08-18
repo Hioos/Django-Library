@@ -448,6 +448,43 @@ def search(request):
         'newbooks': newbooks,
         'x': x,
         'sub_Genre': sub_Genre,
-        'count': count
+        'count': count,
+        'searchText':searchText
+    }
+    return HttpResponse(template.render(context, request))
+@login_required
+def authorUser(request,id):
+    cart = []
+    strid = str(id)
+    authors = Authors.objects.get(author_id=id)
+    lists = Genre.objects.all()
+    themes = Themes.objects.all()
+    count = 0
+    if "cart" in request.session:
+        cart = request.session['cart']
+        for cartProduct in cart:
+            count = count + 1
+    template = loader.get_template('userIndex/authors.html')
+    newbook = Books.objects.raw(
+        'SELECT * FROM book_books INNER JOIN book_bookauthorship ON book_books.book_id=book_bookauthorship.bookauthorship_bookId_id WHERE book_bookauthorship.bookauthorship_authorId_id= %s',[strid])
+    page = request.GET.get('page', 1)
+    paginator = Paginator(newbook, 12)
+    try:
+        newbooks = paginator.page(page)
+    except PageNotAnInteger:
+        newbooks = paginator.page(1)
+    except EmptyPage:
+        newbooks = paginator.page(paginator.num_pages)
+    subgenres= SubGenre.objects.raw('SELECT * FROM book_books INNER JOIN book_bookauthorship ON book_books.book_id=book_bookauthorship.bookauthorship_bookId_id  INNER JOIN book_booksubgenre ON book_id = book_booksubgenre.booksubgenre_bookId_id INNER JOIN genre_subgenre ON booksubgenre_subgenreId_id=genre_subgenre.id WHERE book_bookauthorship.bookauthorship_authorId_id=%s  GROUP BY booksubgenre_subgenreId_id',[strid])
+    authorThemes = Themes.objects.raw('SELECT * FROM book_books INNER JOIN book_bookauthorship ON book_books.book_id=book_bookauthorship.bookauthorship_bookId_id  INNER JOIN book_bookthemes ON book_id = book_bookthemes.bookthemes_bookId_id INNER JOIN genre_themes ON theme_id=book_bookthemes.bookthemes_themeId_id WHERE book_bookauthorship.bookauthorship_authorId_id=%s  GROUP BY book_bookthemes.bookthemes_themeId_id',[strid])
+    context={
+        'authors':authors,
+        'cart':cart,
+        'lists':lists,
+        'themes':themes,
+        'count':count,
+        'newbooks':newbooks,
+        'authorThemes':authorThemes,
+        'subgenres':subgenres
     }
     return HttpResponse(template.render(context, request))

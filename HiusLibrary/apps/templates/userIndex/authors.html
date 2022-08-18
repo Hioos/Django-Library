@@ -1,0 +1,83 @@
+{% extends 'userIndex/base.html' %}
+{% block content %}
+        <section class="blog-details-hero set-bg" data-setbg="{{ authors.author_imgUrl.url }}">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="blog__details__hero__text">
+                        <h2>{{ authors.author_pseudonym }}</h2>
+                        <ul>
+                            <li>{{ authors.author_name }}</li>
+                            <li>{{ authors.author_dateOfBirth }}</li>
+                            <li>{% if authors.author_gender %}Male{% else %}Female{% endif %}</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- Blog Details Hero End -->
+
+    <!-- Blog Details Section Begin -->
+    <section class="blog-details spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 col-md-5 order-md-1 order-2">
+                    <div class="blog__sidebar">
+                        <div class="blog__sidebar__item">
+                            <h4>Themes</h4>
+                            <ul>
+                                {% for authorTheme in authorThemes %}
+                                <li><a href="#">{{ authorTheme.theme_name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="blog__sidebar__item">
+                            <h4>Most common genres</h4>
+                            <div class="blog__sidebar__item__tags">
+                                {% for subgenre in subgenres %}<a href="#">{{ subgenre.subgenre_name }}</a>{% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-8 col-md-7 order-md-1 order-1">
+                    <div class="blog__details__text">
+                        <img src="{{ authors.author_imgUrl.url }}" alt="">
+                        <p>{{ authors.author_biography }}</p>
+                    </div>
+                <div class="blog__details__text"><h3>From Author</h3></div>
+                    <div class="row">
+                        {% for book in newbooks %}
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <div class="product__item">
+                                <div class="product__item__pic set-bg" data-setbg="{{ book.book_image.url }}">
+                                    <ul class="product__item__pic__hover">
+                                        <li><a  href="javascript:void(0)" id="addCart{{ book.book_id }}" book-data ="{{ book.book_id }}"
+                                        {% if cart|length > 0 %}
+                                            {% for cartitem in cart %}
+                                                {% if book.book_id == cartitem.id or book.book_amount == book.asd %}
+                                                    class="addCart" style="display: none;"
+                                                {% else %}
+                                                    class="addCart"
+                                                {% endif %}
+                                            {% endfor %}
+                                                {% elif book.book_amount == book.asd %}
+                                            class="addCart" style="display: none;"
+                                        {% else %}
+                                                    class="addCart"
+                                        {% endif %}{% if name is None %}data-toggle="modal" data-target="#modalLoginForm"{% endif %}><i class="fa fa-shopping-cart"></i></a></li>
+                                    </ul>
+                                </div>
+                                <div class="product__item__text">
+                                    <h6 ><a href="{% url 'userBookInfo' book.book_id %}">{{ book.book_name}}</a>{% if book.book_amount == book.asd %} <span class="badge badge-warning">Not In Library</span>{% endif %}</h6>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+{% endblock %}

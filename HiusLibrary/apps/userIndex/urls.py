@@ -17,5 +17,6 @@ urlpatterns = [
     path('extend',views.extend,name='extend'),
     path('extend/<int:id>',views.extendInfo,name='extendInfo'),
     path('extendMember/<int:id>',views.extendMember,name='extendMember'),
-    path('search/',views.search,name='search')
+    path('search/',views.search,name='search'),
+    path('authors/<int:id>',views.authorUser,name='authorUser')
 ]
