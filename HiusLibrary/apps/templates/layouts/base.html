@@ -134,12 +134,13 @@
             <div class="sidebar-heading">
                 Users
             </div>
-
+            {% if is_admin %}
             <li class="nav-item{% if request.resolver_match.view_name == 'adminIndex' %} active{% endif %}">
                 <a class="nav-link" href="{% url 'adminIndex' %}">
                     <i class="fas fa-fw fa-user-secret"></i>
                     <span>Admin Member</span></a>
             </li>
+            {% endif %}
             <li class="nav-item{% if request.resolver_match.view_name == 'userIndex' %} active{% endif %}">
                 <a class="nav-link" href="{% url 'userIndex' %}">
                     <i class="fas fa-fw fa-address-card"></i>

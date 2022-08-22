@@ -233,7 +233,7 @@ def deleteCart(request, id):
     request.session['cart'] = updatedCart
     return redirect('cart')
 
-@login_required
+
 def requestBook(request):
     booksId = request.POST.getlist('bookId')
     error = 0
@@ -310,7 +310,7 @@ def allBook(request):
     }
     return HttpResponse(template.render(context, request))
 
-@login_required
+
 def information(request):
     if "name" in request.session:
         cart = []
@@ -335,33 +335,35 @@ def information(request):
     else:
         return redirect('indexOfUser')
 
-@login_required
-def history(request):
-    cart = []
-    id = request.session['id']
-    lists = Genre.objects.all()
-    themes = Themes.objects.all()
-    count = 0
-    loans = loanStatus.objects.all()
-    payments = PaymentHistory.objects.prefetch_related().filter(user_id=id).order_by('-history_Id')
-    receipts = Receipt.objects.prefetch_related().filter(receipt_user=id).order_by('-receipt_id')
-    if "cart" in request.session:
-        cart = request.session['cart']
-        for cartProduct in cart:
-            count = count + 1
-    context = {
-        'cart': cart,
-        'lists': lists,
-        'loans': loans,
-        'receipts': receipts,
-        'themes': themes,
-        'count': count,
-        'payments': payments
-    }
-    template = loader.get_template('userIndex/history.html')
-    return HttpResponse(template.render(context, request))
 
-@login_required
+def history(request):
+    if "name" in request.session:
+        cart = []
+        id = request.session['id']
+        lists = Genre.objects.all()
+        themes = Themes.objects.all()
+        count = 0
+        loans = loanStatus.objects.all()
+        payments = PaymentHistory.objects.prefetch_related().filter(user_id=id).order_by('-history_Id')
+        receipts = Receipt.objects.prefetch_related().filter(receipt_user=id).order_by('-receipt_id')
+        if "cart" in request.session:
+            cart = request.session['cart']
+            for cartProduct in cart:
+                count = count + 1
+        context = {
+            'cart': cart,
+            'lists': lists,
+            'loans': loans,
+            'receipts': receipts,
+            'themes': themes,
+            'count': count,
+            'payments': payments
+        }
+        template = loader.get_template('userIndex/history.html')
+        return HttpResponse(template.render(context, request))
+    else:
+        return redirect('indexOfUser')
+
 def extend(request):
     cart = []
     lists = Genre.objects.all()
@@ -378,46 +380,50 @@ def extend(request):
     }
     return HttpResponse(template.render(context, request))
 
-@login_required
-def extendInfo(request, id):
-    cart = []
-    lists = Genre.objects.all()
-    themes = Themes.objects.all()
-    count = 0
-    pricings = Pricing.objects.get(pricing_id=id)
-    user = Account.objects.get(id=request.session['id'])
-    template = loader.get_template('userIndex/extendInfo.html')
-    current = user.expired_date
-    after = current + datetime.timedelta(days=pricings.pricing_days)
-    context = {
-        'lists': lists,
-        'cart': cart,
-        'count': count,
-        'themes': themes,
-        'pricings': pricings,
-        'user': user,
-        'after': after
-    }
-    return HttpResponse(template.render(context, request))
 
-@login_required
+def extendInfo(request, id):
+    if "name" in request.session:
+        cart = []
+        lists = Genre.objects.all()
+        themes = Themes.objects.all()
+        count = 0
+        pricings = Pricing.objects.get(pricing_id=id)
+        user = Account.objects.get(id=request.session['id'])
+        template = loader.get_template('userIndex/extendInfo.html')
+        current = user.expired_date
+        after = current + datetime.timedelta(days=pricings.pricing_days)
+        context = {
+            'lists': lists,
+            'cart': cart,
+            'count': count,
+            'themes': themes,
+            'pricings': pricings,
+            'user': user,
+            'after': after
+        }
+        return HttpResponse(template.render(context, request))
+    else:
+        return redirect('indexOfUser')
+
 def extendMember(request, id):
     # data = request.GET['catid']
-    pricing = Pricing.objects.get(pricing_id=id)
-    user = Account.objects.get(id=request.session['id'])
-    days = pricing.pricing_days
-    history = PaymentHistory(
-        user_id=user,
-        pricing=pricing,
-        old_expired_date = user.expired_date,
-        new_expired_date = user.expired_date + datetime.timedelta(days=days)
-    )
-    history.save()
-    user.expired_date = user.expired_date + datetime.timedelta(days=days)
-    user.save()
-    messages.success(request, "Done")
-    return redirect('history')
-@login_required
+    if "name" in request.session:
+        pricing = Pricing.objects.get(pricing_id=id)
+        user = Account.objects.get(id=request.session['id'])
+        days = pricing.pricing_days
+        history = PaymentHistory(
+            user_id=user,
+            pricing=pricing,
+            old_expired_date = user.expired_date,
+            new_expired_date = user.expired_date + datetime.timedelta(days=days)
+        )
+        history.save()
+        user.expired_date = user.expired_date + datetime.timedelta(days=days)
+        user.save()
+        messages.success(request, "Done")
+        return redirect('history')
+    else:
+        return redirect('indexOfUser')
 def search(request):
     cart = []
     lists = Genre.objects.all()
@@ -452,7 +458,7 @@ def search(request):
         'searchText':searchText
     }
     return HttpResponse(template.render(context, request))
-@login_required
+
 def authorUser(request,id):
     cart = []
     strid = str(id)

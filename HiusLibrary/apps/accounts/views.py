@@ -222,8 +222,12 @@ def info(request, id):
 @login_required
 def extendMembership(request):
     data = request.GET['catid']
+    today = datetime.date.today()
     user = Account.objects.get(id=data)
-    user.expired_date = user.expired_date + datetime.timedelta(seconds=1 * 31 * 24 * 60 * 60)
+    if today < user.expired_date:
+        user.expired_date = user.expired_date + datetime.timedelta(seconds=1 * 31 * 24 * 60 * 60)
+    else:
+        user.expired_date = today + datetime.timedelta(seconds=1 * 31 * 24 * 60 * 60)
     user.save()
     payment = PaymentHistory(
         user_id = user,

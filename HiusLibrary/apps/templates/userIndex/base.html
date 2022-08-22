@@ -83,7 +83,7 @@
         </div>
         <div id="mobile-menu-wrap"><div class="slicknav_menu"><a href="#" aria-haspopup="true" role="button" tabindex="0" class="slicknav_btn slicknav_collapsed" style="outline: none;"><span class="slicknav_menutxt">MENU</span><span class="slicknav_icon"><span class="slicknav_icon-bar"></span><span class="slicknav_icon-bar"></span><span class="slicknav_icon-bar"></span></span></a><nav class="slicknav_nav slicknav_hidden" aria-hidden="true" role="menu" style="display: none;">
             <ul>
-                <li class="active"><a href="{% url 'indexOfUser' %}" role="menuitem">Home</a></li>
+                <li {% if request.resolver_match.view_name == 'indexOfUser' %} class="active"{% endif %}><a href="{% url 'indexOfUser' %}" role="menuitem">Home</a></li>
                 <li><a href="{% url 'allBook' %}" role="menuitem">All</a></li>
                 <li class="slicknav_collapsed slicknav_parent"><a href="#" role="menuitem" aria-haspopup="true" tabindex="-1" class="slicknav_item slicknav_row" style="outline: none;"><a href="#">Themes</a>
                     <span class="slicknav_arrow">►</span></a><ul class="header__menu__dropdown slicknav_hidden" role="menu" aria-hidden="true" style="display: none;">
@@ -101,14 +101,14 @@
             <div class="row">
                 <div class="col-lg-3">
                     <div class="header__logo">
-                        <a href="./index.html"><img src="https://scontent.fhan14-2.fna.fbcdn.net/v/t1.15752-9/293475056_739693457326569_909382292583354364_n.png?_nc_cat=111&ccb=1-7&_nc_sid=ae9488&_nc_ohc=rBnCFt-0ZS0AX9YTEaX&_nc_ht=scontent.fhan14-2.fna&oh=03_AVID0dSgJSh8EOujtWb72zjNXDDiGsfSlXCcNGB-6oko1A&oe=632355A7" style="height: 100px;width: 100px;"></a>
+                        <a href="{% url 'indexOfUser' %}"><img src="https://scontent.fhan14-2.fna.fbcdn.net/v/t1.15752-9/293475056_739693457326569_909382292583354364_n.png?_nc_cat=111&ccb=1-7&_nc_sid=ae9488&_nc_ohc=rBnCFt-0ZS0AX9YTEaX&_nc_ht=scontent.fhan14-2.fna&oh=03_AVID0dSgJSh8EOujtWb72zjNXDDiGsfSlXCcNGB-6oko1A&oe=632355A7" style="height: 100px;width: 100px;"></a>
                     </div>
                 </div>
                 <div class="col-lg-6" style="    font-size: xxx-large;">
                     <nav class="header__menu">
                         <ul>
-                            <li class="active"><a href="{%  url 'indexOfUser' %}">Home</a></li>
-                            <li><a href="{% url 'allBook' %}">Shop</a></li>
+                            <li {% if request.resolver_match.view_name == 'indexOfUser' %} class="active"{% endif %}><a href="{%  url 'indexOfUser' %}">Home</a></li>
+                            <li {% if request.resolver_match.view_name == 'allBook' %} class="active"{% endif %}><a href="{% url 'allBook' %}">Shop</a></li>
                             <li><a href="#">Themes</a>
                                 <ul class="header__menu__dropdown">
                                     {% for theme in themes %}<li><a href="{% url 'userTheme' theme.theme_id %}">{{ theme.theme_name }}</a></li>{% endfor %}
@@ -174,7 +174,7 @@
                         </div>
                         <div class="hero__search__phone">
                             <div class="hero__search__phone__icon">
-                                <i class="fa fa-phone"></i>
+                                <a href="tel:+4733378901"><i class="fa fa-phone"></i></a>
                             </div>
                             <div class="hero__search__phone__text">
                                 <h5>0337851718</h5>
@@ -235,7 +235,7 @@
                 <div class="col-lg-3 col-md-6 col-sm-6">
                     <div class="footer__about">
                         <div class="footer__about__logo">
-                            <a href="./index.html"><img src="https://scontent.fhan14-2.fna.fbcdn.net/v/t1.15752-9/293475056_739693457326569_909382292583354364_n.png?_nc_cat=111&ccb=1-7&_nc_sid=ae9488&_nc_ohc=rBnCFt-0ZS0AX9YTEaX&_nc_ht=scontent.fhan14-2.fna&oh=03_AVID0dSgJSh8EOujtWb72zjNXDDiGsfSlXCcNGB-6oko1A&oe=632355A7"  ></a>
+                            <a href="{% url 'indexOfUser' %}"><img src="https://scontent.fhan14-2.fna.fbcdn.net/v/t1.15752-9/293475056_739693457326569_909382292583354364_n.png?_nc_cat=111&ccb=1-7&_nc_sid=ae9488&_nc_ohc=rBnCFt-0ZS0AX9YTEaX&_nc_ht=scontent.fhan14-2.fna&oh=03_AVID0dSgJSh8EOujtWb72zjNXDDiGsfSlXCcNGB-6oko1A&oe=632355A7"  ></a>
                         </div>
                         {% comment %} <ul>
                             <li>Address: 132A Giang Vo - Ba Dinh </li>

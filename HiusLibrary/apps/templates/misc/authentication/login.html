@@ -1,3 +1,4 @@
+{% if not request.user.is_authenticated %}
 <!DOCTYPE html>
 <html lang="en">
 
@@ -59,13 +60,13 @@
                                             <input type="password" class="form-control form-control-user" name ="adminPassword"
                                                 id="exampleInputPassword" placeholder="Password">
                                         </div>
-                                        <div class="form-group">
-                                            <div class="custom-control custom-checkbox small">
-                                                <input type="checkbox" class="custom-control-input" id="customCheck">
-                                                <label class="custom-control-label" for="customCheck">Remember
-                                                    Me</label>
-                                            </div>
-                                        </div>
+{#                                        <div class="form-group">#}
+{#                                            <div class="custom-control custom-checkbox small">#}
+{#                                                <input type="checkbox" class="custom-control-input" id="customCheck">#}
+{#                                                <label class="custom-control-label" for="customCheck">Remember#}
+{#                                                    Me</label>#}
+{#                                            </div>#}
+{#                                        </div>#}
                                         <button type="submit" class="btn btn-primary btn-user btn-block">
                                             Login
                                         </button>
@@ -82,9 +83,9 @@
                                         {% endfor %}
                                     {% endif %}
                                     <hr>
-                                    <div class="text-center">
-                                        <a class="small" href="forgot-password.html">Forgot Password?</a>
-                                    </div>
+{#                                    <div class="text-center">#}
+{#                                        <a class="small" href="forgot-password.html">Forgot Password?</a>#}
+{#                                    </div>#}
                                 </div>
                             </div>
                         </div>
@@ -126,3 +127,4 @@
     <script src="{% static 'vendor/datatables/jquery.dataTables.min.js' %}"></script>
     <script src="{% static 'vendor/datatables/dataTables.bootstrap4.min.js' %}"></script>
 </html>
+{% endif %}
