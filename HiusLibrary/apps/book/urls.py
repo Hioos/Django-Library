@@ -17,5 +17,10 @@ urlpatterns = [
     path('lending/action',views.lendingAction,name='lendingAction'),
     path('language/<int:id>',views.languageEdit,name='languageEdit'),
     path('language/<int:id>/update',views.languageUpdate,name='languageUpdate'),
-    path('byLanguage/<int:id>',views.byLanguage,name='byLanguage')
+    path('byLanguage/<int:id>',views.byLanguage,name='byLanguage'),
+    path('detailedBook',views.detailedBook,name='detailedBook'),
+    path('detailedBookAdd',views.detailedBookAdd,name='detailedBookAdd'),
+    path('detailedBookUpdate',views.detailedBookUpdate,name='detailedBookUpdate'),
+    path('detailedBookEdit/<int:id>',views.detailedBookEdit,name='detailedBookEdit'),
+    path('lending/reload',views.reload,name='reload')
     ]

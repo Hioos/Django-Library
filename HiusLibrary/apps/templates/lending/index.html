@@ -10,7 +10,7 @@
                                             <i class="fas fa-plus"></i>
                                         </span>
                                         <span class="text">Loan Book</span>
-                                    </a></h1>
+                                    </a><a class="btn btn-circle" href="{% url 'reload' %}"><i class="fas fa-rotate-left"></i></a></h1>
                     </div>
 
                     <div class="row">
@@ -160,10 +160,11 @@
                                                   <div class="container">
                                                   <div class="row justify-content-center">
                                                       <div class="col-sm-3 justify-content-center" style="align-content: center">
-                                                        <img src="{{ book.loanedBook_book.book_image.url }}" style="width: 66.6px;height:100px;"/>
+                                                        <img src="{{ book.loanedBook_book.detailed_book_id.book_image.url }}" style="width: 66.6px;height:100px;"/>
                                                       </div>
                                                       <div class="col-sm-9">
-                                                          <b>{{ book.loanedBook_book.book_name }}</b>
+                                                          <b>{{ book.loanedBook_book.detailed_book_id.book_name }}</b>
+                                                      <h6><b>HLb00{{ book.loanedBook_book_id }}</b></h6>
                                                           <hr>
                                                                          <div class="row justify-content-center">
                                                                   <div class="col-sm-3">
@@ -273,10 +274,11 @@
                                                   <div class="container">
                                                   <div class="row justify-content-center">
                                                       <div class="col-sm-3 justify-content-center" style="align-content: center">
-                                                        <img src="{{ book.loanedBook_book.book_image.url }}" style="width: 66.6px;height:100px;"/>
+                                                        <img src="{{ book.loanedBook_book.detailed_book_id.book_image.url }}" style="width: 66.6px;height:100px;"/>
                                                       </div>
                                                       <div class="col-sm-9"><input type="text" name="bookInReceipts" value="{{ book.loanedBook_id }}" hidden>
-                                                          <b>{{ book.loanedBook_book.book_name }}{% if book.loanedBook_statusId_id == 5 %} <span class="badge badge-danger">Denied</span>{% endif %}</b>
+                                                          <b>{{ book.loanedBook_book.detailed_book_id.book_name }}{% if book.loanedBook_statusId_id == 5 %} <span class="badge badge-danger">Denied</span>{% endif %}</b>
+                                                          <h6><b>HLb00{{ book.loanedBook_book_id }}</b></h6>
                                                           <hr>
 
                                                                          <div class="row justify-content-center">
@@ -306,12 +308,20 @@
                                                                   </div>
                                                                     </div>
                                                         <hr>
+                                                                                       <div class="row">
+                                                      <div class="col-6">
                                                                                        <label for="dataPicker{{ book.loanedBook_id }}">Status:</label>
-                                                            <select name="selectStatus{{ book.loanedBook_id }}" class="form-control" id="dataPicker{{ book.loanedBook_id }}" {% if book.loanedBook_statusId_id == 7 or book.loanedBook_statusId_id == 3 or book.loanedBook_statusId_id == 5%}  readonly="readonly" tabindex="-1" aria-disabled="true" style="background: #eee;pointer-events: none;touch-action: none;"  {% endif %}>
+                                                            <select name="selectStatus{{ book.loanedBook_id }}" class="form-control" id="dataPicker{{ book.loanedBook_id }}" {% if book.loanedBook_statusId_id == 7 or book.loanedBook_statusId_id == 3 or book.loanedBook_statusId_id == 5%} readonly="readonly" tabindex="-1" aria-disabled="true" style="background: #eee;pointer-events: none;touch-action: none;" {% endif %}>
                                                                 {% for loan in loans %}
                                                                     <option value="{{ loan.loanStatus_id }}" {% if loan.loanStatus_id == book.loanedBook_statusId_id %} selected {% endif %}>{{ loan.loanStatus_name }}</option>
                                                                     {% endfor %}
                                                             </select>
+                                                      </div>
+                                                      <div class="col-6">
+                                                          <label for="name{{ book.loanedBook_id }}">Status:</label>
+                                                          <input type="number" name="condition{{ book.loanedBook_id }}" class="form-control" id="name{{ book.loanedBook_id }}" min="0" max="{{ book.loanedBook_book.detailed_book_percentage }}" value="{{ book.loanedBook_book.detailed_book_percentage }}" readonly>
+                                                      </div>
+                                                      </div>
                                                       <hr>
                                                       </div>
 
@@ -348,7 +358,7 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table  class="table table-bordered" id="dataTable2" width="100%" cellspacing="0">
+                                <table  class="table table-bordered" id="dataTable4" width="100%" cellspacing="0">
                                     <thead>
                                     <tr>
                                             <th style="text-align: center">No.</th>
@@ -356,7 +366,6 @@
                                             <th style="text-align: center">Member</th>
                                             <th style="text-align: center">At</th>
                                             <th style="text-align: center">Info</th>
-                                            <th style="text-align: center">Status</th>
                                     </tr>
                                   </thead>
 <!--                                    <tfoot>-->
@@ -377,7 +386,6 @@
                                         <td style="text-align:center;vertical-align: middle;">{{ receipt.receipt_user.name}}</td>
                                         <td style="text-align:center;vertical-align: middle;">{{ receipt.receipt_timestamp}}</td>
                                         <td style="text-align:center;vertical-align: middle;"><button type="button" class="btn btn-outline-info btn-sm btn-circle" data-toggle="modal" data-target="#reqModal-{{ receipt.receipt_id }}"><i class="fas fa-box-open"></i></button></td>
-                                            <td style="text-align:center;vertical-align: middle;"><a><i class="fas fa-inbox"></i></a></td>
                                         </tr>
                                         <!-- Modal -->
                                         <div class="modal fade bd-example-modal-lg" id="reqModal-{{ receipt.receipt_id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -401,12 +409,12 @@
                                                   <div class="container">
                                                   <div class="row justify-content-center">
                                                       <div class="col-sm-3 justify-content-center" style="align-content: center">
-                                                        <img src="{{ book.loanedBook_book.book_image.url }}" style="width: 66.6px;height:100px;"/>
+                                                        <img src="{{ book.loanedBook_book.detailed_book_id.book_image.url }}" style="width: 66.6px;height:100px;"/>
                                                       </div>
                                                       <div class="col-sm-9"><input type="text" name="bookInReceipts" value="{{ book.loanedBook_id }}" hidden>
-                                                          <b>{{ book.loanedBook_book.book_name }}{% if book.loanedBook_statusId_id == 5 %} <span class="badge badge-danger">Denied</span>{% endif %}</b>
+                                                          <b>{{ book.loanedBook_book.detailed_book_id.book_name }}{% if book.loanedBook_statusId_id == 5 %} <span class="badge badge-danger">Denied</span>{% endif %}</b>
+                                                                                                                    <h6><b>HLb00{{ book.loanedBook_book_id }}</b></h6>
                                                           <hr>
-
                                                                          <div class="row justify-content-center">
                                                                   <div class="col-sm-3">
                                                                       <p class="mb-0"><b><i class="fas fa-calendar-check" style="color: #1cc88a"></i></b></p>
@@ -434,13 +442,31 @@
                                                                   </div>
                                                                     </div>
                                                         <hr>
+                                                      <div class="row justify-content-center">
+                                                                  <div class="col-sm-3">
+                                                                      <p class="mb-0"><b><i class="fas fa-money-bill" style="color: #107c00"></i></b></p>
+                                                                  </div>
+                                                                  <div class="col-sm-9">
+                                                                      <p class="text-muted mb-0"><i>{% if book.loanedBook_fee is not None %}${{ book.loanedBook_fee }}{% else %}$0{% endif %}</i><br></p>
+                                                                  </div>
+                                                                    </div>
+                                                                <hr>
+                                                      <div class="row">
+                                                      <div class="col-6">
                                                                                        <label for="dataPicker{{ book.loanedBook_id }}">Status:</label>
                                                             <select name="selectStatus{{ book.loanedBook_id }}" class="form-control" id="dataPicker{{ book.loanedBook_id }}" {% if book.loanedBook_statusId_id == 7 or book.loanedBook_statusId_id == 3 or book.loanedBook_statusId_id == 5%} readonly="readonly" tabindex="-1" aria-disabled="true" style="background: #eee;pointer-events: none;touch-action: none;" {% endif %}>
                                                                 {% for loan in loans %}
                                                                     <option value="{{ loan.loanStatus_id }}" {% if loan.loanStatus_id == book.loanedBook_statusId_id %} selected {% endif %}>{{ loan.loanStatus_name }}</option>
                                                                     {% endfor %}
                                                             </select>
+                                                      </div>
+                                                      <div class="col-6">
+                                                          <label for="name{{ book.loanedBook_id }}">Status:</label>
+                                                          <input type="number" name="condition{{ book.loanedBook_id }}" class="form-control" id="name{{ book.loanedBook_id }}" min="0" max="{{ book.loanedBook_book.detailed_book_percentage }}" value="{{ book.loanedBook_book.detailed_book_percentage }}">
+                                                      </div>
+                                                      </div>
                                                       <hr>
+
                                                       </div>
 
                                                   </div>
@@ -521,10 +547,11 @@
                                                   <div class="container">
                                                   <div class="row justify-content-center">
                                                       <div class="col-sm-3 justify-content-center" style="align-content: center">
-                                                        <img src="{{ book.loanedBook_book.book_image.url }}" style="width: 66.6px;height:100px;"/>
+                                                        <img src="{{ book.loanedBook_book.detailed_book_id.book_image.url }}" style="width: 66.6px;height:100px;"/>
                                                       </div>
                                                       <div class="col-sm-9"><input type="text" name="bookInReceipts" value="{{ book.loanedBook_id }}" hidden>
-                                                          <b>{{ book.loanedBook_book.book_name }}{% if book.loanedBook_statusId_id == 5 %} <span class="badge badge-danger">Denied</span>{% endif %}</b>
+                                                          <b>{{ book.loanedBook_book.detailed_book_id.book_name }}{% if book.loanedBook_statusId_id == 5 %} <span class="badge badge-danger">Denied</span>{% endif %}</b>
+                                                          <h6><b>HLb00{{ book.loanedBook_book_id }}</b></h6>
                                                           <hr>
 
                                                                          <div class="row justify-content-center">
@@ -554,6 +581,15 @@
                                                                   </div>
                                                                     </div>
                                                         <hr>
+                                                      <div class="row justify-content-center">
+                                                                  <div class="col-sm-3">
+                                                                      <p class="mb-0"><b><i class="fas fa-money-bill" style="color: #107c00"></i></b></p>
+                                                                  </div>
+                                                                  <div class="col-sm-9">
+                                                                      <p class="text-muted mb-0"><i>{% if book.loanedBook_fee is not None %}${{ book.loanedBook_fee }}{% else %}$0{% endif %}</i><br></p>
+                                                                  </div>
+                                                                    </div>
+                                                                <hr>
                                                                                        <label for="dataPicker{{ book.loanedBook_id }}">Status:</label>
                                                             <select name="select" class="form-control" id="dataPicker{{ book.loanedBook_id }}" {% if book.loanedBook_statusId_id == 7 or book.loanedBook_statusId_id == 3 or book.loanedBook_statusId_id == 5%}  readonly="readonly" tabindex="-1" aria-disabled="true" style="background: #eee;pointer-events: none;touch-action: none;"  {% endif %}>
                                                                 {% for loan in loans %}

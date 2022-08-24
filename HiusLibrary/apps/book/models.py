@@ -33,8 +33,8 @@ class Books(models.Model):
     book_language = models.ForeignKey('Language', on_delete=models.CASCADE, related_name='book_language')
     book_publisher = models.ForeignKey('publisher.Publisher', on_delete=models.CASCADE, related_name='book_publisher')
     book_released = models.IntegerField()
-    book_amount = models.IntegerField()
     book_pages = models.IntegerField()
+    book_price = models.FloatField()
 
     class Meta:
         get_latest_by = ['book_id']
@@ -127,13 +127,22 @@ class Receipt(models.Model):
 
 class LoanedBook(models.Model):
     loanedBook_id = models.IntegerField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
-    loanedBook_book = models.ForeignKey('Books', on_delete=models.CASCADE, related_name='loanedBook_bookId')
+    loanedBook_book = models.ForeignKey('DetailedBook', on_delete=models.CASCADE, related_name='loanedBook_bookId')
     loanedBook_receipt = models.ForeignKey('Receipt', on_delete=models.CASCADE, related_name='loanedBook_receipt')
     loanedBook_startDate = models.DateField(blank=True, null=True)
     loanedBook_dueDate = models.DateField(blank=True, null=True)
     loanedBook_returnedDate = models.DateField(blank=True, null=True)
     loanedBook_statusId = models.ForeignKey('loan.loanStatus', on_delete=models.CASCADE,
                                             related_name='loanedBook_loanStatus')
-
+    loanedBook_returnedStatus = models.IntegerField(blank=True,null=True)
+    loanedBook_fee = models.FloatField(blank=True,null=True)
     class Meta:
         get_latest_by = ['loanedBook_id']
+class DetailedBook(models.Model):
+    detailed_id = models.IntegerField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')
+    detailed_book_id = models.ForeignKey('Books', on_delete=models.CASCADE,related_name='id_of_book')
+    detailed_book_percentage = models.IntegerField()
+    detailed_book_note = models.TextField(blank=True,null=True)
+    detailed_returned = models.BooleanField(default=True)
+    def __str__(self):
+        return str(self.detailed_id)

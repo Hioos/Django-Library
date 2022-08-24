@@ -1,8 +1,8 @@
 from django.contrib import admin
 
 # Register your models here.
-from apps.book.models import Books, Language, BookThemes, BookSubGenre, BookAuthorship, LoanedBook, Receipt
-
+from apps.book.models import Books, Language, BookThemes, BookSubGenre, BookAuthorship, LoanedBook, Receipt, \
+    DetailedBook
 
 class BookAdmin(admin.ModelAdmin):
     list_display = ('book_name', 'book_released', 'book_publisher', 'book_language')
@@ -28,6 +28,9 @@ class ReceiptAdmin(admin.ModelAdmin):
     list_display = ('receipt_id', 'receipt_user', 'receipt_timestamp')
 
 
+class DetailedBookAdmin(admin.ModelAdmin):
+    list_display = ('detailed_id', 'detailed_book_id', 'detailed_book_percentage', 'detailed_book_note')
+admin.site.register(DetailedBook, DetailedBookAdmin)
 admin.site.register(Receipt, ReceiptAdmin)
 admin.site.register(BookAuthorship, BookAuthorshipAdmin)
 admin.site.register(BookSubGenre, BookSubGenreAdmin)

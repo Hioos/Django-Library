@@ -158,7 +158,7 @@
                                             <td  style="text-align:center;vertical-align: middle;">{{ book.book_released }}</td>
                                             <td  style="text-align:center;vertical-align: middle;font-family: 'Dancing Script', cursive; ">{% for author in book.book_Authorship_bookId.all %}{{ author.bookauthorship_authorId.author_pseudonym }} {% endfor %}</td>
                                             <td  style="text-align:center;vertical-align: middle;">{{ book.book_pages }}</td>
-                                            <td  style="text-align:center;vertical-align: middle;">{{ book.book_amount }}</td>
+                                            <td  style="text-align:center;vertical-align: middle;">{{ book.amount }}</td>
                                             <td  style="text-align:center;vertical-align: middle;"><button type="button" class="btn btn-outline-primary btn-circle btn-sm" data-toggle="modal" data-target="#reqModal-{{ book.book_id }}"><i class="fas fa-info"></i></button></td>
                                             <td style="text-align:center;vertical-align: middle;"><a class="btn btn-warning btn-circle btn-sm" href="{% url 'editBook' book.book_id %}"><i class="fas fa-edit"></i></a></td>
                                         </tr>
@@ -209,7 +209,7 @@
                                                       <p class="mb-0"><b>In Library</b></p>
                                                   </div>
                                                   <div class="col-sm-9">
-                                                    <p class="text-muted mb-0">{{ book.book_amount }}</p>
+                                                    <p class="text-muted mb-0">{{ book.amount }}</p>
                                                   </div>
                                                     </div>
                                                 <hr>

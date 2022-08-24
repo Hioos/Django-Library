@@ -67,10 +67,12 @@
                                                   <div class="container">
                                                   <div class="row justify-content-center">
                                                       <div class="col-sm-3 justify-content-center" style="align-content: center">
-                                                        <img src="{{ book.loanedBook_book.book_image.url }}" style="width: 66.6px;height:100px;"/>
+                                                        <img src="{{ book.loanedBook_book.detailed_book_id.book_image.url }}" style="width: 66.6px;height:100px;"/>
                                                       </div>
                                                       <div class="col-sm-9">
-                                                          <b>{{ book.loanedBook_book.book_name }}</b>
+                                                          <b>{{ book.loanedBook_book.detailed_book_id.book_name }}</b>
+                                                          <b>{% if book.loanedBook_statusId_id == 5 %} <span class="badge badge-danger">Denied</span>{% endif %}</b>
+                                                                                                                    <h6><b>HLb00{{ book.loanedBook_book_id }}</b></h6>
                                                           <hr>
                                                                          <div class="row justify-content-center">
                                                                   <div class="col-sm-3">
@@ -90,6 +92,7 @@
                                                                   </div>
                                                                     </div>
                                                                 <hr>
+
                                                                         <div class="row justify-content-center">
                                                                   <div class="col-sm-3">
                                                                       <p class="mb-0"><b><i class="fas fa-rotate-left"></i></b></p>
@@ -99,6 +102,15 @@
                                                                   </div>
                                                                     </div>
                                                                                                                                                                        <hr>
+                                                      <div class="row justify-content-center">
+                                                                  <div class="col-sm-3">
+                                                                      <p class="mb-0"><b><i class="fas fa-money-bill" style="color: #107c00"></i></b></p>
+                                                                  </div>
+                                                                  <div class="col-sm-9">
+                                                                      <p class="text-muted mb-0"><i>{% if book.loanedBook_fee is not None %}${{ book.loanedBook_fee }}{% else %}$0{% endif %}</i><br></p>
+                                                                  </div>
+                                                                    </div>
+                                                                <hr>
                                                       </div>
 
                                                   </div>
@@ -156,33 +168,22 @@
                         </div>
 
                         <!-- Earnings (Monthly) Card Example -->
-{#                        <div class="col-xl-3 col-md-6 mb-4">#}
-{#                            <div class="card border-left-info shadow h-100 py-2">#}
-{#                                <div class="card-body">#}
-{#                                    <div class="row no-gutters align-items-center">#}
-{#                                        <div class="col mr-2">#}
-{#                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks#}
-{#                                            </div>#}
-{#                                            <div class="row no-gutters align-items-center">#}
-{#                                                <div class="col-auto">#}
-{#                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>#}
-{#                                                </div>#}
-{#                                                <div class="col">#}
-{#                                                    <div class="progress progress-sm mr-2">#}
-{#                                                        <div class="progress-bar bg-info" role="progressbar"#}
-{#                                                            style="width: 50%" aria-valuenow="50" aria-valuemin="0"#}
-{#                                                            aria-valuemax="100"></div>#}
-{#                                                    </div>#}
-{#                                                </div>#}
-{#                                            </div>#}
-{#                                        </div>#}
-{#                                        <div class="col-auto">#}
-{#                                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>#}
-{#                                        </div>#}
-{#                                    </div>#}
-{#                                </div>#}
-{#                            </div>#}
-{#                        </div>#}
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-info shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
+                                                Penalty Fee</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ feeAll.sum }}</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-wallet fa-2x"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
 
                         <!-- Pending Requests Card Example -->
                         <div class="col-xl-3 col-md-6 mb-4">
@@ -452,7 +453,9 @@ new Chart("myChart2", {
 //EndChart
     //Status Chart
     var xValues = ["Available","Not Available"];
-var yValues = [{{ sum.set }}-{{ count }},{{ count }}];
+    {% for sum in sum %}
+var yValues = [{{ sum.sum2 }},{{ sum.sum1 }}-{{ sum.sum2 }}];
+    {% endfor %}
 var barColors = [
   "#00aba9",
   "#b91d47",

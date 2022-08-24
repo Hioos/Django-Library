@@ -98,6 +98,7 @@
                         <a class="collapse-item{% if request.resolver_match.view_name == 'publisherIndex' %} active{% endif %}" href="{% url 'publisherIndex' %}"><i class="fas fa-building"></i> Publisher</a>
                         <h6 class="collapse-header">Books:</h6>
                         <a class="collapse-item{% if request.resolver_match.view_name == 'booksIndex' %} active{% endif %}" href="{% url 'booksIndex' %}"><i class="fas fa-book"></i> Books</a>
+                        <a class="collapse-item{% if request.resolver_match.view_name == 'detailedBook' %} active{% endif %}" href="{% url 'detailedBook' %}"><i class="fas fa-theater-masks"></i> Book's Condition</a>
                     </div>
                 </div>
             </li>
@@ -432,6 +433,9 @@ $("#dataPicker").selectpicker("refresh");
 });
                 $(document).ready(function () {
     $('#dataTable3').DataTable();
+});
+        $(document).ready(function () {
+    $('#dataTable4').DataTable();
 });
                 $(document).ready(function () {
     $('#dataTable9').DataTable();

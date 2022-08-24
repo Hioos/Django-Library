@@ -12,7 +12,8 @@
           <table class="table">
             <thead>
               <tr>
-                <th scope="col" class="h5">Book</th>
+                <th scope="col">Book</th>
+                  <th scope="col">Code</th>
                 <th scope="col">Start Date</th>
                 <th scope="col">Due Date</th>
                   <th scope="col">Delete</th>
@@ -23,7 +24,7 @@
                               <div>
               <tr>
                 <th scope="row">
-                    <input type="text" name="bookId" value="{{ book.id }}" hidden>
+                    <input type="text" name="bookChoose" value="{{ book.id }}" hidden>
                   <div class="d-flex align-items-center">
                     <div class="flex-column ms-4">
                         <p class="mb-2"><a style="text-decoration: none;color: inherit;" href="{% url 'userBookInfo' book.id %}">{{ book.name }}</a></p>
@@ -33,14 +34,20 @@
                 </th>
                 <td class="align-middle">
                   <div class="d-flex flex-row">
-                    <input id="form1" type="date" name="dateStart{{ book.id }}" value="{{ x|date:'Y-m-d' }}" min="{{ x|date:'Y-m-d' }}"
-                      class="form-control form-control-sm" style="width: 100%;" />
+                    <p class="mb-2"><a style="text-decoration: none;color: inherit;">Hlb00{{ book.bcode }}</a></p>
+                      <input type="hidden" name="bookId" value="{{ book.bcode }}">
                   </div>
                 </td>
                 <td class="align-middle">
                   <div class="d-flex flex-row">
-                    <input id="form2" type="date" name="dateDue{{ book.id }}" min ={{ x|date:'Y-m-d'     }} max="{{ mindate|date:'Y-m-d' }}"
-                      class="form-control form-control-sm" style="width: 100%;" required/>
+                    <input id="form1" type="date" class="form-control form-control-sm" name="dateStart{{ book.bcode }}" value="{{ x|date:'Y-m-d' }}" min="{{ x|date:'Y-m-d' }}" max="{{ mindate|date:'Y-m-d' }}"
+                       style="width: 100%;" required/>
+                  </div>
+                </td>
+                <td class="align-middle">
+                  <div class="d-flex flex-row">
+                    <input id="form2" type="date" class="form-control form-control-sm" name="dateDue{{ book.bcode }}" min ="{{ x|date:'Y-m-d'     }}" max="{{ mindate|date:'Y-m-d' }}"
+                       style="width: 100%;" required/>
                   </div>
                 </td>
                 <td>

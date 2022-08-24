@@ -1,4 +1,5 @@
 {% extends 'userIndex/base.html' %}
+{% load static %}
 {% block content %}
         <section class="breadcrumb-section set-bg" data-setbg="{{ book.book_image.url }}">
         <div class="container">
@@ -42,17 +43,6 @@
                         {% for subgenre in book.book_Subgenre_bookId.all %}
                             <a style="text-decoration: none;color: inherit;" href="{% url 'bookList' subgenre.booksubgenre_subgenreId.subgenre_ofGenre.id %}">{{ subgenre.booksubgenre_subgenreId.subgenre_ofGenre  }} </a> <i class="fa fa-arrow-right"></i> {{ subgenre.booksubgenre_subgenreId.subgenre_name  }}<hr>
                         {% endfor %}
-                        <a id="addCart{{ book.book_id }}" href="javascript:void(0)"  book-data ="{{ book.book_id }}"
-                                {% if left <= 0 %}
-                                        class="btn btn-secondary disabled" style="pointer-events: none"
-                                    {% else %}
-                           {% if mtfk > 0 %}
-                                class="addCart btn btn-success disabled"
-                            {% else %}
-                                class="addCart btn btn-success"
-                               {% endif %}
-                                {% endif %}
-                        {% if name is None %}data-toggle="modal" data-target="#modalLoginForm"{% endif %}>ADD TO CART</a>
                         <ul>
                             <li><b>Language</b> <span><img src="{{ book.book_language.language_image.url }}" style="width: 30px;height: 20px"></span></li>
                             <li><b>In Library</b><span>{{ left }}</span></li>
@@ -60,6 +50,55 @@
                             <li><b>Publisher</b> <span>{{ book.book_publisher }}</span></li>
                             <li><b>Released</b> <span>{{ book.book_released }}</span></li>
                         </ul>
+                                       <div class="row justify-content-center">
+                        {% for detail in details %}
+                            <div class="col-6 justify-content-center chooseBook"  data-toggle="tooltip" data-placement="bottom" title="{{ detail.detailed_book_note }}">
+                            {% if mtfk == 0 %}
+
+                            <a {% if detail.detailed_returned %}id="addCart{{ detail.detailed_book_id }}" href="javascript:void(0)"  book-data ="{{ detail.detailed_id }}" class="addCart"{% endif %} style="text-decoration: none;color: #1c1c1c;"{% if name is None %}data-toggle="modal" data-target="#modalLoginForm"{% endif %}>
+                                <div class="card m-3 border border-{% if detail.detailed_book_percentage >= 66 %}success{% elif detail.detailed_book_percentage >= 33 %}warning{% else %}danger{% endif %}" style="width: 18rem;">
+                                  {% if detail.detailed_returned is False %}
+                                <img src="https://thumbs.dreamstime.com/b/unavailable-stamp-rounded-grunge-textured-sign-label-white-background-197716035.jpg" id="overlay" style="  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;position:absolute;opacity: 0.5;z-index: 999;"/>
+                            {% endif %}
+                                    <div class="card-body">
+                                    <h6 class="card-title border-bottom pb-1">HLb00{{ detail.detailed_id }} </h6>
+                                    <h7 class="card-text">
+                                      <div class="d-flex">
+                                        <div class="w-50">{{ detail.detailed_book_percentage }}%</div>
+                                        <div class="progress my-1 w-50">
+                                          <div class="progress-bar bg-{% if detail.detailed_book_percentage >= 66 %}success{% elif detail.detailed_book_percentage >= 33 %}warning{% else %}danger{% endif %}" role="progressbar" style="width: {{ detail.detailed_book_percentage }}%" aria-valuenow="{{ detail.detailed_book_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                      </div>
+                                    </h7>
+                                  </div>
+                                </div>
+                            </a>
+                            {% else %}
+
+                                <div class="card m-3 border border-{% if detail.detailed_book_percentage >= 66 %}success{% elif detail.detailed_book_percentage >= 33 %}warning{% else %}danger{% endif %}" style="width: 18rem;">
+                                  <img src="{% static 'img1/800px_COLOURBOX9968394.jpg' %}" id="overlay" style="  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;position:absolute;opacity: 0.5;z-index: 999;"/>
+                                    <div class="card-body">
+                                    <h6 class="card-title border-bottom pb-1">HLb00{{ detail.detailed_id }} </h6>
+                                    <h7 class="card-text">
+                                      <div class="d-flex">
+                                        <div class="w-50">{{ detail.detailed_book_percentage }}%</div>
+                                        <div class="progress my-1 w-50">
+                                          <div class="progress-bar bg-{% if detail.detailed_book_percentage >= 66 %}success{% elif detail.detailed_book_percentage >= 33 %}warning{% else %}danger{% endif %}" role="progressbar" style="width: {{ detail.detailed_book_percentage }}%" aria-valuenow="{{ detail.detailed_book_percentage }}" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                      </div>
+                                    </h7>
+                                  </div>
+                                </div>
+                            {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
                     </div>
                 </div>
                 <div class="col-lg-12">

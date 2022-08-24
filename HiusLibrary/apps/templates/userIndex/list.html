@@ -43,25 +43,9 @@
                         <div class="col-lg-4 col-md-6 col-sm-6">
                             <div class="product__item">
                                 <div class="product__item__pic set-bg" data-setbg="{{ book.book_image.url }}">
-                                    <ul class="product__item__pic__hover">
-                                        <li><a  href="javascript:void(0)" id="addCart{{ book.book_id }}" book-data ="{{ book.book_id }}"
-                                        {% if cart|length > 0 %}
-                                            {% for cartitem in cart %}
-                                                {% if book.book_id == cartitem.id %}
-                                                    class="addCart" style="display: none;"
-                                                {% elif name is None %}
-                                                class="addCart" style="display: none;"
-                                                {% else %}
-                                                    class="addCart"
-                                                {% endif %}
-                                            {% endfor %}
-                                        {% else %}
-                                                    class="addCart"
-                                        {% endif %}{% if name is None %}data-toggle="modal" data-target="#modalLoginForm"{% endif %}><i class="fa fa-shopping-cart"></i></a></li>
-                                    </ul>
                                 </div>
                                 <div class="product__item__text">
-                                    <h6 ><a href="{% url 'userBookInfo' book.book_id %}">{{ book.book_name}}</a></h6>
+                                    <h6><a href="{% url 'userBookInfo' book.book_id %}">{{ book.book_name}}</a></h6>{% if book.returned == 0 %}<h6><span class="badge badge-warning">Not In Library</span></h6>{% endif %}
                                 </div>
                             </div>
                         </div>

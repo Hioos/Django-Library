@@ -7,11 +7,12 @@ from django.contrib.admin.models import LogEntry, ADDITION, CHANGE
 from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
 from django.core.mail import send_mail
-from django.db.models import Q
+from django.db.models import Q, Count
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template import loader
 from django.urls import reverse
-from .models import Books, Language, BookAuthorship, BookSubGenre, BookThemes, Receipt, LoanedBook
+from .models import Books, Language, BookAuthorship, BookSubGenre, BookThemes, Receipt, LoanedBook, \
+    DetailedBook
 # Create your views here.
 from ..accounts.models import Account
 from ..authors.models import Authors
@@ -32,8 +33,8 @@ def LogEntryAdd(idUser, modelName, objectId, reason, after):
 
 @login_required
 def index(request):
-    books = Books.objects.all().prefetch_related('book_Authorship_bookId', 'book_Subgenre_bookId', 'book_Themes_bookId').order_by('-book_id')
-
+    # books = Books.objects.all().prefetch_related('book_Authorship_bookId', 'book_Subgenre_bookId', 'book_Themes_bookId','id_of_book').annotate(total=Count('book_id')).order_by('-book_id')
+    books = Books.objects.raw('SELECT *,COUNT(detailed_book_id_id) as amount FROM book_books LEFT JOIN book_detailedbook ON book_id = detailed_book_id_id GROUP BY detailed_book_id_id ORDER BY book_id DESC')
     template = loader.get_template('books/index.html')
 
     def bookCounter():
@@ -114,11 +115,18 @@ def addBook(request):
         book_language=Language.objects.get(language_id=language),
         book_publisher=Publisher.objects.get(publisher_id=publisher),
         book_released=book_released,
-        book_amount=book_amount,
         book_pages=book_pages
     )
     book.save()
     LastInsertId = Books.objects.latest()
+    for amount in book_amount:
+        detailedBook = DetailedBook(
+            detailed_book_percentage = 100,
+            detailed_book_id = Books.objects.get(book_id=LastInsertId.book_id),
+            detailed_book_note = 'Good Condition',
+            detailed_returned = True
+        )
+        detailedBook.save()
     for authorId in author:
         bookAuthor = BookAuthorship(
             bookauthorship_bookId=Books.objects.get(book_id=LastInsertId.book_id),
@@ -173,7 +181,6 @@ def update(request, id):
     author = request.POST.getlist('authorSelectEdit')
     subgenre = request.POST.getlist('subgenreSelectEdit')
     theme = request.POST.getlist('themeSelectEdit')
-    book_amount = request.POST['book_amount']
     book_pages = request.POST['book_page']
     book = Books.objects.get(book_id=id)
     if image is None:
@@ -182,7 +189,6 @@ def update(request, id):
         book.book_language = Language.objects.get(language_id=language)
         book.book_publisher = Publisher.objects.get(publisher_id=publisher)
         book.book_released = book_released
-        book.book_amount = book_amount
         book.book_pages = book_pages
     else:
         book.book_name = book_name
@@ -191,7 +197,6 @@ def update(request, id):
         book.book_language = Language.objects.get(language_id=language)
         book.book_publisher = Publisher.objects.get(publisher_id=publisher)
         book.book_released = book_released
-        book.book_amount = book_amount
         book.book_pages = book_pages
     book.save()
     BookAuthorship.objects.filter(bookauthorship_bookId=id).delete()
@@ -245,7 +250,7 @@ def lendingPage(request):
 
 @login_required
 def lendingAdd(request):
-    books = Books.objects.all().prefetch_related('book_Authorship_bookId', 'book_Subgenre_bookId', 'book_Themes_bookId')
+    books = DetailedBook.objects.raw('SELECT * FROM book_detailedbook INNER JOIN book_books ON book_id = detailed_book_id_id  ORDER BY book_id DESC')
     users = Account.objects.exclude(is_banned=True)
     context = {
         'books': books,
@@ -261,81 +266,103 @@ def lendingAddProcess(request):
     user = request.POST['user']
     error = 0
     failed = []
-    for book in books:
-        usedBook = LoanedBook.objects.filter(
-            Q(loanedBook_book_id=book) & (Q(loanedBook_statusId_id=6) | Q(loanedBook_statusId_id=3) | Q(loanedBook_statusId_id=8))).count()
-        bookAmount = Books.objects.get(book_id=book)
-        if bookAmount.book_amount - usedBook <= 0:
-            error = error + 1
-            failed.append(bookAmount.book_name)
-    if error == 0:
-        book_receipt = Receipt(
-            receipt_user_id=user
-        )
-        book_receipt.save()
-        LastInsertId = Receipt.objects.latest()
+    active = 0
+    account = Account.objects.get(id=user)
+    if account.is_available is False:
+        active = 1
+    if active == 0:
         for book in books:
-            inStart = request.POST['start' + book]
-            inDue = request.POST['due' + book]
-            loaned_book = LoanedBook(
-                loanedBook_startDate=inStart,
-                loanedBook_dueDate=inDue,
-                loanedBook_book_id=book,
-                loanedBook_receipt_id=LastInsertId.receipt_id,
-                loanedBook_statusId=loanStatus.objects.get(loanStatus_id=6)
+            strid = str(book)
+            book_amount = DetailedBook.objects.raw('SELECT *,COUNT(detailed_id) as amount FROM book_detailedbook INNER JOIN book_books ON detailed_book_id_id = book_id WHERE detailed_id = %s',[strid])
+            usedBook = LoanedBook.objects.filter(
+                Q(loanedBook_book_id=book) & (Q(loanedBook_statusId_id=6) | Q(loanedBook_statusId_id=3) | Q(loanedBook_statusId_id=8))).count()
+            book_amount[0].amount
+            for x in book_amount:
+                if x.amount - usedBook <= 0:
+                    error = error + 1
+                    failed.append(x.book_name)
+        if error == 0:
+            for book in books:
+                strid = str(book)
+                book_amount = DetailedBook.objects.raw(
+                    'SELECT *,COUNT(detailed_id) as amount FROM book_detailedbook INNER JOIN book_books ON detailed_book_id_id = book_id WHERE detailed_id = %s',
+                    [strid])
+                for x in book_amount:
+                    x.detailed_returned = False
+                    x.save()
+            book_receipt = Receipt(
+                receipt_user_id=user
             )
-            loaned_book.save()
-        return HttpResponseRedirect(reverse('lendingPage'))
+            book_receipt.save()
+            LastInsertId = Receipt.objects.latest()
+            for book in books:
+                inStart = request.POST['start' + book]
+                inDue = request.POST['due' + book]
+                loaned_book = LoanedBook(
+                    loanedBook_startDate=inStart,
+                    loanedBook_dueDate=inDue,
+                    loanedBook_book_id=book,
+                    loanedBook_receipt_id=LastInsertId.receipt_id,
+                    loanedBook_statusId=loanStatus.objects.get(loanStatus_id=6)
+                )
+                loaned_book.save()
+            account.is_available = False
+            account.save()
+            return HttpResponseRedirect(reverse('lendingPage'))
+        else:
+            for fail in failed:
+                messages.success(request, (fail + ' Is not enough in Library !!!'))
+            return HttpResponseRedirect(reverse('lendingAdd'))
     else:
-        for fail in failed:
-            messages.success(request, (fail + ' Is not enough in Library !!!'))
+        messages.success(request, (account.name + ' Is already borrowing books !!!'))
         return HttpResponseRedirect(reverse('lendingAdd'))
 @login_required
 def acceptAll(request,id):
-    strid = str(id)
-    admin = Account.objects.get(id = request.session['id'])
     loanedBook = LoanedBook.objects.filter(loanedBook_receipt_id=id).only('loanedBook_statusId_id')
-    user = LoanedBook.objects.raw("SELECT * FROM book_loanedbook INNER JOIN book_receipt ON loanedBook_receipt_id = book_receipt.receipt_id INNER JOIN accounts_account ON receipt_user_id = accounts_account.id WHERE loanedBook_receipt_id = " +strid+" LIMIT 1")
-    books = LoanedBook.objects.raw("SELECT * FROM book_loanedbook INNER JOIN book_receipt ON loanedBook_receipt_id = book_receipt.receipt_id INNER JOIN accounts_account ON receipt_user_id = accounts_account.id WHERE loanedBook_receipt_id = " +strid)
-    error = 0
-    failed = []
-    for book in books:
-        id = book.loanedBook_book_id
-        usedBook = LoanedBook.objects.filter(
-            Q(loanedBook_book_id=id) & (Q(loanedBook_statusId_id=6) | Q(loanedBook_statusId_id=8))).count()
-        bookAmount = Books.objects.get(book_id=id)
-        if bookAmount.book_amount - usedBook <= 0:
-            error = error + 1
-            failed.append(bookAmount.book_name)
-    if error == 0:
-        for book in loanedBook:
-            book.loanedBook_statusId_id = 8
-            book.save()
-        for x in user:
-            subject = 'Thank you for using HiusLibrary'
-            message = f'Dear {x.name}, \n' \
-                      f'Thank you for using HiusLibrary. \n' \
-                      f'Our books are waiting for you to bring them home \n' \
-                      f'Please bring your ID card to our librarians at ... \n' \
-                      f'\t\t\t Sincerely, \n' \
-                      f'\t\t\t {admin.name}'
-            email_from = settings.EMAIL_HOST_USER
-            recipient_list = [x.email, ]
-            send_mail(subject, message, email_from, recipient_list)
-        messages.success(request, ('Done!!!'))
-        return HttpResponseRedirect(reverse('lendingPage'))
-    else:
-        for fail in failed:
-            messages.success(request, (fail + 'Is not enough in Library !!!'))
-        return HttpResponseRedirect(reverse('lendingPage'))
+    admin = Account.objects.get(id=request.session['id'])
+    for book in loanedBook:
+        bookId = book.loanedBook_book_id
+        receiptId = book.loanedBook_receipt_id
+        getUser = Receipt.objects.get(receipt_id = receiptId)
+        user = getUser.receipt_user_id
+        account = Account.objects.get(id = user)
+        account.is_available = False
+        subject = 'Thank you for using HiusLibrary'
+        message = f'Dear {account.name}, \n' \
+                  f'Thank you for using HiusLibrary. \n' \
+                  f'Our books are waiting for you to bring them home \n' \
+                  f'Please bring your ID card to our librarians at ... \n' \
+                  f'\t\t\t Sincerely, \n' \
+                  f'\t\t\t {admin.name}'
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = [account.email, ]
+        send_mail(subject, message, email_from, recipient_list)
+        detailedBook = DetailedBook.objects.get(detailed_id = bookId)
+        detailedBook.detailed_returned = False
+        book.loanedBook_statusId_id = 8
+        book.save()
+        detailedBook.save()
+        account.save()
+    messages.success(request, ('Done!!!'))
+    return HttpResponseRedirect(reverse('lendingPage'))
 @login_required
 def denyAll(request,id):
     loanedBook = LoanedBook.objects.filter(loanedBook_receipt_id=id).only('loanedBook_statusId_id')
     for book in loanedBook:
+        bookId = book.loanedBook_book_id
+        receiptId = book.loanedBook_receipt_id
+        getUser = Receipt.objects.get(receipt_id = receiptId)
+        user = getUser.receipt_user_id
+        account = Account.objects.get(id = user)
+        account.is_available = True
+        detailedBook = DetailedBook.objects.get(detailed_id = bookId)
+        detailedBook.detailed_returned = True
         book.loanedBook_statusId_id = 5
         book.loanedBook_dueDate = None
         book.loanedBook_startDate = None
         book.save()
+        detailedBook.save()
+        account.save()
     return HttpResponseRedirect(reverse('lendingPage'))
 @login_required
 def lendingAction(request):
@@ -343,14 +370,28 @@ def lendingAction(request):
     for book in books:
         bookReceipt = LoanedBook.objects.get(loanedBook_id = book)
         selected = request.POST['selectStatus' + book]
+        percent = request.POST['condition'+book]
         bookReceipt.loanedBook_statusId_id = selected
         today = datetime.datetime.today()
-        bookReceipt.loanedBook_returnedDate = today
+        bookNumber = bookReceipt.loanedBook_book_id
+        detailedBook = DetailedBook.objects.get(detailed_id = bookNumber)
+        receipt = bookReceipt.loanedBook_receipt_id
+        receiptGet = Receipt.objects.get(receipt_id = receipt)
+        userGet = receiptGet.receipt_user_id
+        user = Account.objects.get(id = userGet)
+        if selected == '7':
+            bookReceipt.loanedBook_returnedDate = today
+            bookReceipt.loanedBook_returnedStatus = percent
+            user.is_available = True
+            detailedBook.detailed_returned = True
+            detailedBook.detailed_book_percentage = percent
         if selected == '3':
             x = Books.objects.get(book_id = bookReceipt.loanedBook_book_id)
             a = x.book_amount-1
             x.book_amount = a
             x.save()
+        user.save()
+        detailedBook.save()
         bookReceipt.save()
     messages.success(request, ('DONE!!!'))
     return HttpResponseRedirect(reverse('lendingPage'))
@@ -387,3 +428,60 @@ def byLanguage(request,id):
         'books' : books
     }
     return HttpResponse(template.render(context,request))
+@login_required
+def detailedBook(request):
+    detailedBooks = DetailedBook.objects.all()
+    template = loader.get_template('detailed/index.html')
+    context = {
+        'detailedBooks': detailedBooks
+    }
+    return HttpResponse(template.render(context,request))
+@login_required
+def detailedBookAdd(request):
+    books = Books.objects.all()
+    template = loader.get_template('detailed/detailedBookAdd.html')
+    context = {
+        'books': books
+    }
+    return HttpResponse(template.render(context,request))
+@login_required
+def detailedBookUpdate(request):
+    book = request.POST['book']
+    percent = request.POST['percent']
+    note = request.POST['note']
+    amount = request.POST['amount']
+    for a in amount:
+        detailedBook = DetailedBook(
+            detailed_book_percentage = percent,
+            detailed_book_id = Books.objects.get(book_id = book),
+            detailed_book_note = note
+        )
+        detailedBook.save()
+    messages.success(request, ('Done!!!'))
+    return HttpResponseRedirect(reverse('detailedBook'))
+@login_required
+def detailedBookEdit(request,id):
+    percent = request.POST['percent']
+    note = request.POST['note']
+    detailed = DetailedBook.objects.get(detailed_id = id)
+    detailed.detailed_book_percentage = percent
+    detailed.detailed_book_note = note
+    detailed.save()
+    messages.success(request, ('Done!!!'))
+    return HttpResponseRedirect(reverse('detailedBook'))
+@login_required
+def reload(request):
+    sql = LoanedBook.objects.raw('SELECT * FROM book_loanedbook WHERE loanedBook_dueDate < DATE() AND loanedBook_statusId_id = 6')
+    for x in sql:
+        x.loanedBook_statusId_id = 2
+        delta = datetime.date.today() - x.loanedBook_dueDate
+        fee = 0.99 * delta.days
+        x.loanedBook_fee = fee
+        x.save()
+    sql2 = LoanedBook.objects.raw('SELECT * FROM book_loanedbook WHERE loanedBook_statusId_id = 2')
+    for y in sql2:
+        delta = datetime.date.today() - y.loanedBook_dueDate
+        fee = 0.99 * delta.days
+        y.loanedBook_fee = fee
+        y.save()
+    return HttpResponseRedirect(reverse('lendingPage'))

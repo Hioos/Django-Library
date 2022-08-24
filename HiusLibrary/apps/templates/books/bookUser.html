@@ -129,17 +129,26 @@
                                                   <div class="col-sm-6">
                                                   <div class="row justify-content-center">
                                                       <div class="col-sm-3 justify-content-center" style="align-content: center">
-                                                        <img src="{{ book.loanedBook_book.book_image.url }}" style="width: 66.6px;height:100px;"/>
+                                                        <img src="{{ book.loanedBook_book.detailed_book_id.book_image.url }}" style="width: 66.6px;height:100px;"/>
                                                       </div>
                                                       <div class="col-sm-9 justify-content-center" style="align-content: center">
                                                           <div class="row justify-content-center">
                                                               <div class="col-sm-3">
-                                                                  Name:
+                                                                  Name
                                                               </div>
                                                               <div class=" col-sm-9">
-                                                                  <i>{{ book.loanedBook_book.book_name }}</i>
+                                                                  <i><b>{{ book.loanedBook_book.detailed_book_id.book_name }}</b></i>
                                                               </div>
                                                           </div>
+                                                          <hr>
+                                                          <div class="row justify-content-center">
+                                                              <div class="col-sm-3">
+                                                                  Code:
+                                                              </div>
+                                                              <div class=" col-sm-9">
+                                                                  <i>HLb00{{ book.loanedBook_book }}</i>
+                                                              </div>
+                                                            </div>
                                                           <hr>
                                                           <div class="row justify-content-center">
                                                               <div class="col-sm-3">

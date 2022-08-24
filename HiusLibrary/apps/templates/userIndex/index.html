@@ -25,26 +25,10 @@
                             <div class="col-lg-3 col-md-4 col-sm-6 mix{% for subgenre in book.book_Subgenre_bookId.all %} {{ subgenre.booksubgenre_subgenreId.subgenre_ofGenre|cut:" "  }}{% endfor %}">
                     <div class="featured__item">
                         <div class="featured__item__pic set-bg" data-setbg="{{ book.book_image.url }}">
-                            <ul class="featured__item__pic__hover">
-                                <li><a  href="javascript:void(0)" id="addCart{{ book.book_id }}" book-data ="{{ book.book_id }}"
-                                        {% if cart|length > 0 %}
-                                            {% for cartitem in cart %}
-                                                {% if book.book_id == cartitem.id or book.book_amount == book.asd %}
-                                                    class="addCart" style="display: none;"
-                                                {% else %}
-                                                    class="addCart"
-                                                {% endif %}
-                                            {% endfor %}
-                                        {% elif book.book_amount == book.asd %}
-                                            class="addCart" style="display: none;"
-                                        {% else %}
-                                                    class="addCart"
-                                        {% endif %}{% if name is None %} data-toggle="modal" data-target="#modalLoginForm"{% endif %}><i class="fa fa-shopping-cart"></i></a></li>
-                            </ul>
                         </div>
                         <div class="featured__item__text">
                             <h6><a href="{% url 'userBookInfo' book.book_id %}">{{ book.book_name }}</a></h6>
-                            {% if book.book_amount == book.asd %}<h5><span class="badge badge-pill badge-warning">Not In Library</span></h5>{% endif %}
+                            {% if book.returned == 0 %}<h5><span class="badge badge-pill badge-warning">Not In Library</span></h5>{% endif %}
                         </div>
                     </div>
                 </div>

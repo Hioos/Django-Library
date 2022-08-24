@@ -12,7 +12,7 @@ from django.template import loader
 
 from apps.accounts.models import Account, Pricing, PaymentHistory
 from apps.authors.models import Authors
-from apps.book.models import Books, LoanedBook, Receipt
+from apps.book.models import Books, LoanedBook, Receipt, DetailedBook
 from apps.genre.models import Genre, Themes, SubGenre
 from apps.loan.models import loanStatus
 
@@ -20,7 +20,7 @@ from apps.loan.models import loanStatus
 def index(request):
     cart = []
     books = Books.objects.raw(
-        'SELECT * FROM book_books LEFT JOIN (SELECT loanedBook_book_id,count(*) as asd FROM book_loanedbook WHERE loanedBook_statusId_id = 2 OR loanedBook_statusId_id = 6 GROUP BY loanedBook_book_id) ON loanedBook_book_id = book_id ORDER BY book_id DESC')
+        'SELECT *,COUNT(detailed_book_id_id) as asd,COUNT(case when detailed_returned = 1 then 1 else null end ) as returned FROM book_detailedbook INNER JOIN book_books ON detailed_book_id_id=book_id GROUP BY detailed_book_id_id ORDER BY book_id DESC')
     lists = Genre.objects.all()
     authors = Authors.objects.all()
     newbooks = Books.objects.all().order_by('-book_id')[:6]
@@ -56,11 +56,11 @@ def bookInfo(request, id):
         book_id=id)
     allbooks = Books.objects.prefetch_related('book_Authorship_bookId', 'book_Subgenre_bookId',
                                               'book_Themes_bookId').exclude(book_id=id).order_by('-book_id')[:4]
+    details = DetailedBook.objects.filter(detailed_book_id = id)
     lists = Genre.objects.all()
     themes = Themes.objects.all()
     usedBook = LoanedBook.objects.filter(
         Q(loanedBook_book_id=id) & (Q(loanedBook_statusId_id=6))).count()
-    left = book.book_amount - usedBook
     template = loader.get_template('userIndex/book_info.html')
     count = 0
     if "cart" in request.session:
@@ -78,8 +78,8 @@ def bookInfo(request, id):
         'lists': lists,
         'themes': themes,
         'allbooks': allbooks,
-        'left': left,
         'cart': cart,
+        'details': details,
         'count': count,
         'mtfk': mtfk
     }
@@ -94,7 +94,7 @@ def bookList(request, id):
     themes = Themes.objects.all()
     strid = str(id)
     book = Books.objects.raw(
-        'SELECT * FROM book_books INNER JOIN book_booksubgenre ON book_id = book_booksubgenre.booksubgenre_bookId_id INNER JOIN genre_subgenre ON book_booksubgenre.booksubgenre_subgenreId_id = genre_subgenre.id INNER JOIN genre_genre ON subgenre_ofGenre_id = genre_genre.id WHERE genre_genre.id = %s GROUP BY book_name ORDER BY book_id DESC',
+        'SELECT *,COUNT(detailed_book_id_id) as asd,COUNT(case when detailed_returned = 1 then 1 else null end ) as returned FROM book_detailedbook INNER JOIN book_books ON detailed_book_id_id=book_id INNER JOIN book_booksubgenre ON book_id = book_booksubgenre.booksubgenre_bookId_id INNER JOIN genre_subgenre ON book_booksubgenre.booksubgenre_subgenreId_id = genre_subgenre.id INNER JOIN genre_genre ON subgenre_ofGenre_id = genre_genre.id WHERE genre_genre.id = %s GROUP BY book_name ORDER BY book_id DESC',
         [strid])
     x = len(list(book))
     template = loader.get_template('userIndex/list.html')
@@ -130,7 +130,7 @@ def themeInfo(request, id):
     strid = str(id)
     cart = []
     bookTheme = Books.objects.raw(
-        'SELECT * FROM book_books INNER JOIN book_bookthemes ON book_books.book_id = book_bookthemes.bookthemes_bookId_id WHERE bookthemes_themeId_id = %s',
+        'SELECT *,COUNT(detailed_book_id_id) as asd,COUNT(case when detailed_returned = 1 then 1 else null end ) as returned FROM book_detailedbook INNER JOIN book_books ON detailed_book_id_id=book_id INNER JOIN book_bookthemes ON book_id = book_bookthemes.bookthemes_bookId_id INNER JOIN genre_themes ON bookthemes_themeId_id = genre_themes.theme_id WHERE genre_themes.theme_id = %s GROUP BY book_name ORDER BY book_id DESC ',
         [strid])
     x = len(list(bookTheme))
     themedesc = Themes.objects.get(theme_id=id)
@@ -165,7 +165,8 @@ def themeInfo(request, id):
 
 def addtoCart(request):
     data = request.GET['catid']
-    book = Books.objects.prefetch_related('book_Authorship_bookId').get(book_id=data)
+    bookDetail = DetailedBook.objects.get(detailed_id = data)
+    book = Books.objects.prefetch_related('book_Authorship_bookId').get(book_id=bookDetail.detailed_book_id_id)
     cart = []
     if "cart" in request.session:
         cart = request.session['cart']
@@ -178,6 +179,7 @@ def addtoCart(request):
         cart.append({
             'id': book.book_id,
             'name': book.book_name,
+            'bcode': bookDetail.detailed_id
         })
     request.session['cart'] = cart
     return redirect('cart')
@@ -217,7 +219,7 @@ def cart(request):
         }
         return HttpResponse(template.render(context, request))
     else:
-        messages.success(request, "Done")
+        messages.success(request, "Please extends your membership first")
         return redirect('extend')
 
 
@@ -235,41 +237,57 @@ def deleteCart(request, id):
 
 
 def requestBook(request):
-    booksId = request.POST.getlist('bookId')
+    books = request.POST.getlist('bookId')
     error = 0
     failed = []
-    for book in booksId:
-        usedBook = LoanedBook.objects.filter(
-            Q(loanedBook_book_id=book) & (Q(loanedBook_statusId_id=6))).count()
-        bookAmount = Books.objects.get(book_id=book)
-        if bookAmount.book_amount - usedBook <= 0:
-            error = error + 1
-            failed.append(bookAmount.book_name)
-    if error == 0:
-        book_receipt = Receipt(
-            receipt_user_id=request.session['id']
-        )
-        book_receipt.save()
-        LastInsertId = Receipt.objects.latest()
-        for book in booksId:
-            inStart = request.POST['dateStart' + book]
-            inDue = request.POST['dateDue' + book]
-            loaned_book = LoanedBook(
-                loanedBook_startDate=inStart,
-                loanedBook_dueDate=inDue,
-                loanedBook_book_id=book,
-                loanedBook_receipt_id=LastInsertId.receipt_id,
-                loanedBook_statusId=loanStatus.objects.get(loanStatus_id=4)
+    account = Account.objects.get(id=request.session['id'])
+    if account.is_available is True:
+        for book in books:
+            strid = str(book)
+            book_amount = DetailedBook.objects.raw('SELECT *,COUNT(detailed_id) as amount FROM book_detailedbook INNER JOIN book_books ON detailed_book_id_id = book_id WHERE detailed_id = %s',[strid])
+            usedBook = LoanedBook.objects.filter(
+                Q(loanedBook_book_id=book) & (Q(loanedBook_statusId_id=6) | Q(loanedBook_statusId_id=3) | Q(
+                    loanedBook_statusId_id=8))).count()
+            book_amount[0].amount
+            for x in book_amount:
+                if x.amount - usedBook <= 0:
+                    error = error + 1
+                    failed.append(x.book_name)
+        if error == 0:
+            for book in books:
+                strid = str(book)
+                book_amount = DetailedBook.objects.raw(
+                    'SELECT *,COUNT(detailed_id) as amount FROM book_detailedbook INNER JOIN book_books ON detailed_book_id_id = book_id WHERE detailed_id = %s',
+                    [strid])
+                for x in book_amount:
+                    x.detailed_returned = False
+                    x.save()
+            book_receipt = Receipt(
+                receipt_user_id=request.session['id']
             )
-            loaned_book.save()
-        del request.session['cart']
-        messages.success(request, 'Requested !!! Please wait until Librarians Accept your Request !')
-        return redirect('indexOfUser')
+            book_receipt.save()
+            LastInsertId = Receipt.objects.latest()
+            for book in books:
+                inStart = request.POST['dateStart' + book]
+                inDue = request.POST['dateDue' + book]
+                loaned_book = LoanedBook(
+                    loanedBook_startDate=inStart,
+                    loanedBook_dueDate=inDue,
+                    loanedBook_book_id=book,
+                    loanedBook_receipt_id=LastInsertId.receipt_id,
+                    loanedBook_statusId=loanStatus.objects.get(loanStatus_id=4  )
+                )
+                loaned_book.save()
+            del request.session['cart']
+            messages.success(request, ('Done !!! Please wait for out librarians to confirm your request !'))
+            return redirect('indexOfUser')
+        else:
+            for fail in failed:
+                messages.success(request, (fail + ' Is not enough in Library !!!'))
+            return redirect('cart')
     else:
-        for fail in failed:
-            messages.success(request, fail + " Not Enough in Library")
+        messages.success(request, ('You are borrowing books !!!'))
         return redirect('cart')
-
 
 def allBook(request):
     cart = []
@@ -278,7 +296,7 @@ def allBook(request):
     lists = Genre.objects.all()
     authors = Authors.objects.all()
     newbook = Books.objects.raw(
-        'SELECT * FROM book_books LEFT JOIN (SELECT loanedBook_book_id,count(*) as asd FROM book_loanedbook WHERE loanedBook_statusId_id = 2 OR loanedBook_statusId_id = 6 GROUP BY loanedBook_book_id) ON loanedBook_book_id = book_id ORDER BY book_id DESC')
+        'SELECT *,COUNT(detailed_book_id_id) as asd,COUNT(case when detailed_returned = 1 then 1 else null end ) as returned FROM book_detailedbook INNER JOIN book_books ON detailed_book_id_id=book_id GROUP BY detailed_book_id_id ORDER BY book_id DESC')
     themes = Themes.objects.all()
     template = loader.get_template('userIndex/all_book.html')
     sub_Genre = SubGenre.objects.all()
@@ -340,10 +358,12 @@ def history(request):
     if "name" in request.session:
         cart = []
         id = request.session['id']
+        strid = str(id)
         lists = Genre.objects.all()
         themes = Themes.objects.all()
         count = 0
         loans = loanStatus.objects.all()
+        inuse = LoanedBook.objects.raw('SELECT * FROM book_loanedbook INNER JOIN book_detailedbook ON loanedBook_book_id = detailed_id INNER JOIN book_books ON book_detailedbook.detailed_book_id_id = book_books.book_id INNER JOIN book_receipt ON loanedBook_receipt_id = book_receipt.receipt_id INNER JOIN accounts_account ON receipt_user_id = accounts_account.id WHERE receipt_user_id= %s AND loanedBook_statusId_id = 6',[strid])
         payments = PaymentHistory.objects.prefetch_related().filter(user_id=id).order_by('-history_Id')
         receipts = Receipt.objects.prefetch_related().filter(receipt_user=id).order_by('-receipt_id')
         if "cart" in request.session:
@@ -351,6 +371,7 @@ def history(request):
             for cartProduct in cart:
                 count = count + 1
         context = {
+            'inuse': inuse,
             'cart': cart,
             'lists': lists,
             'loans': loans,
@@ -369,6 +390,10 @@ def extend(request):
     lists = Genre.objects.all()
     themes = Themes.objects.all()
     count = 0
+    if "cart" in request.session:
+        cart = request.session['cart']
+        for cartProduct in cart:
+            count = count + 1
     pricings = Pricing.objects.filter(pricing_price__gte=0.4).order_by('pricing_price')
     template = loader.get_template('userIndex/extend.html')
     context = {
@@ -392,6 +417,10 @@ def extendInfo(request, id):
         template = loader.get_template('userIndex/extendInfo.html')
         current = user.expired_date
         after = current + datetime.timedelta(days=pricings.pricing_days)
+        if "cart" in request.session:
+            cart = request.session['cart']
+            for cartProduct in cart:
+                count = count + 1
         context = {
             'lists': lists,
             'cart': cart,
