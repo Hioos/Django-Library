@@ -339,7 +339,7 @@ def allBook(request):
         'count': count
     }
     return HttpResponse(template.render(context, request))
-
+# hahaha
 
 def information(request):
     if "name" in request.session:
