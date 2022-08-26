@@ -1,5 +1,7 @@
 import datetime
 import logging
+import math
+
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.core.paginator import Paginator, PageNotAnInteger, EmptyPage
@@ -88,7 +90,7 @@ def bookInfo(request, id):
 
 def bookList(request, id):
     cart = []
-    sub_Genre = SubGenre.objects.filter(subgenre_ofGenre=id).all()
+    sub_Genres = SubGenre.objects.filter(subgenre_ofGenre=id).all()
     genre = Genre.objects.get(id=id)
     lists = Genre.objects.all()
     themes = Themes.objects.all()
@@ -105,12 +107,16 @@ def bookList(request, id):
             count = count + 1
     page = request.GET.get('page', 1)
     paginator = Paginator(book, 12)
+    paginator2 = Paginator(sub_Genres,12)
     try:
         books = paginator.page(page)
+        sub_Genre = paginator2.page(page)
     except PageNotAnInteger:
         books = paginator.page(1)
+        sub_Genre = paginator2.page(1)
     except EmptyPage:
         books = paginator.page(paginator.num_pages)
+        sub_Genre = paginator2.page(paginator.num_pages)
 
     context = {
         'cart': cart,
@@ -299,7 +305,7 @@ def allBook(request):
         'SELECT *,COUNT(detailed_book_id_id) as asd,COUNT(case when detailed_returned = 1 then 1 else null end ) as returned FROM book_detailedbook INNER JOIN book_books ON detailed_book_id_id=book_id GROUP BY detailed_book_id_id ORDER BY book_id DESC')
     themes = Themes.objects.all()
     template = loader.get_template('userIndex/all_book.html')
-    sub_Genre = SubGenre.objects.all()
+    sub_Genres = SubGenre.objects.all()
     x = len(list(newbook))
     count = 0
     if "cart" in request.session:
@@ -308,13 +314,19 @@ def allBook(request):
             count = count + 1
     page = request.GET.get('page', 1)
     paginator = Paginator(newbook, 12)
+    pagNumber = x / 12
+    pagS = len(list(sub_Genres)) / math.ceil(pagNumber)
+    pagSub = math.ceil(pagS)
+    paginator2 = Paginator(sub_Genres,pagSub)
     try:
         newbooks = paginator.page(page)
+        sub_Genre = paginator2.page(page)
     except PageNotAnInteger:
         newbooks = paginator.page(1)
+        sub_Genre = paginator2.page(1)
     except EmptyPage:
         newbooks = paginator.page(paginator.num_pages)
-
+        sub_Genre = paginator2.page(paginator.num_pages)
     context = {
         'cart': cart,
         'books': books,
