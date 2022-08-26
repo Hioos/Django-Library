@@ -17,7 +17,6 @@
                                             <th style="text-align:center;vertical-align: middle;">Released</th>
                                             <th style="text-align:center;vertical-align: middle;">Authors</th>
                                             <th style="text-align:center;vertical-align: middle;">Pages</th>
-                                            <th style="text-align:center;vertical-align: middle;">Owned</th>
                                             <th style="text-align:center;vertical-align: middle;">Information</th>
                                     </tr>
                                   </thead>
@@ -47,7 +46,6 @@
                                             <td  style="text-align:center;vertical-align: middle;">{{ book.bookauthorship_bookId.book_released }}</td>
                                             <td  style="text-align:center;vertical-align: middle;font-family: 'Dancing Script', cursive; ">{% for author in book.bookauthorship_bookId.book_Authorship_bookId.all %}{{ author.bookauthorship_authorId.author_pseudonym }} {% endfor %}</td>
                                             <td  style="text-align:center;vertical-align: middle;">{{ book.bookauthorship_bookId.book_pages }}</td>
-                                            <td  style="text-align:center;vertical-align: middle;">{{ book.bookauthorship_bookId.book_amount }}</td>
                                             <td  style="text-align:center;vertical-align: middle;"><button type="button" class="btn btn-outline-primary btn-circle btn-sm" data-toggle="modal" data-target="#reqModal-{{ book.bookauthorship_bookId.book_id }}"><i class="fas fa-info"></i></button></td>
                                         </tr>
                                                                         <div class="modal fade bd-example-modal-lg" id="reqModal-{{ book.bookauthorship_bookId.book_id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -88,15 +86,6 @@
                                                   </div>
                                                   <div class="col-sm-9">
                                                     <p class="text-muted mb-0">{{ book.bookauthorship_bookId.book_publisher.publisher_name }}</p>
-                                                  </div>
-                                                    </div>
-                                                <hr>
-                                                <div class="row">
-                                                  <div class="col-sm-3">
-                                                      <p class="mb-0"><b>In Library</b></p>
-                                                  </div>
-                                                  <div class="col-sm-9">
-                                                    <p class="text-muted mb-0">{{ book.bookauthorship_bookId.book_amount }}</p>
                                                   </div>
                                                     </div>
                                                 <hr>

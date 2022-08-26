@@ -28,14 +28,14 @@
                             <h4>Themes</h4>
                             <ul>
                                 {% for authorTheme in authorThemes %}
-                                <li><a href="#">{{ authorTheme.theme_name }}</a></li>
+                                <li><a href="{% url 'userTheme' authorTheme.theme_id %}">{{ authorTheme.theme_name }}</a></li>
                                 {% endfor %}
                             </ul>
                         </div>
                         <div class="blog__sidebar__item">
                             <h4>Most common genres</h4>
                             <div class="blog__sidebar__item__tags">
-                                {% for subgenre in subgenres %}<a href="#">{{ subgenre.subgenre_name }}</a>{% endfor %}
+                                {% for subgenre in subgenres %}<a href="{% url 'subGenreUser' subgenre.id %}">{{ subgenre.subgenre_name }}</a>{% endfor %}
                             </div>
                         </div>
                     </div>

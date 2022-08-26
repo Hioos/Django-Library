@@ -108,6 +108,7 @@ def addBook(request):
     theme = request.POST.getlist('theme')
     book_amount = request.POST['book_amount']
     book_pages = request.POST['book_page']
+    book_price = request.POST['book_price']
     book = Books(
         book_name=book_name,
         book_image=image,
@@ -115,16 +116,18 @@ def addBook(request):
         book_language=Language.objects.get(language_id=language),
         book_publisher=Publisher.objects.get(publisher_id=publisher),
         book_released=book_released,
-        book_pages=book_pages
+        book_pages=book_pages,
+        book_price = book_price
     )
     book.save()
     LastInsertId = Books.objects.latest()
-    for amount in book_amount:
+    for amount in range(int(book_amount)):
         detailedBook = DetailedBook(
             detailed_book_percentage = 100,
             detailed_book_id = Books.objects.get(book_id=LastInsertId.book_id),
             detailed_book_note = 'Good Condition',
-            detailed_returned = True
+            detailed_returned = True,
+            detailed_importDate = datetime.date.today()
         )
         detailedBook.save()
     for authorId in author:
@@ -322,27 +325,28 @@ def acceptAll(request,id):
     admin = Account.objects.get(id=request.session['id'])
     for book in loanedBook:
         bookId = book.loanedBook_book_id
+        book.loanedBook_confirm = admin
         receiptId = book.loanedBook_receipt_id
         getUser = Receipt.objects.get(receipt_id = receiptId)
         user = getUser.receipt_user_id
         account = Account.objects.get(id = user)
         account.is_available = False
-        subject = 'Thank you for using HiusLibrary'
-        message = f'Dear {account.name}, \n' \
-                  f'Thank you for using HiusLibrary. \n' \
-                  f'Our books are waiting for you to bring them home \n' \
-                  f'Please bring your ID card to our librarians at ... \n' \
-                  f'\t\t\t Sincerely, \n' \
-                  f'\t\t\t {admin.name}'
-        email_from = settings.EMAIL_HOST_USER
-        recipient_list = [account.email, ]
-        send_mail(subject, message, email_from, recipient_list)
         detailedBook = DetailedBook.objects.get(detailed_id = bookId)
         detailedBook.detailed_returned = False
         book.loanedBook_statusId_id = 8
         book.save()
         detailedBook.save()
         account.save()
+    subject = 'Thank you for using HiusLibrary'
+    message = f'Dear {account.name}, \n' \
+              f'Thank you for using HiusLibrary. \n' \
+              f'Our books are waiting for you to bring them home \n' \
+              f'Please bring your ID card to our librarians at ... \n' \
+              f'\t\t\t Sincerely, \n' \
+              f'\t\t\t {admin.name}'
+    email_from = settings.EMAIL_HOST_USER
+    recipient_list = [account.email, ]
+    send_mail(subject, message, email_from, recipient_list)
     messages.success(request, ('Done!!!'))
     return HttpResponseRedirect(reverse('lendingPage'))
 @login_required
@@ -365,16 +369,48 @@ def denyAll(request,id):
         account.save()
     return HttpResponseRedirect(reverse('lendingPage'))
 @login_required
+def using(request,id):
+    loanedBook = LoanedBook.objects.filter(loanedBook_receipt_id=id).only('loanedBook_statusId_id')
+    for book in loanedBook:
+        bookId = book.loanedBook_book_id
+        receiptId = book.loanedBook_receipt_id
+        getUser = Receipt.objects.get(receipt_id=receiptId)
+        user = getUser.receipt_user_id
+        account = Account.objects.get(id=user)
+        account.is_available = False
+        detailedBook = DetailedBook.objects.get(detailed_id=bookId)
+        detailedBook.detailed_returned = False
+        book.loanedBook_statusId_id = 6
+        book.save()
+        detailedBook.save()
+        account.save()
+    return HttpResponseRedirect(reverse('lendingPage'))
+@login_required
 def lendingAction(request):
     books = request.POST.getlist('bookInReceipts')
+    admin = Account.objects.get(id=request.session['id'])
+    failed = []
     for book in books:
         bookReceipt = LoanedBook.objects.get(loanedBook_id = book)
+        bookN = bookReceipt.loanedBook_book_id
+        bookNumber = str(bookN) #34
+        # bookGet = Books.objects.get(book_id=bookNumber)
+        detailedBook = DetailedBook.objects.get(detailed_id=bookNumber)
+        bookId = detailedBook.detailed_book_id_id
+        bookGet = Books.objects.get(book_id=bookId)
+        currentPercent = detailedBook.detailed_book_percentage
         selected = request.POST['selectStatus' + book]
         percent = request.POST['condition'+book]
+        price = bookGet.book_price
+        diff = float(currentPercent) - float(percent)
+        fee = float(price)*float(diff)/100
+        currentFee = bookReceipt.loanedBook_fee
+        if currentFee is None:
+            finalFee = fee
+        else:
+            finalFee = currentFee + fee
         bookReceipt.loanedBook_statusId_id = selected
         today = datetime.datetime.today()
-        bookNumber = bookReceipt.loanedBook_book_id
-        detailedBook = DetailedBook.objects.get(detailed_id = bookNumber)
         receipt = bookReceipt.loanedBook_receipt_id
         receiptGet = Receipt.objects.get(receipt_id = receipt)
         userGet = receiptGet.receipt_user_id
@@ -382,18 +418,19 @@ def lendingAction(request):
         if selected == '7':
             bookReceipt.loanedBook_returnedDate = today
             bookReceipt.loanedBook_returnedStatus = percent
+            bookReceipt.loanedBook_fee = finalFee
+            bookReceipt.loanedBook_receive = admin
             user.is_available = True
             detailedBook.detailed_returned = True
             detailedBook.detailed_book_percentage = percent
         if selected == '3':
-            x = Books.objects.get(book_id = bookReceipt.loanedBook_book_id)
-            a = x.book_amount-1
-            x.book_amount = a
-            x.save()
+            detailedBook.detailed_retursned = False
+            detailedBook.detailed_book_percentage = 0
+            bookReceipt.loanedBook_returnedStatus = 0
+            bookReceipt.loanedBook_fee = price
         user.save()
         detailedBook.save()
         bookReceipt.save()
-    messages.success(request, ('DONE!!!'))
     return HttpResponseRedirect(reverse('lendingPage'))
 
 @login_required
@@ -450,11 +487,12 @@ def detailedBookUpdate(request):
     percent = request.POST['percent']
     note = request.POST['note']
     amount = request.POST['amount']
-    for a in amount:
+    for a in range(int(amount)):
         detailedBook = DetailedBook(
             detailed_book_percentage = percent,
             detailed_book_id = Books.objects.get(book_id = book),
-            detailed_book_note = note
+            detailed_book_note = note,
+            detailed_importDate = datetime.date.today()
         )
         detailedBook.save()
     messages.success(request, ('Done!!!'))
@@ -485,3 +523,11 @@ def reload(request):
         y.loanedBook_fee = fee
         y.save()
     return HttpResponseRedirect(reverse('lendingPage'))
+@login_required
+def detailedHistory(request,id):
+    books = LoanedBook.objects.filter(loanedBook_book_id = id)
+    template = loader.get_template('detailed/detailed_history.html')
+    context = {
+        'books': books
+    }
+    return HttpResponse(template.render(context, request))

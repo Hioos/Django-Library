@@ -1,0 +1,156 @@
+{% extends 'layouts/base.html' %}
+{% block content %}
+    <div class="container-fluid">
+<div class="row">
+
+                        <!-- Earnings (Monthly) Card Example -->
+                        <div class="col-xl-3 col-md-6 mb-4">
+                            <div class="card border-left-primary shadow h-100 py-2">
+                                <div class="card-body">
+                                    <div class="row no-gutters align-items-center">
+                                        <div class="col mr-2">
+                                            <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
+                                                Number of Known-Publisher</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{x}}</div>
+                                        </div>
+                                        <div class="col-auto">
+                                            <i class="fas fa-briefcase fa-2x text-gray-300"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Earnings (Annual) Card Example -->
+{#                        <div class="col-xl-3 col-md-6 mb-4">#}
+{#                            <div class="card border-left-success shadow h-100 py-2">#}
+{#                                <div class="card-body">#}
+{#                                    <div class="row no-gutters align-items-center">#}
+{#                                        <div class="col mr-2">#}
+{#                                            <div class="text-xs font-weight-bold text-success text-uppercase mb-1">#}
+{#                                                Online</div>#}
+{#                                            <div class="h5 mb-0 font-weight-bold text-gray-800">3</div>#}
+{#                                        </div>#}
+{#                                        <div class="col-auto">#}
+{#                                            <i class="fas fa-lightbulb fa-2x text-gray-300"></i>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{##}
+{#                        <!-- Tasks Card Example -->#}
+{#                        <div class="col-xl-3 col-md-6 mb-4">#}
+{#                            <div class="card border-left-info shadow h-100 py-2">#}
+{#                                <div class="card-body">#}
+{#                                    <div class="row no-gutters align-items-center">#}
+{#                                        <div class="col mr-2">#}
+{#                                            <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Tasks#}
+{#                                            </div>#}
+{#                                            <div class="row no-gutters align-items-center">#}
+{#                                                <div class="col-auto">#}
+{#                                                    <div class="h5 mb-0 mr-3 font-weight-bold text-gray-800">50%</div>#}
+{#                                                </div>#}
+{#                                                <div class="col">#}
+{#                                                    <div class="progress progress-sm mr-2">#}
+{#                                                        <div class="progress-bar bg-info" role="progressbar"#}
+{#                                                            style="width: 50%" aria-valuenow="50" aria-valuemin="0"#}
+{#                                                            aria-valuemax="100"></div>#}
+{#                                                    </div>#}
+{#                                                </div>#}
+{#                                            </div>#}
+{#                                        </div>#}
+{#                                        <div class="col-auto">#}
+{#                                            <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+{##}
+{#                        <!-- Pending Requests Card Example -->#}
+{#                        <div class="col-xl-3 col-md-6 mb-4">#}
+{#                            <div class="card border-left-warning shadow h-100 py-2">#}
+{#                                <div class="card-body">#}
+{#                                    <div class="row no-gutters align-items-center">#}
+{#                                        <div class="col mr-2">#}
+{#                                            <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">#}
+{#                                                Most Popular Book Genre</div>#}
+{#                                            <div class="h5 mb-0 font-weight-bold text-gray-800">Horror</div>#}
+{#                                        </div>#}
+{#                                        <div class="col-auto">#}
+{#                                            <i class="fas fa-trophy fa-2x text-gray-300"></i>#}
+{#                                        </div>#}
+{#                                    </div>#}
+{#                                </div>#}
+{#                            </div>#}
+{#                        </div>#}
+                    </div>
+<div class="card shadow mb-4">
+                        <div class="card-header">
+                            <div class="row">
+                                <div class="col-6">
+                                                        <h6 class="m-0 font-weight-bold text-primary" style="font-size: x-large;">{% for book in books|slice:"1" %}HLb00{{ book.loanedBook_book_id }}{% endfor %}</h6>
+                                </div>
+                                <div class="col-6">
+                                    <div class="d-flex flex-row-reverse">
+                                        <div class="p-2">
+                                        <a class="btn btn-dark btn-sm rounded-pill" href="{% url 'adminLog' 12   %}"><i class="fas fa-clock"></i> History</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table  class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                                    <thead>
+                                        <tr>
+                                            <th style="text-align:center;vertical-align: middle;">No.</th>
+                                            <th style="text-align:center;vertical-align: middle;">User</th>
+                                            <th style="text-align:center;vertical-align: middle;">Start</th>
+                                            <th style="text-align:center;vertical-align: middle;">Due</th>
+                                            <th  style="text-align: center">Returned</th>
+                                            <th  style="text-align: center">Status</th>
+                                            <th  style="text-align: center">Confirmed</th>
+                                            <th  style="text-align: center">Received</th>
+                                            <th  style="text-align: center">Condition</th>
+                                            <th  style="text-align: center">Fee</th>
+                                        </tr>
+                                    </thead>
+                                    <tfoot>
+                                        <tr>
+                                            <th style="text-align:center;vertical-align: middle;">No.</th>
+                                            <th style="text-align:center;vertical-align: middle;">User</th>
+                                            <th style="text-align:center;vertical-align: middle;">Start</th>
+                                            <th style="text-align:center;vertical-align: middle;">Due</th>
+                                            <th  style="text-align: center">Returned</th>
+                                            <th  style="text-align: center">Status</th>
+                                            <th  style="text-align: center">Confirmed</th>
+                                            <th  style="text-align: center">Received</th>
+                                            <th  style="text-align: center">Condition</th>
+                                            <th  style="text-align: center">Fee</th>
+                                        </tr>
+                                    </tfoot>
+                                    <tbody>
+                                    {% for book in books %}
+                                        <tr>
+                                            <td style="text-align:center;vertical-align: middle;">{{ forloop.counter }}</td>
+                                            <td style="text-align:center;vertical-align: middle;">{{ book.loanedBook_receipt.receipt_user.name }}</td>
+                                            <td style="text-align:center;vertical-align: middle;">{{ book.loanedBook_startDate }}</td>
+                                           <td  style="text-align: center">{{ book.loanedBook_dueDate }}</td>
+                                            <td  style="text-align: center">{{ book.loanedBook_returnedDate }}</td>
+                                            <td  style="text-align: center">{{ book.loanedBook_statusId.loanStatus_name }}</td>
+                                            <td  style="text-align: center">{{ book.loanedBook_confirm.name }}</td>
+                                            <td  style="text-align: center">{{ book.loanedBook_receive.name }}</td>
+                                            <td  style="text-align: center">{{ book.loanedBook_returnedStatus }}%</td>
+                                            <td  style="text-align: center">{{ book.loanedBook_fee }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                </div>
+    </div>
+{% endblock %}

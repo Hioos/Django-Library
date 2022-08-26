@@ -107,7 +107,7 @@
                                                                       <p class="mb-0"><b><i class="fas fa-money-bill" style="color: #107c00"></i></b></p>
                                                                   </div>
                                                                   <div class="col-sm-9">
-                                                                      <p class="text-muted mb-0"><i>{% if book.loanedBook_fee is not None %}${{ book.loanedBook_fee }}{% else %}$0{% endif %}</i><br></p>
+                                                                      <p class="text-muted mb-0"><i>{% if book.loanedBook_fee is not None %}${{ book.loanedBook_fee|floatformat:-2 }}{% else %}$0{% endif %}</i><br></p>
                                                                   </div>
                                                                     </div>
                                                                 <hr>
@@ -175,7 +175,7 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">
                                                 Penalty Fee</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ feeAll.sum }}</div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800">${{ feeAll.sum|floatformat:-2 }}</div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-wallet fa-2x"></i>
@@ -220,7 +220,7 @@
     </div>
         <div class="col-xl-4 col-lg-5">
             <div class="card shadow mb-4">
-                <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">All Books</h6></div>
+                <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Loaned Books</h6></div>
                 <div class="card-body">
                     <canvas id="myChart1" width="100%" height="100%"></canvas>
                 </div>
@@ -237,6 +237,12 @@
                 <canvas id="myChart3"  width="100%" height="100%"></canvas>
             </div>
         </div>
+            <div class="card shadow mb-4">
+            <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">In/Outcome All time</h6></div>
+            <div class="card-body">
+                <canvas id="myChartMoney"  width="100%" height="100%"></canvas>
+            </div>
+            </div>
 
 {#            <div class="card shadow mb-4">#}
 {#                <div class="card-header"><h6 class="m-0 font-weight-bold text-primary">Progress</h6></div>#}
@@ -273,6 +279,32 @@
 {#                                    </div>#}
 {#                </div>#}
 {#            </div>#}
+        </div>
+    </div>
+        <div class="row">
+        <div class="col-md-4 col-lg-4">
+        <div class="card shadow mb-4">
+                <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Most Used</h6></div>
+                <div class="card-body">
+                    <canvas id="myChartMostUsed" style="width:100%;max-width:100%"></canvas>
+                </div>
+            </div>
+        </div>
+            <div class="col-md-4 col-lg-4">
+        <div class="card shadow mb-4">
+                <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Deposit Last 7 Days</h6></div>
+                <div class="card-body">
+                    <canvas id="myChartDeposit" style="width:100%;max-width:100%"></canvas>
+                </div>
+            </div>
+        </div>
+            <div class="col-md-4 col-lg-4">
+        <div class="card shadow mb-4">
+                <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Fee Last 7 Days</h6></div>
+                <div class="card-body">
+                    <canvas id="myChartFee" style="width:100%;max-width:100%"></canvas>
+                </div>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -330,18 +362,18 @@
 var xValues = [{% for chart in chart1 %} "{{ chart.loanStatus_name }}"{% if chart == chart1.last %} {% else %} , {% endif %} {% endfor %}];
 var yValues = [{% for chart in chart1 %}"{{ chart.count }}"{% if chart == chart1.last %} {% else %} , {% endif %} {% endfor %}];
 var barColors = [
-    "#cd3c3a",
-    "#8cbcf6",
-    "#e68a03",
-    "#4df2bf",
-    "#4e4ebf",
-    "#6b8566",
-    "#bf155f",
-    "#46f10b",
+    "rgba(205,60,58,0.5)",
+    "rgba(140,188,246,0.5)",
+    "rgba(230,138,3,0.5)",
+    "rgba(77,242,191,0.5)",
+    "rgba(78,78,191,0.5)",
+    "rgba(107,133,102,0.5)",
+    "rgba(191,21,95,0.5)",
+    "rgba(70,241,11,0.5)",
 ];
 
 new Chart("myChart1", {
-  type: "doughnut",
+  type: "polarArea",
   data: {
     labels: xValues,
     datasets: [{
@@ -349,12 +381,29 @@ new Chart("myChart1", {
       data: yValues
     }]
   },
-  options: {
-    title: {
-      display: true,
-      text: "All Receipt "
+    options: {
+    responsive: true,
+    scales: {
+      r: {
+        pointLabels: {
+          display: true,
+          centerPointLabels: true,
+          font: {
+            size: 18
+          }
+        }
+      }
+    },
+    plugins: {
+      legend: {
+        position: 'top',
+      },
+      title: {
+        display: true,
+        text: 'All Loaned Book'
+      }
     }
-  }
+  },
 });
 
 //End Chart
@@ -457,11 +506,8 @@ new Chart("myChart2", {
 var yValues = [{{ sum.sum2 }},{{ sum.sum1 }}-{{ sum.sum2 }}];
     {% endfor %}
 var barColors = [
-  "#00aba9",
-  "#b91d47",
-  "#2b5797",
-  "#e8c3b9",
-  "#1e7145"
+  "#00d9ff",
+  "#f7ff00"
 ];
 
 new Chart("myChart3", {
@@ -563,6 +609,104 @@ new Chart("myChart10", {
     legend: {display: false},
     scales: {
       yAxes: [{ticks: {min: chart10min , max: chart10max}}],
+    }
+  }
+});
+ function getRandomColor() {
+            var letters = '0123456789ABCDEF'.split('');
+            var color = '#';
+            for (var i = 0; i < 6; i++ ) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+                }
+var xValues = [{% for chart in mostuses %} "{{ chart.book_name }}"{% if chart == mostuses.last %} {% else %} , {% endif %} {% endfor %}];
+var yValues = [{% for chart in mostuses %} "{{ chart.total }}"{% if chart == mostuses.last %} {% else %} , {% endif %} {% endfor %}];
+var barColors = [{% for chart in mostuses %} getRandomColor() {% if chart == mostuses.last %} {% else %} , {% endif %} {% endfor %}];
+
+new Chart("myChartMostUsed", {
+  type: "horizontalBar",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: yValues
+    }]
+  },
+  options: {
+    legend: {display: false},
+    title: {
+      display: true,
+      text: "Most Borrowed Books This Week"
+    }
+  }
+});
+var xValues = [{% for chart in deposits %} "{{ chart.detailed_importDate  }}"{% if chart == deposits.last %} {% else %} , {% endif %} {% endfor %}];
+var yValues = [{% for chart in deposits %} "{{ chart.total|floatformat:-2  }}"{% if chart == deposits.last %} {% else %} , {% endif %} {% endfor %}];
+
+new Chart("myChartDeposit", {
+  type: "line",
+  data: {
+    labels: xValues,
+    datasets: [{
+      fill: false,
+      lineTension: 0,
+      backgroundColor: "rgba(0,0,255,1.0)",
+      borderColor: "rgba(0,0,255,0.1)",
+      data: yValues
+    }]
+  },
+  options: {
+    legend: {display: false},
+    scales: {
+      yAxes: [{ticks: {min: 0, max:{% for dep in depmax %}{{ dep.total|floatformat:0 }}+100{% endfor %}}}],
+    }
+  }
+});
+var xValues = [{% for chart in fees %} "{{ chart.loanedBook_returnedDate  }}"{% if chart == fees.last %} {% else %} , {% endif %} {% endfor %}];
+var yValues = [{% for chart in fees %} "{{ chart.total|floatformat:-2  }}"{% if chart == fees.last %} {% else %} , {% endif %} {% endfor %}];
+
+new Chart("myChartFee", {
+  type: "line",
+  data: {
+    labels: xValues,
+    datasets: [{
+      fill: false,
+      lineTension: 0,
+      backgroundColor: "rgba(0,0,255,1.0)",
+      borderColor: "rgba(0,0,255,0.1)",
+      data: yValues
+    }]
+  },
+  options: {
+    legend: {display: false},
+    scales: {
+      yAxes: [{ticks: {min: 0, max:{% for fee in feeMax %}{{ fee.total|floatformat:0 }}+10{% endfor %}}}],
+    }
+  }
+});
+const income = {% for sm in sumMoney %}{{ sm.moneys|floatformat:-2 }} + {{ feeAll.sum|floatformat:-2 }}{% endfor %}
+
+var xValues = ["Income", "Outcome"];
+var yValues = [ income.toFixed(2), {% for oc in outcome %}{{ oc.PRICE|floatformat:-2 }}{% endfor %}];
+var barColors = [
+  "rgb(255,131,254)",
+  "rgb(115,255,0)",
+];
+
+new Chart("myChartMoney", {
+  type: "doughnut",
+  data: {
+    labels: xValues,
+    datasets: [{
+      backgroundColor: barColors,
+      data: yValues
+    }]
+  },
+  options: {
+    title: {
+      display: true,
+      text: "All Time"
     }
   }
 });

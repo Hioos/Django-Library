@@ -134,6 +134,10 @@ class LoanedBook(models.Model):
     loanedBook_returnedDate = models.DateField(blank=True, null=True)
     loanedBook_statusId = models.ForeignKey('loan.loanStatus', on_delete=models.CASCADE,
                                             related_name='loanedBook_loanStatus')
+    loanedBook_receive = models.ForeignKey('accounts.Account', on_delete=models.CASCADE,
+                                            related_name='loanedBook_receive',blank=True,null=True)
+    loanedBook_confirm = models.ForeignKey('accounts.Account', on_delete=models.CASCADE,
+                                           related_name='loanedBook_confirm', blank=True, null=True)
     loanedBook_returnedStatus = models.IntegerField(blank=True,null=True)
     loanedBook_fee = models.FloatField(blank=True,null=True)
     class Meta:
@@ -144,5 +148,6 @@ class DetailedBook(models.Model):
     detailed_book_percentage = models.IntegerField()
     detailed_book_note = models.TextField(blank=True,null=True)
     detailed_returned = models.BooleanField(default=True)
+    detailed_importDate = models.DateField(blank=True, null=True)
     def __str__(self):
         return str(self.detailed_id)

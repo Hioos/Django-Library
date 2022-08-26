@@ -42,6 +42,7 @@ def index(request):
         values('date_joined__date').annotate(count=Count('id'))
     max = items.order_by('-count').first()
     min = items.order_by('count').first()
+    mostuses = DetailedBook.objects.raw("SELECT *,COUNT(detailed_book_id_id) as total FROM book_detailedbook LEFT JOIN book_loanedbook ON loanedBook_book_id = detailed_id INNER JOIN book_books ON detailed_book_id_id = book_books.book_id WHERE loanedBook_id NOTNULL AND loanedBook_returnedStatus !=5 AND loanedBook_startDate > DATETIME('now', '-7 day')  GROUP BY detailed_book_id_id ORDER BY total DESC LIMIT 7")
     last7days = PaymentHistory.objects.raw("SELECT history_Id,SUM(pricing_price) as price FROM (select * from accounts_paymenthistory LEFT JOIN accounts_pricing ON accounts_paymenthistory.pricing_id = accounts_pricing.pricing_id WHERE history_timestamp > (SELECT DATETIME('now', '-7 day')))")
     sumMoney = PaymentHistory.objects.raw('SELECT history_id,SUM(pricing_price) as moneys FROM accounts_paymenthistory INNER JOIN accounts_pricing ON accounts_paymenthistory.pricing_id = accounts_pricing.pricing_id')
     chart10 = PaymentHistory.objects.prefetch_related().filter(history_timestamp__lte = datetime.datetime.today(),history_timestamp__gt = datetime.datetime.today()-datetime.timedelta(days=7)).values('history_timestamp__date').order_by('history_timestamp__date').annotate(sum=Sum('pricing__pricing_price'))
@@ -49,16 +50,29 @@ def index(request):
     chart10max = chart10.order_by('-sum').first()
     template = loader.get_template('home/index.html')
     feeAll = LoanedBook.objects.aggregate(sum = Sum('loanedBook_fee'))
+    deposits = DetailedBook.objects.raw("SELECT *,SUM(book_price) as total FROM book_detailedbook INNER JOIN book_books ON detailed_book_id_id = book_books.book_id WHERE detailed_importDate > (SELECT DATETIME('now', '-7 day')) GROUP BY detailed_importDate")
+    depmax = DetailedBook.objects.raw("SELECT *,SUM(book_price) as total FROM book_detailedbook INNER JOIN book_books ON detailed_book_id_id = book_books.book_id GROUP BY detailed_importDate ORDER BY total DESC LIMIT 1")
+    depmin = DetailedBook.objects.raw("SELECT *,SUM(book_price) as total FROM book_detailedbook INNER JOIN book_books ON detailed_book_id_id = book_books.book_id GROUP BY detailed_importDate ORDER BY total ASC LIMIT 1")
+    fees = LoanedBook.objects.raw('SELECT *,SUM(loanedBook_fee) as total FROM book_loanedbook WHERE loanedBook_returnedDate IS NOT NULL GROUP BY loanedBook_returnedDate')
+    feeMax = LoanedBook.objects.raw('SELECT *,SUM(loanedBook_fee) as total FROM book_loanedbook WHERE loanedBook_returnedDate IS NOT NULL GROUP BY loanedBook_returnedDate ORDER BY total DESC LIMIT 1')
+    outcome = DetailedBook.objects.raw('SELECT *,SUM(book_price) as PRICE FROM book_detailedbook INNER JOIN book_books ON book_detailedbook.detailed_book_id_id = book_id')
     context = {
         'nearends': nearends,
         'receipts': receipts,
         'chart1': chart1,
+        'mostuses': mostuses,
         'sum':sum,
+        'deposits':deposits,
+        'outcome':outcome,
+        'depmax':depmax,
+        'depmin':depmin,
         'feeAll':feeAll,
         'languages': languages,
         'chart2': chart2,
         'count' : count,
         'items' : items,
+        'fees': fees,
+        'feeMax':feeMax,
         'last7days': last7days,
         'max' : max,
         'sumMoney': sumMoney,

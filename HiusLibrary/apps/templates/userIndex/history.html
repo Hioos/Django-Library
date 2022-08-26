@@ -7,9 +7,9 @@
             <a href="{% url 'userBookInfo' iu.book_id %}" style="text-decoration: none;color: #1c1c1c;">
     <div class="col-4">
         <div class="card" style="width: 15rem;">
-  <img class="card-img-top" src="{{ iu.loanedBook_book.detailed_book_id.book_image.url }}" alt="{{ iu.book_name }}">
+  <img class="card-img-top" src="{{ iu.loanedBook_book.detailed_book_id.book_image.url }}" alt="{{ iu.book_name }}" height="250px">
   <div class="card-body">
-      <p class="card-text"><b>{{ iu.book_name }}</b></p>
+      <p class="card-text"><b>{{ iu.book_name }}</b>{% if iu.loanedBook_dueDate < today %} <span class="badge badge-pill badge-danger">Overdue</span>{% endif %}</p>
       <div class="row">
           <div class="col-4">Start</div>
           <div class="col-8">{{ iu.loanedBook_startDate }}</div>
@@ -19,9 +19,15 @@
           <div class="col-8">{{ iu.loanedBook_dueDate }}</div>
       </div>
       <div class="row">
-          <div class="col-4"></div>
-          <div class="col-8">({{ iu.loanedBook_dueDate|timeuntil }})</div>
+          <div class="col-4">{% if iu.loanedBook_dueDate > today %}E.T{% else %}Over{% endif %}</div>
+          <div class="col-8">{% if iu.loanedBook_dueDate > today %}{{ iu.loanedBook_dueDate|timeuntil }}{% else %}{{ iu.loanedBook_dueDate|timesince }}{% endif %}</div>
       </div>
+  {% if iu.loanedBook_fee is not None %}
+      <div class="row">
+          <div class="col-4">Fee</div>
+          <div class="col-8"><i style="color:#ff4848"><b>${{ iu.loanedBook_fee }}</b></i></div>
+      </div>
+  {% endif %}
   </div>
 </div>
     </div>
@@ -136,6 +142,15 @@
                                                               </div>
                                                           </div>
                                                           <hr>
+                                                          <div class="row justify-content-center">
+                                                                  <div class="col-sm-3">
+                                                                      Fee:
+                                                                  </div>
+                                                                  <div class=" col-sm-9">
+                                                                      {% if book.loanedBook_fee is not None %}<i style="color:#7bcc71"><b>${{ book.loanedBook_fee }}</b></i>{% else %}{{ book.loanedBook_fee }}{% endif %}
+                                                                  </div>
+                                                              </div>
+                                                              <hr>
                                                       </div>
                                                   </div>
                                                   </div>

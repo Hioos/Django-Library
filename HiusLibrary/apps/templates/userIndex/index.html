@@ -20,7 +20,7 @@
                 </div>
             </div>
                     <div class="row featured__filter">
-            {% for book in books|slice:":8" %}
+            {% for book in books|slice:":12" %}
 
                             <div class="col-lg-3 col-md-4 col-sm-6 mix{% for subgenre in book.book_Subgenre_bookId.all %} {{ subgenre.booksubgenre_subgenreId.subgenre_ofGenre|cut:" "  }}{% endfor %}">
                     <div class="featured__item">

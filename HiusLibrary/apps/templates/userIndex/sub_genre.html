@@ -7,12 +7,7 @@
                     <div class="sidebar">
                         <div class="sidebar__item">
                         <div class="blog__sidebar__item">
-                            <h4 style="    font-size: xx-large;">Sub-Genre</h4>
-                            <div class="blog__sidebar__item__tags">
-                                {% for sub in sub_Genre %}
-                                <a href="{% url 'subGenreUser' sub.id %}">{{ sub.subgenre_name }}</a>
-                                {% endfor %}
-                            </div>
+                            <h4 style="    font-size: xx-large;">{{ subGenres.subgenre_name }}</h4>
                         </div>
                         </div>
 
@@ -91,8 +86,8 @@
     <div class="hero__item set-bg" data-setbg="https://i.pinimg.com/originals/80/50/ee/8050eeeec9311721a748450b1509b3a8.png">
                         <div class="hero__text">
 
-                            <h2 style="color: white;font-family: cursive">{{ genre.genre_name }}</h2>
-                                <h4 style="-webkit-text-stroke: 0.7px black;color: yellow;" >{{ genre.genre_description }}</h4>
+                            <h2 style="color: white;font-family: cursive">{{ subGenres.subgenre_name }}</h2>
+                                <h4 style="-webkit-text-stroke: 0.7px black;color: yellow;" >{{ subGenres.subgenre_description }}</h4>
                         </div>
                     </div>
 {% endblock %}

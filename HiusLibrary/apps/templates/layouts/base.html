@@ -592,7 +592,10 @@ $(document).ready(function() {
 
   hide_all_elements();
 });
-
+$('.turnOff').click('shown.bs.modal',function(){
+    $('.modal1').modal('hide')
+    $(".modal-backdrop").remove();
+})
 </script>
 
 </body>

@@ -139,7 +139,7 @@
                                         <td style="text-align:center;vertical-align: middle;">{{ receipt.receipt_timestamp}}</td>
                                         <td style="text-align:center;vertical-align: middle;"><button type="button" class="btn btn-outline-info btn-sm btn-circle" data-toggle="modal" data-target="#reqModal-{{ receipt.receipt_id }}"><i class="fas fa-box-open"></i></button></td>
                                             <td style="text-align:center;vertical-align: middle;"><a href="{% url 'acceptAll' receipt.receipt_id %}" class="btn btn-circle btn-outline-success btn-sm"><i class="fas fa-check"></i></a></td>
-                                            <td style="text-align:center;vertical-align: middle;"><a href="{% url 'denyAll' receipt.receipt_id %}" class="btn btn-circle btn-outline-danger btn-sm"><i class="   fas fa-exclamation-triangle"></i></a></td>
+                                            <td style="text-align:center;vertical-align: middle;"><a href="{% url 'denyAll' receipt.receipt_id %}" class="btn btn-circle btn-outline-danger btn-sm"><i class="fas fa-exclamation-triangle"></i></a></td>
                                         </tr>
                                         <!-- Modal -->
                                         <div class="modal fade bd-example-modal-lg" id="reqModal-{{ receipt.receipt_id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -183,15 +183,6 @@
                                                                       <p class="text-muted mb-0"><i>{{ book.loanedBook_dueDate }}</i><br></p>
                                                                   </div>
                                                                     </div>
-                                                                <hr>
-                                                                        <div class="row justify-content-center">
-                                                                  <div class="col-sm-3">
-                                                                      <p class="mb-0"><b><i class="fas fa-rotate-left"></i></b></p>
-                                                                  </div>
-                                                                  <div class="col-sm-9">
-                                                                      <p class="text-muted mb-0"><i>{% if book.loanedBook_returnedDate is None %} <i class="fas fa-times-circle" style="color: #ff2929"></i> {% else %}{{ book.loanedBook_returnedDate }} {% endif %} </i><br></p>
-                                                                  </div>
-                                                                    </div>
                                                                                                                                                                        <hr>
                                                       </div>
 
@@ -229,7 +220,8 @@
                                             <th style="text-align: center">Member</th>
                                             <th style="text-align: center">At</th>
                                             <th style="text-align: center">Info</th>
-                                            <th style="text-align: center">Status</th>
+                                            <th style="text-align: center">Loan</th>
+                                            <th style="text-align: center">Deny</th>
                                     </tr>
                                   </thead>
                                     <tfoot>
@@ -239,7 +231,8 @@
                                             <th style="text-align: center">Member</th>
                                             <th style="text-align: center">At</th>
                                             <th style="text-align: center">Info</th>
-                                            <th style="text-align: center">Status</th>
+                                            <th style="text-align: center">Loan</th>
+                                            <th style="text-align: center">Deny</th>
                                     </tr>
                                     </tfoot>
                                     <tbody>
@@ -250,7 +243,8 @@
                                         <td style="text-align:center;vertical-align: middle;">{{ receipt.receipt_user.name}}</td>
                                         <td style="text-align:center;vertical-align: middle;">{{ receipt.receipt_timestamp}}</td>
                                         <td style="text-align:center;vertical-align: middle;"><button type="button" class="btn btn-outline-info btn-sm btn-circle" data-toggle="modal" data-target="#reqModal-{{ receipt.receipt_id }}"><i class="fas fa-box-open"></i></button></td>
-                                            <td style="text-align:center;vertical-align: middle;"><a><i class="fas fa-inbox"></i></a></td>
+                                            <td style="text-align:center;vertical-align: middle;"><a href="{% url 'using' receipt.receipt_id %}" class="btn btn-circle btn-outline-success btn-sm"><i class="fas fa-inbox"></i></a></td>
+                                        <td style="text-align:center;vertical-align: middle;"><a href="{% url 'denyAll' receipt.receipt_id %}" class="btn btn-circle btn-outline-danger btn-sm"><i class="fas fa-exclamation-triangle"></i></a></td>
                                         </tr>
                                         <!-- Modal -->
                                         <div class="modal fade bd-example-modal-lg" id="reqModal-{{ receipt.receipt_id }}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -265,8 +259,6 @@
                                       <div class="modal-body">
                                           <!--Body -->
                                           <div class="container-fluid">
-                                        <form method="post" action="{% url 'lendingAction' %}">
-                                            {% csrf_token %}
                                           <div class="row">
 
                                               {% for book in receipt.loanedBook_receipt.all %}
@@ -298,20 +290,11 @@
                                                                       <p class="text-muted mb-0"><i>{{ book.loanedBook_dueDate }}</i><br></p>
                                                                   </div>
                                                                     </div>
-                                                                <hr>
-                                                                        <div class="row justify-content-center">
-                                                                  <div class="col-sm-3">
-                                                                      <p class="mb-0"><b><i class="fas fa-rotate-left"></i></b></p>
-                                                                  </div>
-                                                                  <div class="col-sm-9">
-                                                                      <p class="text-muted mb-0"><i>{% if book.loanedBook_returnedDate is None %} <i class="fas fa-times-circle" style="color: #ff2929"></i> {% else %}{{ book.loanedBook_returnedDate }} {% endif %} </i><br></p>
-                                                                  </div>
-                                                                    </div>
                                                         <hr>
                                                                                        <div class="row">
                                                       <div class="col-6">
                                                                                        <label for="dataPicker{{ book.loanedBook_id }}">Status:</label>
-                                                            <select name="selectStatus{{ book.loanedBook_id }}" class="form-control" id="dataPicker{{ book.loanedBook_id }}" {% if book.loanedBook_statusId_id == 7 or book.loanedBook_statusId_id == 3 or book.loanedBook_statusId_id == 5%} readonly="readonly" tabindex="-1" aria-disabled="true" style="background: #eee;pointer-events: none;touch-action: none;" {% endif %}>
+                                                            <select name="selectStatus{{ book.loanedBook_id }}" class="form-control" id="dataPicker{{ book.loanedBook_id }}" readonly="readonly" tabindex="-1" aria-disabled="true" style="background: #eee;pointer-events: none;touch-action: none;">
                                                                 {% for loan in loans %}
                                                                     <option value="{{ loan.loanStatus_id }}" {% if loan.loanStatus_id == book.loanedBook_statusId_id %} selected {% endif %}>{{ loan.loanStatus_name }}</option>
                                                                     {% endfor %}
@@ -331,10 +314,6 @@
                                               {% endfor %}
 
                                           </div>
-                                            <div class="row justify-content-center">
-                                              <button type="submit" class="btn btn-warning">Update</button>
-                                            </div>
-                                          </form>
                                           </div>
                                           <!--Body -->
                                         </div>
@@ -447,7 +426,7 @@
                                                                       <p class="mb-0"><b><i class="fas fa-money-bill" style="color: #107c00"></i></b></p>
                                                                   </div>
                                                                   <div class="col-sm-9">
-                                                                      <p class="text-muted mb-0"><i>{% if book.loanedBook_fee is not None %}${{ book.loanedBook_fee }}{% else %}$0{% endif %}</i><br></p>
+                                                                      <p class="text-muted mb-0"><i>{% if book.loanedBook_fee is not None %}${{ book.loanedBook_fee|floatformat:-2 }}{% else %}$0{% endif %}</i><br></p>
                                                                   </div>
                                                                     </div>
                                                                 <hr>
@@ -462,7 +441,7 @@
                                                       </div>
                                                       <div class="col-6">
                                                           <label for="name{{ book.loanedBook_id }}">Status:</label>
-                                                          <input type="number" name="condition{{ book.loanedBook_id }}" class="form-control" id="name{{ book.loanedBook_id }}" min="0" max="{{ book.loanedBook_book.detailed_book_percentage }}" value="{{ book.loanedBook_book.detailed_book_percentage }}">
+                                                          <input type="number" name="condition{{ book.loanedBook_id }}" class="form-control" id="name{{ book.loanedBook_id }}" min="0" max="{{ book.loanedBook_book.detailed_book_percentage }}" value="{{ book.loanedBook_book.detailed_book_percentage }}" {% if book.loanedBook_statusId_id == 7 or book.loanedBook_statusId_id == 3 or book.loanedBook_statusId_id == 5%}readonly{% endif %}>
                                                       </div>
                                                       </div>
                                                       <hr>
@@ -586,7 +565,7 @@
                                                                       <p class="mb-0"><b><i class="fas fa-money-bill" style="color: #107c00"></i></b></p>
                                                                   </div>
                                                                   <div class="col-sm-9">
-                                                                      <p class="text-muted mb-0"><i>{% if book.loanedBook_fee is not None %}${{ book.loanedBook_fee }}{% else %}$0{% endif %}</i><br></p>
+                                                                      <p class="text-muted mb-0"><i>{% if book.loanedBook_fee is not None %}${{ book.loanedBook_fee|floatformat:-2 }}{% else %}$0{% endif %}</i><br></p>
                                                                   </div>
                                                                     </div>
                                                                 <hr>

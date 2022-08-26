@@ -68,13 +68,14 @@ def userIndex(request):
     def accountCounter():
         count = Account.objects.filter(is_admin=False, is_staff=False, is_superuser=False).count()
         return count
-
+    inUse = Account.objects.raw("select * FROM accounts_account INNER JOIN book_receipt ON accounts_account.id = book_receipt.receipt_user_id INNER JOIN book_loanedbook ON book_receipt.receipt_id = book_loanedbook.loanedBook_receipt_id INNER JOIN book_detailedbook ON loanedBook_book_id = detailed_id INNER JOIN book_books ON detailed_book_id_id = book_id WHERE is_admin=False AND is_staff=False AND is_superuser=False AND ( loanedBook_statusId_id = 6 OR loanedBook_statusId_id = 2)")
     currentlyOnline = Account.objects.filter(is_active=True).count()
     x = accountCounter()
     y = nearends.count()
     context = {
         'nearends' : nearends,
         'accounts': accounts,
+        'inUse': inUse,
         'currentlyOnline': currentlyOnline,
         'media_url': settings.MEDIA_URL,
         'x': x,
@@ -225,15 +226,15 @@ def extendMembership(request):
     today = datetime.date.today()
     user = Account.objects.get(id=data)
     if today < user.expired_date:
-        user.expired_date = user.expired_date + datetime.timedelta(seconds=1 * 31 * 24 * 60 * 60)
+        a = user.expired_date + datetime.timedelta(seconds=1 * 31 * 24 * 60 * 60)
     else:
-        user.expired_date = today + datetime.timedelta(seconds=1 * 31 * 24 * 60 * 60)
+        a = today + datetime.timedelta(seconds=1 * 31 * 24 * 60 * 60)
     user.save()
     payment = PaymentHistory(
         user_id = user,
         pricing = Pricing.objects.get(pricing_id=2),
         old_expired_date = user.expired_date,
-        new_expired_date = user.expired_date + datetime.timedelta(days=31)
+        new_expired_date = a
     )
     payment.save()
     return HttpResponseRedirect(reverse('userIndex'))

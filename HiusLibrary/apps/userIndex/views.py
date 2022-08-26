@@ -29,7 +29,7 @@ def index(request):
     template = loader.get_template('userIndex/index.html')
     count = 0
     hot = Books.objects.raw(
-        'SELECT * FROM book_books LEFT JOIN (SELECT loanedBook_book_id,count(*) as asd FROM book_loanedbook GROUP BY loanedBook_book_id ORDER BY loanedBook_startDate DESC) ON loanedBook_book_id = book_id ORDER BY asd DESC')[
+        "SELECT *,COUNT(detailed_book_id_id) as total FROM book_detailedbook LEFT JOIN book_loanedbook ON loanedBook_book_id = detailed_id INNER JOIN book_books ON detailed_book_id_id = book_books.book_id WHERE loanedBook_id NOTNULL AND loanedBook_returnedStatus !=5 AND loanedBook_startDate > DATETIME('now', '-7 day')  GROUP BY detailed_book_id_id ORDER BY total DESC LIMIT 6")[
           :6]
     if "cart" in request.session:
         cart = request.session['cart']
@@ -56,7 +56,7 @@ def bookInfo(request, id):
         book_id=id)
     allbooks = Books.objects.prefetch_related('book_Authorship_bookId', 'book_Subgenre_bookId',
                                               'book_Themes_bookId').exclude(book_id=id).order_by('-book_id')[:4]
-    details = DetailedBook.objects.filter(detailed_book_id = id)
+    details = DetailedBook.objects.filter(detailed_book_id=book.book_id,detailed_book_percentage__range=(10, 100))
     lists = Genre.objects.all()
     themes = Themes.objects.all()
     usedBook = LoanedBook.objects.filter(
@@ -362,8 +362,9 @@ def history(request):
         lists = Genre.objects.all()
         themes = Themes.objects.all()
         count = 0
+        today = datetime.date.today()
         loans = loanStatus.objects.all()
-        inuse = LoanedBook.objects.raw('SELECT * FROM book_loanedbook INNER JOIN book_detailedbook ON loanedBook_book_id = detailed_id INNER JOIN book_books ON book_detailedbook.detailed_book_id_id = book_books.book_id INNER JOIN book_receipt ON loanedBook_receipt_id = book_receipt.receipt_id INNER JOIN accounts_account ON receipt_user_id = accounts_account.id WHERE receipt_user_id= %s AND loanedBook_statusId_id = 6',[strid])
+        inuse = LoanedBook.objects.raw('SELECT * FROM book_loanedbook INNER JOIN book_detailedbook ON loanedBook_book_id = detailed_id INNER JOIN book_books ON book_detailedbook.detailed_book_id_id = book_books.book_id INNER JOIN book_receipt ON loanedBook_receipt_id = book_receipt.receipt_id INNER JOIN accounts_account ON receipt_user_id = accounts_account.id WHERE receipt_user_id= %s AND (loanedBook_statusId_id = 6 OR loanedBook_statusId_id=2)',[strid])
         payments = PaymentHistory.objects.prefetch_related().filter(user_id=id).order_by('-history_Id')
         receipts = Receipt.objects.prefetch_related().filter(receipt_user=id).order_by('-receipt_id')
         if "cart" in request.session:
@@ -372,6 +373,7 @@ def history(request):
                 count = count + 1
         context = {
             'inuse': inuse,
+            'today':today,
             'cart': cart,
             'lists': lists,
             'loans': loans,
@@ -523,3 +525,42 @@ def authorUser(request,id):
         'subgenres':subgenres
     }
     return HttpResponse(template.render(context, request))
+def subGenreUser(request,id):
+    template = loader.get_template('userIndex/sub_genre.html')
+    cart = []
+    strid = str(id)
+    lists = Genre.objects.all()
+    themes = Themes.objects.all()
+    subGenres = SubGenre.objects.get(id = id)
+    count = 0
+    if "cart" in request.session:
+        cart = request.session['cart']
+        for cartProduct in cart:
+            count = count + 1
+    strid = str(id)
+    book = Books.objects.raw(
+        'SELECT *,COUNT(detailed_book_id_id) as asd,COUNT(case when detailed_returned = 1 then 1 else null end ) as returned FROM book_detailedbook INNER JOIN book_books ON detailed_book_id_id=book_id INNER JOIN book_booksubgenre ON book_id = book_booksubgenre.booksubgenre_bookId_id INNER JOIN genre_subgenre ON book_booksubgenre.booksubgenre_subgenreId_id = genre_subgenre.id WHERE genre_subgenre.id = %s GROUP BY book_name ORDER BY book_id DESC',
+        [strid])
+    x = len(list(book))
+    page = request.GET.get('page', 1)
+    paginator = Paginator(book, 12)
+    try:
+        books = paginator.page(page)
+    except PageNotAnInteger:
+        books = paginator.page(1)
+    except EmptyPage:
+        books = paginator.page(paginator.num_pages)
+
+    context = {
+        'subGenres': subGenres,
+        'cart': cart,
+        'lists': lists,
+        'themes': themes,
+        'count': count,
+        'x':x,
+        'books':books
+    }
+    return HttpResponse(template.render(context, request))
+def contact(request):
+    template = loader.get_template('userIndex/contact.html')
+    return HttpResponse(template.render({}, request))
