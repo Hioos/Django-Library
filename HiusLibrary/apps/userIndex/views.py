@@ -30,19 +30,29 @@ def index(request):
     themes = Themes.objects.all()
     template = loader.get_template('userIndex/index.html')
     count = 0
+    if 'id' not in request.session:
+        strid = None
+    else:
+        strid = str(request.session['id'])
     hot = Books.objects.raw(
         "SELECT *,COUNT(detailed_book_id_id) as total FROM book_detailedbook LEFT JOIN book_loanedbook ON loanedBook_book_id = detailed_id INNER JOIN book_books ON detailed_book_id_id = book_books.book_id WHERE loanedBook_id NOTNULL AND loanedBook_returnedStatus !=5 AND loanedBook_startDate > DATETIME('now', '-7 day')  GROUP BY detailed_book_id_id ORDER BY total DESC LIMIT 6")[
           :6]
+    forYou = LoanedBook.objects.raw("SELECT *,COUNT(loanedBook_id) as d,genre_genre.id as sad FROM book_loanedbook INNER JOIN book_receipt on book_loanedbook.loanedBook_receipt_id=book_receipt.receipt_id INNER JOIN accounts_account ON book_receipt.receipt_user_id = accounts_account.id INNER JOIN book_detailedbook ON detailed_id = book_loanedbook.loanedBook_book_id INNER JOIN book_books ON detailed_book_id_id = book_id INNER JOIN book_booksubgenre ON book_id = book_booksubgenre.booksubgenre_bookId_id INNER JOIN genre_subgenre ON booksubgenre_subgenreId_id = genre_subgenre.id INNER JOIN genre_genre On genre_subgenre.subgenre_ofGenre_id = genre_genre.id WHERE accounts_account.id = %s GROUP BY genre_subgenre.id ORDER BY d DESC LIMIT 1",[strid])
     if "cart" in request.session:
         cart = request.session['cart']
         for cartProduct in cart:
             count = count + 1
-
+    d = None
+    for f in forYou:
+        d = str(f.sad)
+    forYouBooks = Books.objects.raw('SELECT * FROM book_books LEFT JOIN (SELECT count(detailed_returned) as returned,detailed_book_id_id FROM book_detailedbook WHERE detailed_returned = 1 GROUP BY detailed_book_id_id) ON book_books.book_id = detailed_book_id_id INNER JOIN book_booksubgenre ON book_booksubgenre.booksubgenre_bookId_id = book_id INNER JOIN genre_subgenre ON book_booksubgenre.booksubgenre_subgenreId_id = genre_subgenre.id WHERE subgenre_ofGenre_id = %s GROUP BY book_id ORDER BY book_id DESC',[d])
     context = {
         'cart': cart,
         'books': books,
         'lists': lists,
+        'forYou': forYou,
         'themes': themes,
+        'forYouBooks': forYouBooks,
         'newbooks': newbooks,
         'authors': authors,
         'count': count,
@@ -57,7 +67,7 @@ def bookInfo(request, id):
     book = Books.objects.prefetch_related('book_Authorship_bookId', 'book_Subgenre_bookId', 'book_Themes_bookId').get(
         book_id=id)
     allbooks = Books.objects.prefetch_related('book_Authorship_bookId', 'book_Subgenre_bookId',
-                                              'book_Themes_bookId').exclude(book_id=id).order_by('-book_id')[:4]
+                                              'book_Themes_bookId').exclude(book_id=id).order_by('-book_id')[:12]
     details = DetailedBook.objects.filter(detailed_book_id=book.book_id,detailed_book_percentage__range=(10, 100))
     lists = Genre.objects.all()
     themes = Themes.objects.all()
@@ -69,7 +79,11 @@ def bookInfo(request, id):
         cart = request.session['cart']
         for cartProduct in cart:
             count = count + 1
-
+    strid = str(id)
+    stridUser = 0
+    if "id" in request.session:
+        stridUser = str(request.session['id'])
+    read = Books.objects.raw('SELECT * FROM book_books INNER JOIN book_detailedbook ON book_id = detailed_book_id_id INNER JOIN book_loanedbook ON loanedBook_book_id = detailed_id INNER JOIN book_receipt ON loanedBook_receipt_id = receipt_id WHERE receipt_user_id = '+stridUser+' and book_id = '+strid+' GROUP BY book_id')
     mtfk = 0
     for product in cart:
         currentId = product.get('id')
@@ -78,6 +92,7 @@ def bookInfo(request, id):
     context = {
         'book': book,
         'lists': lists,
+        'read':read,
         'themes': themes,
         'allbooks': allbooks,
         'cart': cart,
@@ -90,7 +105,7 @@ def bookInfo(request, id):
 
 def bookList(request, id):
     cart = []
-    sub_Genres = SubGenre.objects.filter(subgenre_ofGenre=id).all()
+    sub_Genres = SubGenre.objects.filter(subgenre_ofGenre=id).all().order_by('?')
     genre = Genre.objects.get(id=id)
     lists = Genre.objects.all()
     themes = Themes.objects.all()
@@ -292,7 +307,7 @@ def requestBook(request):
                 messages.success(request, (fail + ' Is not enough in Library !!!'))
             return redirect('cart')
     else:
-        messages.success(request, ('You are borrowing books !!!'))
+        messages.success(request, ('You are already borrowing books !!!'))
         return redirect('cart')
 
 def allBook(request):
@@ -305,7 +320,7 @@ def allBook(request):
         'SELECT *,COUNT(detailed_book_id_id) as asd,COUNT(case when detailed_returned = 1 then 1 else null end ) as returned FROM book_detailedbook INNER JOIN book_books ON detailed_book_id_id=book_id GROUP BY detailed_book_id_id ORDER BY book_id DESC')
     themes = Themes.objects.all()
     template = loader.get_template('userIndex/all_book.html')
-    sub_Genres = SubGenre.objects.all()
+    sub_Genres = SubGenre.objects.all().order_by('?')
     x = len(list(newbook))
     count = 0
     if "cart" in request.session:
@@ -515,7 +530,7 @@ def authorUser(request,id):
             count = count + 1
     template = loader.get_template('userIndex/authors.html')
     newbook = Books.objects.raw(
-        'SELECT * FROM book_books INNER JOIN book_bookauthorship ON book_books.book_id=book_bookauthorship.bookauthorship_bookId_id WHERE book_bookauthorship.bookauthorship_authorId_id= %s',[strid])
+        'SELECT *,COUNT(detailed_book_id_id) as asd,COUNT(case when detailed_returned = 1 then 1 else null end ) as returned FROM book_detailedbook INNER JOIN book_books ON detailed_book_id_id=book_id INNER JOIN book_bookauthorship ON book_id = book_bookauthorship.bookauthorship_bookId_id WHERE bookauthorship_authorId_id=%s GROUP BY book_name ORDER BY book_id DESC',[strid])
     page = request.GET.get('page', 1)
     paginator = Paginator(newbook, 12)
     try:

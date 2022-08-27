@@ -70,16 +70,7 @@
             {% endif %}
         </div>
         <div class="humberger__menu__widget">
-            {% if name %}
-                            <div class="header__top__right__auth">
-                <a href="#"><i class="fa fa-user"></i> {{ name }}</a>
-            </div>
-                {% else %}
 
-                            <div class="header__top__right__auth">
-                <a href="#"><i class="fa fa-user"></i> Login</a>
-            </div>
-            {% endif %}
         </div>
         <div id="mobile-menu-wrap"><div class="slicknav_menu"><a href="#" aria-haspopup="true" role="button" tabindex="0" class="slicknav_btn slicknav_collapsed" style="outline: none;"><span class="slicknav_menutxt">MENU</span><span class="slicknav_icon"><span class="slicknav_icon-bar"></span><span class="slicknav_icon-bar"></span><span class="slicknav_icon-bar"></span></span></a><nav class="slicknav_nav slicknav_hidden" aria-hidden="true" role="menu" style="display: none;">
             <ul>
@@ -109,13 +100,13 @@
                         <ul>
                             <li {% if request.resolver_match.view_name == 'indexOfUser' %} class="active"{% endif %}><a href="{%  url 'indexOfUser' %}">Home</a></li>
                             <li {% if request.resolver_match.view_name == 'allBook' %} class="active"{% endif %}><a href="{% url 'allBook' %}">Shop</a></li>
-                            <li><a href="#">Themes</a>
+                            <li {% if request.resolver_match.view_name == 'userTheme' %} class="active"{% endif %}><a href="#">Themes</a>
                                 <ul class="header__menu__dropdown">
                                     {% for theme in themes %}<li><a href="{% url 'userTheme' theme.theme_id %}">{{ theme.theme_name }}</a></li>{% endfor %}
                                 </ul>
                             </li>
                             {% if name %}
-                                    <li><a href="#"><i class="fa fa-user"></i>{{ name }}</a>
+                                    <li {% if request.resolver_match.view_name == 'information' or request.resolver_match.view_name == 'history' or request.resolver_match.view_name == 'extend' or request.resolver_match.view_name == 'changePasswordUser'  %} class="active"{% endif %}><a href="#"><i class="fa fa-user"></i>{{ name }}</a>
                                         <ul class="header__menu__dropdown">
                                             <li><a href="{% url 'information' %}">Information</a></li>
                                             <li><a href="{% url 'history' %}" >History</a></li>

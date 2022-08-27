@@ -238,7 +238,7 @@
             </div>
         </div>
             <div class="card shadow mb-4">
-            <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">In/Outcome All time</h6></div>
+            <div class="card-header py-3"><h6 class="m-0 font-weight-bold text-primary">Income/Deposits Price All time</h6></div>
             <div class="card-body">
                 <canvas id="myChartMoney"  width="100%" height="100%"></canvas>
             </div>
@@ -687,7 +687,7 @@ new Chart("myChartFee", {
 });
 const income = {% for sm in sumMoney %}{{ sm.moneys|floatformat:-2 }} + {{ feeAll.sum|floatformat:-2 }}{% endfor %}
 
-var xValues = ["Income", "Outcome"];
+var xValues = ["Income", "Deposits Price"];
 var yValues = [ income.toFixed(2), {% for oc in outcome %}{{ oc.PRICE|floatformat:-2 }}{% endfor %}];
 var barColors = [
   "rgb(255,131,254)",

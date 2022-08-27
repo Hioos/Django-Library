@@ -69,7 +69,7 @@
                                     </ul>
                                 </div>
                                 <div class="product__item__text">
-                                    <h6 ><a href="{% url 'userBookInfo' book.book_id %}">{{ book.book_name}}</a>{% if book.book_amount == book.asd %} <span class="badge badge-warning">Not In Library</span>{% endif %}</h6>
+                                    <h6 ><a href="{% url 'userBookInfo' book.book_id %}">{{ book.book_name}}</a>{% if book.returned == 0 %} <span class="badge badge-warning">Not In Library</span>{% endif %}</h6>
                                 </div>
                             </div>
                         </div>
