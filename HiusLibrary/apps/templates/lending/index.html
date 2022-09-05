@@ -426,7 +426,7 @@
                                                                       <p class="mb-0"><b><i class="fas fa-money-bill" style="color: #107c00"></i></b></p>
                                                                   </div>
                                                                   <div class="col-sm-9">
-                                                                      <p class="text-muted mb-0"><i>{% if book.loanedBook_fee is not None %}${{ book.loanedBook_fee|floatformat:-2 }}{% else %}$0{% endif %}</i><br></p>
+                                                                      <p class="text-muted mb-0"><i id="result{{ book.loanedBook_id }}">{% if book.loanedBook_fee is not None %}${{ book.loanedBook_fee|floatformat:-2 }}{% else %}$0{% endif %}</i><br></p>
                                                                   </div>
                                                                     </div>
                                                                 <hr>
@@ -440,8 +440,9 @@
                                                             </select>
                                                       </div>
                                                       <div class="col-6">
-                                                          <label for="name{{ book.loanedBook_id }}">Status:</label>
+                                                          <label for="name{{ book.loanedBook_id }}">Condition: </label>
                                                           <input type="number" name="condition{{ book.loanedBook_id }}" class="form-control" id="name{{ book.loanedBook_id }}" min="0" max="{{ book.loanedBook_book.detailed_book_percentage }}" value="{{ book.loanedBook_book.detailed_book_percentage }}" {% if book.loanedBook_statusId_id == 7 or book.loanedBook_statusId_id == 3 or book.loanedBook_statusId_id == 5%}readonly{% endif %}>
+                                                            <input type ="hidden" id="currentFee{{ book.loanedBook_id }}" value="{% if book.loanedBook_fee is None %}0{% else %}{{ book.loanedBook_fee }}{% endif %}" >
                                                       </div>
                                                       </div>
                                                       <hr>
@@ -602,4 +603,26 @@
 <!-- End -->
 </div>
 </div>
+{% endblock %}
+{% block script %}
+    <script>
+{% for receipt in receipts %}
+    {% for book in receipt.loanedBook_receipt.all %}
+        const source{{ book.loanedBook_id }} = document.getElementById('name{{ book.loanedBook_id }}')
+        const result{{ book.loanedBook_id }} = document.getElementById('result{{ book.loanedBook_id }}')
+        var currentFee{{ book.loanedBook_id }} = document.getElementById('currentFee{{ book.loanedBook_id }}').value;
+        const inputHandler = function(e) {
+        var percent = ( {{ book.loanedBook_book.detailed_book_percentage }} - e.target.value) / 100;
+
+	    var final ={{ book.loanedBook_book.detailed_book_id.book_price }}*percent;
+        {#var ultraFinal = parseFloat(final)#}
+        console.log(source{{ book.loanedBook_id }})
+        superFinal ="$"+final.toFixed(2);
+        result{{ book.loanedBook_id }}.innerHTML = superFinal ;
+        }
+        source{{ book.loanedBook_id }}.addEventListener('input', inputHandler);
+        source{{ book.loanedBook_id }}.addEventListener('propertychange', inputHandler);
+    {% endfor %}
+{% endfor %}
+    </script>
 {% endblock %}
